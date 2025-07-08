@@ -1,0 +1,39 @@
+<mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+  <!-- Leaf node -->
+  <mat-tree-node
+    *matTreeNodeDef="let node"
+    matTreeNodePadding
+    class="d-flex align-items-center text-secondary"
+  >
+    <!-- Invisible button for padding -->
+    <button mat-icon-button disabled class="invisible pe-2"></button>
+    <span class="flex-grow-1 text-truncate">{{ node.text }}</span>
+  </mat-tree-node>
+
+  <!-- Expandable node -->
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: hasChild"
+    matTreeNodePadding
+    matTreeNodeToggle
+    [cdkTreeNodeTypeaheadLabel]="node.name"
+    class="d-flex align-items-center"
+  >
+    <button
+      mat-icon-button
+      matTreeNodeToggle
+      [attr.aria-label]="'Toggle ' + node.name"
+      class="pe-2 btn btn-sm btn-outline-primary rounded"
+      style="
+        min-width: 38px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <mat-icon class="mat-icon-rtl-mirror">
+        {{ tree.isExpanded(node) ? "expand_more" : "chevron_right" }}
+      </mat-icon>
+    </button>
+    <span class="flex-grow-1 text-truncate">{{ node.text }}</span>
+  </mat-tree-node>
+</mat-tree>
