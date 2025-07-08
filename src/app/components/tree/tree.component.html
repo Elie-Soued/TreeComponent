@@ -26,13 +26,13 @@
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
     matTreeNodeToggle
-    [cdkTreeNodeTypeaheadLabel]="node.name"
+    [cdkTreeNodeTypeaheadLabel]="node.text"
     class="d-flex align-items-center"
   >
     <button
       mat-icon-button
       matTreeNodeToggle
-      [attr.aria-label]="'Toggle ' + node.name"
+      [attr.aria-label]="'Toggle ' + node.text"
       class="pe-2 btn btn-sm btn-outline-primary rounded"
       style="
         min-width: 38px;

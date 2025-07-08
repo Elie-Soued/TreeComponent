@@ -24,7 +24,7 @@ interface node {
     MatInputModule,
   ],
   templateUrl: './tree.component.html',
-  styleUrls: ['./tree.component.css'], // fix: styleUrls (plural)
+  styleUrls: ['./tree.component.css'],
 })
 export class TreeComponent implements OnInit {
   dataSource: node[] = [];
@@ -38,7 +38,7 @@ export class TreeComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.http.get('menu.json').subscribe((response: any) => {
       this.initialData = response.children;
       this.dataSource = response.children;
