@@ -1,16 +1,27 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width">
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      placeholder="Search"
+      value=""
+      [(ngModel)]="searchValue"
+      (ngModelChange)="onSearchChange($event)"
+      name="searchValue"
+    />
+  </mat-form-field>
+</form>
+
 <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
-  <!-- Leaf node -->
   <mat-tree-node
     *matTreeNodeDef="let node"
     matTreeNodePadding
     class="d-flex align-items-center text-secondary"
   >
-    <!-- Invisible button for padding -->
     <button mat-icon-button disabled class="invisible pe-2"></button>
     <span class="flex-grow-1 text-truncate">{{ node.text }}</span>
   </mat-tree-node>
 
-  <!-- Expandable node -->
   <mat-tree-node
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
