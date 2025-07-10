@@ -1,32 +1,34 @@
+<!--SEARCH BAR-->
+
 <form class="example-form">
   <mat-form-field class="example-full-width">
     <mat-label>Search</mat-label>
-    <input
-      matInput
-      placeholder="Search"
-      value=""
-      [(ngModel)]="searchValue"
-      (ngModelChange)="onSearchChange($event)"
-      name="searchValue"
-    />
+    <input matInput placeholder="Search" [formControl]="searchControl" />
   </mat-form-field>
 </form>
 
+<!------------->
+
+<!--TREE-->
+
 <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+  <!--LEAF-->
   <mat-tree-node
     *matTreeNodeDef="let node"
     matTreeNodePadding
     class="d-flex align-items-center text-secondary"
   >
     <button mat-icon-button disabled class="invisible pe-2"></button>
-    <span class="flex-grow-1 text-truncate">{{ node.text }}</span>
+    <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
+      {{ node.text }}
+    </span>
   </mat-tree-node>
+  <!------------->
+
+  <!--NODE-->
 
   <mat-tree-node
     *matTreeNodeDef="let node; when: hasChild"
-    matTreeNodePadding
-    matTreeNodeToggle
-    [cdkTreeNodeTypeaheadLabel]="node.text"
     class="d-flex align-items-center"
   >
     <button
@@ -45,6 +47,10 @@
         {{ tree.isExpanded(node) ? "expand_more" : "chevron_right" }}
       </mat-icon>
     </button>
-    <span class="flex-grow-1 text-truncate">{{ node.text }}</span>
+    <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
+      {{ node.text }}
+    </span>
   </mat-tree-node>
+  <!------------->
 </mat-tree>
+<!------------->

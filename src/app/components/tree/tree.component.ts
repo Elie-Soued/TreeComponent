@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { MatTreeModule } from '@angular/material/tree';
+import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ReactiveFormsModule } from '@angular/forms';
 
 interface node {
   text: string;
@@ -19,7 +22,7 @@ interface node {
     MatTreeModule,
     MatIconModule,
     MatButtonModule,
-    FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
   ],
@@ -30,6 +33,8 @@ export class TreeComponent implements OnInit {
   dataSource: node[] = [];
   initialData: node[] = [];
   searchValue = '';
+  @ViewChild('tree') tree!: MatTree<any>;
+  searchControl = new FormControl('');
 
   childrenAccessor = (node: node) => node.children ?? [];
 
@@ -43,40 +48,54 @@ export class TreeComponent implements OnInit {
       this.initialData = response.children;
       this.dataSource = response.children;
     });
+
+    this.searchControl.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value: string | null) => {
+        if (value !== null) {
+          this.onSearchChange(value);
+        }
+      });
   }
 
   onSearchChange(value: string): void {
-    if (value || value.trim() !== '') {
-      this.dataSource = this.filterTree(this.initialData, value);
+    this.searchValue = value;
+
+    if (!value || value === '') {
+      this.tree.collapseAll();
     } else {
-      this.dataSource = this.initialData;
+      this.expandMatchingNodes(this.dataSource, value);
     }
   }
 
-  filterTree(nodes: node[], searchTerm: string): node[] {
-    if (!searchTerm || searchTerm.trim() === '') {
-      return nodes;
+  expandMatchingNodes(
+    nodes: node[],
+    searchTerm: string,
+    ancestors: node[] = []
+  ) {
+    for (const node of nodes) {
+      const isMatch = node.text
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      if (isMatch) {
+        // Expand all ancestors of the matching node
+        ancestors.forEach((ancestor) => this.tree.expand(ancestor));
+      }
+
+      if (node.children?.length) {
+        // Recurse with updated ancestors
+        this.expandMatchingNodes(node.children, searchTerm, [
+          ...ancestors,
+          node,
+        ]);
+      }
     }
+  }
 
-    const lowerSearchTerm = searchTerm.toLowerCase();
+  isNodeMatch(node: node): boolean {
+    if (!this.searchValue) return false;
 
-    return nodes
-      .map((node) => {
-        const filteredChildren = node.children
-          ? this.filterTree(node.children, searchTerm)
-          : [];
-
-        const isMatch = node.text.toLowerCase().includes(lowerSearchTerm);
-
-        if (isMatch || filteredChildren.length > 0) {
-          return {
-            ...node,
-            children: filteredChildren.length > 0 ? filteredChildren : [],
-          };
-        }
-
-        return null;
-      })
-      .filter((node) => node !== null) as node[];
+    return node.text.toLowerCase().includes(this.searchValue.toLowerCase());
   }
 }
