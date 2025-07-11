@@ -1,50 +1,46 @@
-<!--SEARCH BAR-->
-
-<form class="example-form">
-  <mat-form-field class="example-full-width">
-    <mat-label>Search</mat-label>
-    <input matInput placeholder="Search" [formControl]="searchControl" />
-  </mat-form-field>
-</form>
-
-<!------------->
-
-<!--TREE-->
-
-<mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
-  <!--LEAF-->
-  <mat-tree-node
-    *matTreeNodeDef="let node"
-    matTreeNodePadding
-    class="text-secondary"
+<div class="d-inline-block p-1 m-2">
+  <mat-tree
+    #tree
+    [dataSource]="dataSource"
+    [childrenAccessor]="childrenAccessor"
   >
-    <div class="d-flex align-items-center">
-      <button mat-icon-button disabled class="invisible pe-2"></button>
-      <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
-        {{ node.text }}
-      </span>
-    </div>
-  </mat-tree-node>
+    <mat-tree-node
+      *matTreeNodeDef="let node"
+      matTreeNodePadding
+      class="text-secondary"
+    >
+      <div class="d-flex align-items-center">
+        <button mat-icon-button disabled class="invisible pe-2"></button>
+        <span
+          class="text-truncate"
+          [class.match]="nodeService.isNodeMatch(node, searchValue)"
+        >
+          {{ node.text }}
+        </span>
+      </div>
+    </mat-tree-node>
 
-  <!--NODE-->
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <div class="d-flex align-items-center p-1">
-      <button
-        matTreeNodeToggle
-        [attr.aria-label]="'Toggle ' + node.text"
-        class="btn btn-sm btn-primary d-flex justify-content-center align-items-center rounded-5 p-1"
-      >
-        <mat-icon class="mat-icon-rtl-mirror">
-          {{ tree.isExpanded(node) ? "remove" : "add" }}
-        </mat-icon>
-      </button>
-      <span
-        class="flex-grow-1 text-truncate p-1"
-        [class.match]="isNodeMatch(node)"
-      >
-        {{ node.text }}
-      </span>
-    </div>
-  </mat-tree-node>
-</mat-tree>
-<!------------->
+    <mat-tree-node
+      *matTreeNodeDef="let node; when: hasChild"
+      matTreeNodePadding
+    >
+      <div class="d-flex align-items-center p-1">
+        <button
+          matTreeNodeToggle
+          [attr.aria-label]="'Toggle ' + node.text"
+          class="btn btn-sm btn-primary d-flex justify-content-center align-items-center rounded-circle p-1"
+        >
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ tree.isExpanded(node) ? "remove" : "add" }}
+          </mat-icon>
+        </button>
+        <span
+          class="text-truncate p-1"
+          [class.match]="nodeService.isNodeMatch(node, searchValue)"
+        >
+          {{ node.text }}
+        </span>
+      </div>
+    </mat-tree-node>
+  </mat-tree>
+</div>
