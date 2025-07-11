@@ -1,6 +1,10 @@
-<form class="p-1 m-2">
-  <mat-form-field class="w-100">
+<form class="m-2">
+  <mat-form-field appearance="outline" class="w-100 border-danger">
     <mat-label>Enter Keyword</mat-label>
-    <input matInput [formControl]="searchControl" />
+    <input
+      matInput
+      [formControl]="searchControl"
+      placeholder="Type to search..."
+    />
   </mat-form-field>
 </form>
