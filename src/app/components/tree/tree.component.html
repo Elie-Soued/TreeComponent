@@ -16,41 +16,35 @@
   <mat-tree-node
     *matTreeNodeDef="let node"
     matTreeNodePadding
-    class="d-flex align-items-center text-secondary"
+    class="text-secondary"
   >
-    <button mat-icon-button disabled class="invisible pe-2"></button>
-    <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
-      {{ node.text }}
-    </span>
+    <div class="d-flex align-items-center">
+      <button mat-icon-button disabled class="invisible pe-2"></button>
+      <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
+        {{ node.text }}
+      </span>
+    </div>
   </mat-tree-node>
-  <!------------->
 
   <!--NODE-->
-
-  <mat-tree-node
-    *matTreeNodeDef="let node; when: hasChild"
-    class="d-flex align-items-center"
-  >
-    <button
-      mat-icon-button
-      matTreeNodeToggle
-      [attr.aria-label]="'Toggle ' + node.text"
-      class="pe-2 btn btn-sm btn-outline-primary rounded"
-      style="
-        min-width: 38px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      "
-    >
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{ tree.isExpanded(node) ? "expand_more" : "chevron_right" }}
-      </mat-icon>
-    </button>
-    <span class="flex-grow-1 text-truncate" [class.match]="isNodeMatch(node)">
-      {{ node.text }}
-    </span>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <div class="d-flex align-items-center p-1">
+      <button
+        matTreeNodeToggle
+        [attr.aria-label]="'Toggle ' + node.text"
+        class="btn btn-sm btn-primary d-flex justify-content-center align-items-center rounded-5 p-1"
+      >
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ tree.isExpanded(node) ? "remove" : "add" }}
+        </mat-icon>
+      </button>
+      <span
+        class="flex-grow-1 text-truncate p-1"
+        [class.match]="isNodeMatch(node)"
+      >
+        {{ node.text }}
+      </span>
+    </div>
   </mat-tree-node>
-  <!------------->
 </mat-tree>
 <!------------->
