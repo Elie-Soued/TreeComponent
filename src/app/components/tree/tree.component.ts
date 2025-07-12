@@ -18,7 +18,6 @@ import { type node, type data } from '../../services/node.service';
   standalone: true,
   imports: [MatTreeModule, NodeComponent],
   templateUrl: './tree.component.html',
-  styleUrls: ['./tree.component.css'],
 })
 export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   dataSource: node[] = [];

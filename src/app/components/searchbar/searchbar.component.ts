@@ -9,7 +9,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   selector: 'app-searchbar',
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './searchbar.component.html',
-  styleUrl: './searchbar.component.css',
 })
 export class SearchbarComponent {
   @Output() searchValue = new EventEmitter<string | null>();

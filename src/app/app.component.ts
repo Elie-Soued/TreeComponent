@@ -6,7 +6,6 @@ import { SearchbarComponent } from './components/searchbar/searchbar.component';
   selector: 'app-root',
   imports: [TreeComponent, SearchbarComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
 })
 export class AppComponent {
   searchValue: string | null = null;
