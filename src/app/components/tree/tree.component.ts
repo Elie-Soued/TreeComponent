@@ -7,18 +7,11 @@ import {
   OnChanges,
   AfterViewInit,
 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from './node.service';
 import { NodeComponent } from '../node/node.component';
-import { type node } from './node.service';
-
-interface data {
-  Interface: string;
-  NodeToLoad: string;
-  Result: boolean;
-  children: node[];
-}
+import { type node, type data } from './node.service';
 
 @Component({
   selector: 'app-tree',
@@ -37,10 +30,10 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   hasChild = (_: number, node: node) =>
     !!node.children && node.children.length > 0;
 
-  constructor(private http: HttpClient, private nodeService: NodeService) {}
+  constructor(private nodeService: NodeService) {}
 
   ngOnInit(): void {
-    this.http.get<data>('menu.json').subscribe((response: data) => {
+    this.nodeService.getInitialData().subscribe((response: data) => {
       this.initialData = response.children;
       this.dataSource = response.children;
     });
@@ -51,27 +44,24 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
+    const searchValueChanged =
       changes['searchValue'] &&
       !changes['searchValue'].firstChange &&
-      this.isTreeReady
-    ) {
-      this.onSearchChange(this.searchValue);
-    }
-  }
+      this.isTreeReady;
 
-  onSearchChange(value: string | null): void {
-    this.searchValue = value;
+    const searchValueIsEmpty = !this.searchValue || this.searchValue === '';
 
-    if (!value || value === '') {
-      this.tree.collapseAll();
-    } else {
-      this.nodeService.expandMatchingNodes(
-        this.dataSource,
-        value,
-        [],
-        this.tree
-      );
+    if (searchValueChanged) {
+      if (searchValueIsEmpty) {
+        this.tree.collapseAll();
+      } else {
+        this.nodeService.expandMatchingNodes(
+          this.dataSource,
+          this.searchValue!,
+          [],
+          this.tree
+        );
+      }
     }
   }
 }
