@@ -24,6 +24,42 @@ describe('NodeService', () => {
     ],
   };
 
+  const treeData: node[] = [
+    {
+      text: 'Parent 1',
+      iconCls: '',
+      children: [
+        {
+          text: 'Child Match',
+          children: [],
+          iconCls: '',
+        },
+        {
+          text: 'Another Child',
+          children: [],
+          iconCls: '',
+        },
+      ],
+    },
+    {
+      text: 'Parent 2',
+      iconCls: '',
+      children: [
+        {
+          text: 'Deep Parent',
+          iconCls: '',
+          children: [
+            {
+              text: 'Deep Match',
+              children: [],
+              iconCls: '',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
@@ -45,42 +81,6 @@ describe('NodeService', () => {
     const mockTree = {
       expand: jasmine.createSpy('expand'),
     } as unknown as MatTree<node>;
-
-    const treeData: node[] = [
-      {
-        text: 'Parent 1',
-        iconCls: '',
-        children: [
-          {
-            text: 'Child Match',
-            children: [],
-            iconCls: '',
-          },
-          {
-            text: 'Another Child',
-            children: [],
-            iconCls: '',
-          },
-        ],
-      },
-      {
-        text: 'Parent 2',
-        iconCls: '',
-        children: [
-          {
-            text: 'Deep Parent',
-            iconCls: '',
-            children: [
-              {
-                text: 'Deep Match',
-                children: [],
-                iconCls: '',
-              },
-            ],
-          },
-        ],
-      },
-    ];
 
     service.expandMatchingNodes(treeData, 'match', [], mockTree);
 
