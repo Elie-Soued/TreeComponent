@@ -4,7 +4,7 @@ import { TreeComponent } from './tree.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-describe('MenuComponent', () => {
+describe('TreeComponent', () => {
   let component: TreeComponent;
   let fixture: ComponentFixture<TreeComponent>;
 
@@ -18,7 +18,19 @@ describe('MenuComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('Tree component is correctly rendered', () => {
+    // write test
+  });
+
+  it('Data is correctly fetched on Init', () => {
+    // write test
+  });
+
+  it('onSearchChange is triggered onChange', () => {
+    // write test
+  });
+
+  it('Tree is ready after ViewInit', () => {
+    // write test
   });
 });

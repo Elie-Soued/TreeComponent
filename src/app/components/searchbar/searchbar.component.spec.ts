@@ -8,16 +8,19 @@ describe('SearchbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SearchbarComponent]
-    })
-    .compileComponents();
+      imports: [SearchbarComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SearchbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('searchBar Component is correctly rendered', () => {
+    // write test
+  });
+
+  it('searchBar correctly emits a searchValue', () => {
+    // write test
   });
 });

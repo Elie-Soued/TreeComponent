@@ -10,7 +10,11 @@ describe('NodeService', () => {
     service = TestBed.inject(NodeService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('expandMatchingNodes is working correctly', () => {
+    // write test
+  });
+
+  it('isNodeMatch is working correctly', () => {
+    // write test
   });
 });

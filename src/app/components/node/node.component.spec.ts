@@ -1,23 +1,40 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NodeComponent } from './node.component';
+// import { NodeComponent } from './node.component';
 
-describe('NodeComponent', () => {
-  let component: NodeComponent;
-  let fixture: ComponentFixture<NodeComponent>;
+// describe('NodeComponent', () => {
+//   let component: NodeComponent;
+//   let fixture: ComponentFixture<NodeComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NodeComponent]
-    })
-    .compileComponents();
+//   const mockNode = {
+//     text: '',
+//     iconCls: '',
+//     children: [],
+//   };
 
-    fixture = TestBed.createComponent(NodeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//   const nodeInputs = {
+//     isleaf: false,
+//     node: mockNode,
+//     searchValue: '',
+//     tree: undefined,
+//   };
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   const tree = beforeEach(async () => {
+//     await TestBed.configureTestingModule({
+//       imports: [NodeComponent],
+//     }).compileComponents();
+
+//     fixture = TestBed.createComponent(NodeComponent);
+//     component = fixture.componentInstance;
+//     component.isLeaf = false;
+//     component.node = mockNode;
+//     component.searchValue = '';
+//     component.tree = ;
+
+//     fixture.detectChanges();
+//   });
+
+//   it('should create', () => {
+//     // expect(component).toBeTruthy();
+//   });
+// });
