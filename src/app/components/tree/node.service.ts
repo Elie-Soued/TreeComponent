@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
-interface node {
+export interface node {
   text: string;
+  iconCls: string;
   children?: node[];
 }
 

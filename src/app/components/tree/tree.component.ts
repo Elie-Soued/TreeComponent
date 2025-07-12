@@ -9,36 +9,38 @@ import {
 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { NodeService } from './node.service';
+import { NodeComponent } from '../node/node.component';
+import { type node } from './node.service';
 
-interface node {
-  text: string;
-  children?: node[];
+interface data {
+  Interface: string;
+  NodeToLoad: string;
+  Result: boolean;
+  children: node[];
 }
 
 @Component({
   selector: 'app-tree',
   standalone: true,
-  imports: [MatTreeModule, MatIconModule, MatButtonModule],
+  imports: [MatTreeModule, NodeComponent],
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css'],
 })
-export class TreeComponent implements OnInit, AfterViewInit, OnChanges {
+export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   dataSource: node[] = [];
   initialData: node[] = [];
-  @ViewChild('tree') tree!: MatTree<any>;
+  @ViewChild('tree') tree!: MatTree<node>;
   @Input() searchValue: string | null = '';
   isTreeReady = false;
   childrenAccessor = (node: node) => node.children ?? [];
   hasChild = (_: number, node: node) =>
     !!node.children && node.children.length > 0;
 
-  constructor(private http: HttpClient, public nodeService: NodeService) {}
+  constructor(private http: HttpClient, private nodeService: NodeService) {}
 
   ngOnInit(): void {
-    this.http.get('menu.json').subscribe((response: any) => {
+    this.http.get<data>('menu.json').subscribe((response: data) => {
       this.initialData = response.children;
       this.dataSource = response.children;
     });
@@ -46,8 +48,6 @@ export class TreeComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     this.isTreeReady = true;
-    // Optionally trigger search after initial view is ready
-    this.onSearchChange(this.searchValue);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
