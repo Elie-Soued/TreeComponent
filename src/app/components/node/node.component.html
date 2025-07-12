@@ -13,7 +13,7 @@
 
 <div class="d-flex align-items-center p-1">
   <button
-    matTreeNodeToggle
+    (click)="toggleNode(node)"
     [attr.aria-label]="'Toggle ' + node.text"
     class="btn btn-sm btn-primary d-flex justify-content-center align-items-center rounded-circle p-1"
     style="width: 20px; height: 20px"

@@ -18,4 +18,8 @@ export class NodeComponent {
   @Input() tree!: MatTree<node>;
 
   constructor(public nodeService: NodeService) {}
+
+  toggleNode(node: node): void {
+    this.tree.toggle(node);
+  }
 }
