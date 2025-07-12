@@ -29,8 +29,9 @@
           matTreeNodeToggle
           [attr.aria-label]="'Toggle ' + node.text"
           class="btn btn-sm btn-primary d-flex justify-content-center align-items-center rounded-circle p-1"
+          style="width: 20px; height: 20px"
         >
-          <mat-icon class="mat-icon-rtl-mirror">
+          <mat-icon class="mat-icon-rtl-mirror small-icon">
             {{ tree.isExpanded(node) ? "remove" : "add" }}
           </mat-icon>
         </button>
