@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { NodeService } from '../tree/node.service';
+import { NodeService } from '../../services/node.service';
 import { MatIconModule } from '@angular/material/icon';
-import { type node } from '../tree/node.service';
+import { type node } from '../../services/node.service';
 import { MatTree } from '@angular/material/tree';
 
 @Component({

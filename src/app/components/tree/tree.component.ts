@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 
 import { MatTree, MatTreeModule } from '@angular/material/tree';
-import { NodeService } from './node.service';
+import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
-import { type node, type data } from './node.service';
+import { type node, type data } from '../../services/node.service';
 
 @Component({
   selector: 'app-tree',
