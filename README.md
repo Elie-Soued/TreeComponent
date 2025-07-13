@@ -16,7 +16,7 @@ ng serve
 Open your browser at http://localhost:4200/ to see the app.  
 
 
-##### 🧪 Test the application 
+#### 🧪 Test the application 
 
 Type a value into the search bar.
 
@@ -27,7 +27,7 @@ If a match is found:
 - If no match is found, the tree remains unchanged.
 
 
-##### 🛠 Technologies Used
+#### 🛠 Technologies Used
 
 Angular
 
