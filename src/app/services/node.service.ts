@@ -31,15 +31,18 @@ export class NodeService {
     searchTerm: string,
     ancestors: node[] = [],
     tree: MatTree<node>
-  ) {
+  ): void {
     for (const node of nodes) {
       const isMatch = node.text
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      if (isMatch) {
+
+      // Expand fpr match with ancestors
+      if (isMatch && ancestors.length) {
         ancestors.forEach((ancestor) => tree.expand(ancestor));
       }
 
+      // As long as a node has children, collect its ancestors
       if (node.children?.length) {
         this.expandMatchingNodes(
           node.children,
