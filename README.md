@@ -7,7 +7,7 @@ This repository contains an Angular implementation of a dynamic tree structure w
 
 ```bash
 git clone https://github.com/Elie-Soued/TreeComponent.git
-cd ogs
+cd TreeComponent
 npm install
 ng serve
 
