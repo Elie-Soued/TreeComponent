@@ -1,0 +1,36 @@
+@if(isLeaf){
+<div class="d-flex align-items-center">
+  <button mat-icon-button disabled id="leafBtn" class="invisible pe-2"></button>
+  <span
+    id="leafSpan"
+    class="text-truncate"
+    [class.match]="nodeService.isNodeMatch(node, searchValue)"
+  >
+    {{ node.text }}
+  </span>
+</div>
+
+} @else{
+
+<div class="d-flex align-items-center p-1">
+  <button
+    id="nodeBtn"
+    (click)="toggleNode(node)"
+    [attr.aria-label]="'Toggle ' + node.text"
+    class="btn btn-sm btn-secondary d-flex justify-content-center align-items-center  p-1"
+    style="width: 20px; height: 20px"
+  >
+    <mat-icon class="mat-icon-rtl-mirror small-icon fw-bold" id="nodeIcon">
+      {{ tree.isExpanded(node) ? "remove" : "add" }}
+    </mat-icon>
+  </button>
+  <span
+    id="nodeSpan"
+    class="text-truncate p-1"
+    [class.match]="nodeService.isNodeMatch(node, searchValue)"
+  >
+    {{ node.text }}
+  </span>
+</div>
+
+}

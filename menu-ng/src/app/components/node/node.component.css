@@ -1,0 +1,13 @@
+.match {
+  color: green; /* Red-ish color, change as you like */
+}
+
+
+.small-icon {
+  font-size: 15px;
+  line-height: 15px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
