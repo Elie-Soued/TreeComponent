@@ -20,10 +20,10 @@ import { type node, type data } from '../../services/node.service';
   templateUrl: './tree.component.html',
 })
 export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
-  dataSource: node[] = [];
-  initialData: node[] = [];
   @ViewChild('tree') tree!: MatTree<node>;
   @Input() searchValue: string | null = '';
+  dataSource: node[] = [];
+  initialData: node[] = [];
   isTreeReady = false;
   minimunSearchCharacter = 3;
   childrenAccessor = (node: node) => node.children ?? [];
