@@ -52,8 +52,18 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
 
     if (searchValueChanged) {
       if (searchValueIsEmpty) {
+        this.dataSource = this.initialData;
         this.tree.collapseAll();
       } else {
+        const filteredNodes = this.nodeService.filterNonMatchingLeafs(
+          this.dataSource,
+          this.searchValue!
+        );
+
+        this.dataSource = filteredNodes.length
+          ? filteredNodes
+          : this.initialData;
+
         this.nodeService.expandMatchingNodes(
           this.dataSource,
           this.searchValue!,

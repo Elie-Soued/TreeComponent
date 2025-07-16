@@ -33,12 +33,8 @@ export class NodeService {
     tree: MatTree<node>
   ): void {
     for (const node of nodes) {
-      const isMatch = node.text
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-
       // Expand fpr match with ancestors
-      if (isMatch && ancestors.length) {
+      if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
         ancestors.forEach((ancestor) => tree.expand(ancestor));
       }
 
@@ -54,9 +50,29 @@ export class NodeService {
     }
   }
 
+  filterNonMatchingLeafs(nodes: node[], searchTerm: string): node[] {
+    return nodes
+      .map((node) => {
+        // Winding phase : We go from the parent to a leaf and create multiple execution contexts
+        const children = node.children
+          ? this.filterNonMatchingLeafs(node.children, searchTerm)
+          : [];
+
+        // Unwinding phase: when we reach a match, we bubble up the child which allows the parent to be also returned (due to the || children.length)
+        if (this.isNodeMatch(node, searchTerm) || children.length) {
+          return {
+            ...node,
+            children: children.length ? children : [],
+          };
+        }
+
+        return null;
+      })
+      .filter((node) => node !== null);
+  }
+
   isNodeMatch(node: node, searchValue: string | null): boolean {
     if (!searchValue) return false;
-
     return node.text.toLowerCase().includes(searchValue.toLowerCase());
   }
 }
