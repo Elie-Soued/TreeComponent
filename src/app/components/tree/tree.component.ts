@@ -25,6 +25,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('tree') tree!: MatTree<node>;
   @Input() searchValue: string | null = '';
   isTreeReady = false;
+  minimunSearchCharacter = 3;
   childrenAccessor = (node: node) => node.children ?? [];
   hasChild = (_: number, node: node) =>
     !!node.children && node.children.length > 0;
@@ -49,9 +50,11 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
       this.isTreeReady;
 
     const searchValueIsEmpty = !this.searchValue || this.searchValue === '';
+    const searchValueIsTooShort =
+      this.searchValue && this.searchValue.length < this.minimunSearchCharacter;
 
     if (searchValueChanged) {
-      if (searchValueIsEmpty) {
+      if (searchValueIsEmpty || searchValueIsTooShort) {
         this.dataSource = this.initialData;
         this.tree.collapseAll();
       } else {
