@@ -24,6 +24,50 @@ describe('NodeService', () => {
     ],
   };
 
+  let mockData2 = {
+    Interface: 'menu.load',
+    NodeToLoad: 'R10ALL00',
+    Result: true,
+    children: [
+      {
+        text: 'Nonex',
+        iconCls: 'stamm.ico',
+        children: [
+          {
+            text: 'Nonex le ouf',
+            iconCls: 'navigator_16.ico',
+            children: [
+              {
+                text: 'Nonex cornflex',
+                call: 'R10AB01001',
+                iconCls: 'prosoz_16.ico',
+                leaf: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Pilex CornFlex',
+        iconCls: 'AUFTRAG.ico',
+        children: [
+          {
+            text: 'Pilex',
+            iconCls: 'navigator_16.ico',
+            children: [
+              {
+                text: 'Pilex la flex',
+                call: 'R10AB01001',
+                iconCls: 'prosoz_16.ico',
+                leaf: true,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
   const treeData: node[] = [
     {
       text: 'Parent 1',
@@ -100,5 +144,13 @@ describe('NodeService', () => {
 
     expect(service.isNodeMatch(mockNode, 'test1')).toBeFalsy();
     expect(service.isNodeMatch(mockNode, 'test')).toBeTruthy();
+  });
+
+  it('filterNonMatchingLeafs is filtering the correct nodes', () => {
+    const ouf = service.filterNonMatchingLeafs(mockData2.children, 'Pilex');
+    expect(ouf.length).toBe(1);
+    expect(ouf[0].text).toBe('Pilex CornFlex');
+    expect(ouf[0].children?.[0].text).toBe('Pilex');
+    expect(ouf[0].children?.[0].children?.[0].text).toBe('Pilex la flex');
   });
 });

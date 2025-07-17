@@ -3,13 +3,13 @@
   style="height: auto"
 >
   @if(displayHighlightedText(searchValue)){
-  <p class="text-truncate p-1 m-0">
-    <span class="m-0 p-0">{{ before }}</span
-    ><span class="m-0 p-0 match">{{ match }}</span
-    ><span class="m-0 p-0">{{ after }}</span>
+  <p class="text-truncate p-1 m-0" id="match">
+    <span id="before" class="m-0 p-0">{{ before }}</span
+    ><span id="matchedText" class="m-0 p-0 match">{{ match }}</span
+    ><span id="after" class="m-0 p-0">{{ after }}</span>
   </p>
   } @else{
-  <p class="p-1 m-0 d-flex justify-content-center">
+  <p class="p-1 m-0 d-flex justify-content-center" id="noMatch">
     {{ node.text }}
   </p>
   }

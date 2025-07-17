@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodetextComponent } from './nodetext.component';
+import { By } from '@angular/platform-browser';
 
 describe('NodetextComponent', () => {
   let component: NodetextComponent;
@@ -33,7 +34,40 @@ describe('NodetextComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('Normal text is displayed when no searchValue is entered', () => {
+    component.searchValue = '';
+    fixture.detectChanges();
+    const noMatchParagraph = fixture.debugElement.query(
+      By.css('#noMatch')
+    ).nativeElement;
+
+    expect(noMatchParagraph).toBeTruthy();
+  });
+
+  it('Letters are highlighted when there is a match', () => {
+    component.searchValue = 'daten';
+    component.node = {
+      text: 'Stammdatenverwaltung',
+      iconCls: 'stamm.ico',
+      children: [],
+    };
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const matchParagraph = fixture.debugElement.query(
+      By.css('#match')
+    ).nativeElement;
+    expect(matchParagraph).toBeTruthy();
+
+    const before = fixture.debugElement.query(By.css('#before')).nativeElement;
+    const matchedText = fixture.debugElement.query(
+      By.css('#matchedText')
+    ).nativeElement;
+    const after = fixture.debugElement.query(By.css('#after')).nativeElement;
+
+    expect(before.innerText).toBe('Stamm');
+    expect(matchedText.innerText).toBe('daten');
+    expect(matchedText.classList.contains('match')).toBeTrue();
+    expect(after.innerText).toBe('verwaltung');
   });
 });

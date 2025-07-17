@@ -50,4 +50,17 @@ describe('SearchbarComponent', () => {
     //Trigger
     expect(emitSpy).toHaveBeenCalledWith('test');
   }));
+
+  it('clear form is clearing the searchControl', fakeAsync(() => {
+    const clearSpy = spyOn(component, 'clearForm');
+
+    const clearBtn = fixture.debugElement.query(
+      By.css('#clearBtn')
+    ).nativeElement;
+
+    clearBtn.click();
+
+    expect(clearSpy).toHaveBeenCalled();
+    expect(component.searchControl.value).toEqual('');
+  }));
 });
