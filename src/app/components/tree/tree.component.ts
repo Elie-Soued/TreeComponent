@@ -63,9 +63,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
           this.searchValue!
         );
 
-        this.dataSource = filteredNodes.length
-          ? filteredNodes
-          : this.initialData;
+        this.dataSource = filteredNodes;
 
         this.nodeService.expandMatchingNodes(
           this.dataSource,
