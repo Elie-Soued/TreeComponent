@@ -59,7 +59,7 @@ describe('NodeComponent', () => {
   it('Render a node', () => {
     const button = fixture.debugElement.query(By.css('#nodeBtn'));
     const icon = fixture.debugElement.query(By.css('#nodeIcon'));
-    const span = fixture.debugElement.query(By.css('#nodeSpan'));
+    const span = fixture.debugElement.query(By.css('app-nodetext'));
 
     expect(button).toBeTruthy();
     expect(span).toBeTruthy();
@@ -77,7 +77,7 @@ describe('NodeComponent', () => {
     fixture.detectChanges();
 
     const button = fixture.debugElement.query(By.css('#leafBtn'));
-    const span = fixture.debugElement.query(By.css('#leafSpan'));
+    const span = fixture.debugElement.query(By.css('app-nodetext'));
     expect(button).toBeTruthy();
     expect(span).toBeTruthy();
   });

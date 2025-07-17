@@ -6,6 +6,7 @@ import {
 } from '@angular/core/testing';
 import { SearchbarComponent } from './searchbar.component';
 import { By } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('SearchbarComponent', () => {
   let component: SearchbarComponent;
@@ -13,6 +14,7 @@ describe('SearchbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideAnimations()],
       imports: [SearchbarComponent],
     }).compileComponents();
 
@@ -24,7 +26,7 @@ describe('SearchbarComponent', () => {
   it('searchBar Component is correctly rendered', () => {
     const form = fixture.debugElement.query(By.css('form'));
     const formField = fixture.debugElement.query(By.css('mat-form-field'));
-    const label = fixture.debugElement.query(By.css('mat-label'));
+    const label = fixture.debugElement.query(By.css('label'));
     const input = fixture.debugElement.query(By.css('input'));
 
     expect(form).toBeTruthy();

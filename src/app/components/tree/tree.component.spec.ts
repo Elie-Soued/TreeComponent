@@ -39,6 +39,7 @@ describe('TreeComponent', () => {
       'getInitialData',
       'expandMatchingNodes',
       'isNodeMatch',
+      'filterNonMatchingLeafs',
     ]);
 
     nodeService.getInitialData.and.returnValue(of(mockData));
@@ -83,6 +84,11 @@ describe('TreeComponent', () => {
       'collapseAll',
     ]);
     component.tree = mockTree;
+
+    component.ngAfterViewInit();
+    nodeService.filterNonMatchingLeafs.and.returnValue(mockData.children);
+    component.initialData = mockData.children;
+    component.dataSource = mockData.children;
 
     const changes = {
       searchValue: {
