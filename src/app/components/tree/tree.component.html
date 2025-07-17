@@ -1,4 +1,8 @@
-<div class="w-auto m-2 p-1" style="border: 1px solid gray">
+<div
+  class="w-auto m-2 p-1"
+  [hidden]="!dataSource.length"
+  style="border: 1px solid gray"
+>
   <mat-tree
     #tree
     [dataSource]="dataSource"
