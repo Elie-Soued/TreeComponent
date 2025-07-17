@@ -1,8 +1,9 @@
-<div class="w-auto">
+<div class="w-auto m-2 p-1" style="border:1px solid gray">
   <mat-tree
     #tree
     [dataSource]="dataSource"
     [childrenAccessor]="childrenAccessor"
+    style="background-color: white;"
   >
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <app-node
