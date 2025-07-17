@@ -1,10 +1,21 @@
-<form class="m-2">
-  <mat-form-field appearance="outline" class="w-100 border-danger">
-    <mat-label>Suche</mat-label>
+<form class="m-2 d-flex rows align align-items-center w-auto h-auto">
+  <label style="width: 100px;">Suche :</label>
+  <mat-form-field appearance="outline" class="w-100 border-danger w-100 h-auto">
     <input
       matInput
       [formControl]="searchControl"
       placeholder="min. 3 Zeichen"
     />
+     <button
+
+    class="btn btn-sm btn-secondary-outlined"
+    matSuffix
+    mat-icon-button
+    aria-label="Clear"
+    type="button"
+    (click)="clearForm()"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
   </mat-form-field>
 </form>

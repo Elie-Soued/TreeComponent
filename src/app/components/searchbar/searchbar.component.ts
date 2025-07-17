@@ -4,11 +4,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-searchbar',
-  standalone : true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+  ],
   templateUrl: './searchbar.component.html',
 })
 export class SearchbarComponent {
@@ -21,5 +27,9 @@ export class SearchbarComponent {
       .subscribe((value: string | null) => {
         this.searchValue.emit(value);
       });
+  }
+
+  clearForm() {
+    this.searchControl.setValue('');
   }
 }
