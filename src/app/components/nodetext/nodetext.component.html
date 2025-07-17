@@ -1,0 +1,16 @@
+
+<div class="d-flex align-items-center">
+@if(displayHighlightedText(searchValue)){
+  <p class="text-truncate p-1" ><span class = "m-0 p-0">{{ before }}</span><span class=" m-0 p-0 match">{{ match }}</span><span class = "m-0 p-0">{{ after }}</span></p>
+}
+
+@else{
+  <p class=" p-1 d-flex justify-content-center" >
+    {{node.text}}
+  </p>
+}
+
+</div>
+
+
+

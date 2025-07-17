@@ -1,13 +1,11 @@
 @if(isLeaf){
 <div class="d-flex align-items-center">
   <button mat-icon-button disabled id="leafBtn" class="invisible pe-2"></button>
-  <span
-    id="leafSpan"
-    class="text-truncate"
-    [class.match]="nodeService.isNodeMatch(node, searchValue)"
-  >
-    {{ node.text }}
-  </span>
+<app-nodetext
+    [node]="node"
+    [searchValue]="searchValue"
+
+></app-nodetext>
 </div>
 
 } @else{
@@ -24,13 +22,10 @@
       {{ tree.isExpanded(node) ? "remove" : "add" }}
     </mat-icon>
   </button>
-  <span
-    id="nodeSpan"
-    class="text-truncate p-1"
-    [class.match]="nodeService.isNodeMatch(node, searchValue)"
-  >
-    {{ node.text }}
-  </span>
+<app-nodetext
+    [node]="node"
+    [searchValue]="searchValue"
+></app-nodetext>
 </div>
 
 }

@@ -3,11 +3,12 @@ import { NodeService } from '../../services/node.service';
 import { MatIconModule } from '@angular/material/icon';
 import { type node } from '../../services/node.service';
 import { MatTree } from '@angular/material/tree';
+import { NodetextComponent } from '../nodetext/nodetext.component';
 
 @Component({
   selector: 'app-node',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, NodetextComponent],
   templateUrl: './node.component.html',
   styleUrl: './node.component.css',
 })
