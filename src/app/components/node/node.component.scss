@@ -1,0 +1,52 @@
+
+.leaf-container,
+.node-container {
+  display: flex;
+  align-items: center;
+}
+
+.leaf-btn {
+  visibility: hidden;
+  padding-right: 0.5rem;
+}
+
+
+.node-container{
+  padding: 0.25rem;
+}
+
+
+.small-icon {
+  font-size: 15px;
+  line-height: 15px;
+  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.node-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.25rem;
+  width: 20px;
+  height: 20px;
+  // Below are styles relative to btn-secondary sm
+  font-size: 0.875rem; // btn-sm → around 14px
+  background-color: #6c757d; // btn-secondary (adjust as needed)
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  cursor: pointer;
+   &:hover {
+    background-color: #5c636a;
+  }
+}
+
+.node-icon {
+  font-weight: bold;
+  font-size: 0.75rem;
+  direction: rtl;
+}

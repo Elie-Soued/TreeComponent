@@ -4,9 +4,10 @@ import { SearchbarComponent } from './components/searchbar/searchbar.component';
 
 @Component({
   selector: 'app-root',
-   standalone : true,
+  standalone: true,
   imports: [TreeComponent, SearchbarComponent],
   templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   searchValue: string | null = null;

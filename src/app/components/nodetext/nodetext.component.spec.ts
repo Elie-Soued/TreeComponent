@@ -67,7 +67,7 @@ describe('NodetextComponent', () => {
 
     expect(before.innerText).toBe('Stamm');
     expect(matchedText.innerText).toBe('daten');
-    expect(matchedText.classList.contains('match')).toBeTrue();
+    expect(matchedText.classList.contains('matched-text')).toBeTrue();
     expect(after.innerText).toBe('verwaltung');
   });
 });

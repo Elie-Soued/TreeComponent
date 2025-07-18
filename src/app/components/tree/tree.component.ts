@@ -18,6 +18,7 @@ import { type node, type data } from '../../services/node.service';
   standalone: true,
   imports: [MatTreeModule, NodeComponent],
   templateUrl: './tree.component.html',
+  styleUrl: './tree.component.scss',
 })
 export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('tree') tree!: MatTree<node>;

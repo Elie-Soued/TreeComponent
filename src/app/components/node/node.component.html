@@ -1,19 +1,18 @@
 @if(isLeaf){
-<div class="d-flex align-items-center">
-  <button mat-icon-button disabled id="leafBtn" class="invisible pe-2"></button>
+<div class="leaf-container">
+  <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
   <app-nodetext [node]="node" [searchValue]="searchValue"></app-nodetext>
 </div>
 
 } @else{
-<div class="d-flex align-items-center p-1">
+<div class="node-container">
   <button
     id="nodeBtn"
     (click)="toggleNode(node)"
     [attr.aria-label]="'Toggle ' + node.text"
-    class="btn btn-sm btn-secondary d-flex justify-content-center align-items-center p-1"
-    style="width: 20px; height: 20px"
+    class="node-btn"
   >
-    <mat-icon class="mat-icon-rtl-mirror small-icon fw-bold" id="nodeIcon">
+    <mat-icon class="small-icon" id="nodeIcon">
       {{ tree.isExpanded(node) ? "remove" : "add" }}
     </mat-icon>
   </button>

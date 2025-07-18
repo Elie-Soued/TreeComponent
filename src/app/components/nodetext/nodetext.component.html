@@ -1,16 +1,13 @@
-<div
-  class="d-flex align-items-center justify-content-center"
-  style="height: auto"
->
+<main>
   @if(displayHighlightedText(searchValue)){
-  <p class="text-truncate p-1 m-0" id="match">
-    <span id="before" class="m-0 p-0">{{ before }}</span
-    ><span id="matchedText" class="m-0 p-0 match">{{ match }}</span
-    ><span id="after" class="m-0 p-0">{{ after }}</span>
+  <p class="matched" id="match">
+    <span id="before" class="no-space">{{ before }}</span
+    ><span id="matchedText" class="matched-text">{{ match }}</span
+    ><span id="after" class="no-space">{{ after }}</span>
   </p>
   } @else{
-  <p class="p-1 m-0 d-flex justify-content-center" id="noMatch">
+  <p class="not-matched" id="noMatch">
     {{ node.text }}
   </p>
   }
-</div>
+</main>

@@ -1,6 +1,6 @@
-<form class="m-2 d-flex rows align align-items-center w-auto h-auto">
-  <label class="m-2" style="width: 100px">Suche :</label>
-  <mat-form-field appearance="outline" class="w-100 border-danger w-100 h-auto">
+<form>
+  <label>Suche :</label>
+  <mat-form-field appearance="outline">
     <input
       matInput
       [formControl]="searchControl"
@@ -8,7 +8,6 @@
     />
     <button
       id="clearBtn"
-      class="btn btn-sm btn-secondary-outlined"
       matSuffix
       mat-icon-button
       aria-label="Clear"

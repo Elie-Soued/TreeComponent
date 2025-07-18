@@ -10,7 +10,7 @@ import { NodetextComponent } from '../nodetext/nodetext.component';
   standalone: true,
   imports: [MatIconModule, NodetextComponent],
   templateUrl: './node.component.html',
-  styleUrl: './node.component.css',
+  styleUrl: './node.component.scss',
 })
 export class NodeComponent {
   @Input() isLeaf: boolean = false;
