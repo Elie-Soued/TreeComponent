@@ -1,7 +1,11 @@
 @if(isLeaf){
 <div class="leaf-container">
   <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
-  <app-nodetext [node]="node" [searchValue]="searchValue"></app-nodetext>
+  <app-nodetext
+    [node]="node"
+    [searchValue]="searchValue"
+    (contextmenu)="onRightClick($event)"
+  ></app-nodetext>
 </div>
 
 } @else{
@@ -16,6 +20,20 @@
       {{ tree.isExpanded(node) ? "remove" : "add" }}
     </mat-icon>
   </button>
-  <app-nodetext [node]="node" [searchValue]="searchValue"></app-nodetext>
+  <app-nodetext
+    [node]="node"
+    [searchValue]="searchValue"
+    (contextmenu)="onRightClick($event)"
+  ></app-nodetext>
+</div>
+} @if(contextMenuVisible){
+<div
+  class="favoriten"
+  [ngStyle]="{
+    top: contextMenuPosition.y + 'px',
+    left: contextMenuPosition.x + 'px'
+  }"
+>
+  Favoriten
 </div>
 }

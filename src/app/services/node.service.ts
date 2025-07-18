@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 export interface node {
   text: string;
@@ -21,6 +21,34 @@ export interface data {
 })
 export class NodeService {
   constructor(private http: HttpClient) {}
+
+  private contextMenuState = new BehaviorSubject<{
+    visible: boolean;
+    node: node | null;
+    position: { x: number; y: number };
+  }>({
+    visible: false,
+    node: null,
+    position: { x: 0, y: 0 },
+  });
+
+  contextMenuState$ = this.contextMenuState.asObservable();
+
+  showContextMenu(node: node, position: { x: number; y: number }) {
+    this.contextMenuState.next({
+      visible: true,
+      node,
+      position,
+    });
+  }
+
+  hideContextMenu() {
+    this.contextMenuState.next({
+      visible: false,
+      node: null,
+      position: { x: 0, y: 0 },
+    });
+  }
 
   getInitialData(): Observable<data> {
     return this.http.get<data>('menu.json');

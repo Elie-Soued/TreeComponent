@@ -35,12 +35,24 @@ describe('TreeComponent', () => {
   };
 
   beforeEach(async () => {
-    nodeService = jasmine.createSpyObj(NodeService, [
-      'getInitialData',
-      'expandMatchingNodes',
-      'isNodeMatch',
-      'filterNonMatchingLeafs',
-    ]);
+    nodeService = jasmine.createSpyObj(
+      'NodeService',
+      [
+        'getInitialData',
+        'expandMatchingNodes',
+        'isNodeMatch',
+        'filterNonMatchingLeafs',
+        'showContextMenu',
+        'hideContextMenu',
+      ],
+      {
+        contextMenuState$: of({
+          visible: false,
+          node: null,
+          position: { x: 0, y: 0 },
+        }),
+      }
+    );
 
     nodeService.getInitialData.and.returnValue(of(mockData));
 
