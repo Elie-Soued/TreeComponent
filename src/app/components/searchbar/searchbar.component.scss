@@ -1,4 +1,4 @@
-form{
+form {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -7,19 +7,17 @@ form{
   margin: 0.5rem;
 }
 
-
-label{
+label {
   width: 100px;
   margin: 0.5rem;
 }
 
-
-mat-form-field{
+mat-form-field {
   width: 100%;
   height: auto;
 }
 
-button{
+button {
   background-color: white;
   border: none;
   margin: 0.5rem;
