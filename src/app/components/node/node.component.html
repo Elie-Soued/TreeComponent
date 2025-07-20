@@ -26,12 +26,12 @@
     (contextmenu)="onRightClick($event)"
   ></app-nodetext>
 </div>
-} @if(contextMenuVisible){
+} @if(favoritePopupIsVisible){
 <div
   class="favoriten"
   [ngStyle]="{
-    top: contextMenuPosition.y + 'px',
-    left: contextMenuPosition.x + 'px'
+    top: favoritePopupPosition.y + 'px',
+    left: favoritePopupPosition.x + 'px'
   }"
 >
   Favoriten

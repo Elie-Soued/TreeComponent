@@ -1,10 +1,11 @@
 import { Component, Input, HostListener } from '@angular/core';
 import { NodeService } from '../../services/node.service';
 import { MatIconModule } from '@angular/material/icon';
-import { type node } from '../../services/node.service';
+import { type node } from '../../types';
 import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
 import { NgStyle } from '@angular/common';
+import { FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-node',
@@ -19,14 +20,17 @@ export class NodeComponent {
   @Input() searchValue: string | null = null;
   @Input() tree!: MatTree<node>;
 
-  contextMenuVisible = false;
-  contextMenuPosition = { x: 0, y: 0 };
+  favoritePopupIsVisible = false;
+  favoritePopupPosition = { x: 0, y: 0 };
   selectedNode: node | null = null;
 
-  constructor(public nodeService: NodeService) {
-    this.nodeService.contextMenuState$.subscribe((state) => {
-      this.contextMenuVisible = state.visible && state.node === this.node;
-      this.contextMenuPosition = state.position;
+  constructor(
+    public nodeService: NodeService,
+    private favoriteService: FavoritesService
+  ) {
+    this.favoriteService.FavoritePopup$.subscribe((state) => {
+      this.favoritePopupIsVisible = state.visible && state.node === this.node;
+      this.favoritePopupPosition = state.position;
     });
   }
 
@@ -36,19 +40,19 @@ export class NodeComponent {
 
   onRightClick(event: MouseEvent) {
     event.preventDefault();
-    this.nodeService.showContextMenu(this.node, {
+    this.favoriteService.showFavoritePopup(this.node, {
       x: event.clientX,
       y: event.clientY,
     });
   }
 
   @HostListener('document:click')
-  hideContextMenu() {
-    this.nodeService.hideContextMenu();
+  hideFavorites() {
+    this.favoriteService.closeFavoritePopup();
   }
 
   @HostListener('document:keydown.escape')
   onEscape() {
-    this.nodeService.hideContextMenu();
+    this.favoriteService.closeFavoritePopup();
   }
 }
