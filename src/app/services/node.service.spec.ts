@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { type node } from './node.service';
+import { type node } from '../types';
 import { NodeService } from './node.service';
 import { provideHttpClient } from '@angular/common/http';
 import {

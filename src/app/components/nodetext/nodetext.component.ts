@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NodeService } from '../../services/node.service';
-import { type node } from '../../services/node.service';
+import { type node } from '../../types';
 
 @Component({
   selector: 'app-nodetext',

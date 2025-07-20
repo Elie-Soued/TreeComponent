@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodeService } from '../../services/node.service';
 import { MatTree } from '@angular/material/tree';
-import { type node } from '../../services/node.service';
+import { type node } from '../../types';
 import { By } from '@angular/platform-browser';
 
 describe('NodeComponent', () => {

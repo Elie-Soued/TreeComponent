@@ -11,7 +11,7 @@ import {
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
-import { type node, type data } from '../../services/node.service';
+import { type data, type node } from '../../types';
 
 @Component({
   selector: 'app-tree',

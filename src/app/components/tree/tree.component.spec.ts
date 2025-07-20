@@ -6,7 +6,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { NodeService } from '../../services/node.service';
 import { of } from 'rxjs';
-import { type node } from '../../services/node.service';
+import { type node } from '../../types';
 import { MatTree } from '@angular/material/tree';
 
 describe('TreeComponent', () => {
