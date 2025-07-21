@@ -10,3 +10,16 @@ export interface data {
   Result: boolean;
   children: node[];
 }
+
+export interface payload {
+  language: string;
+  MenuUsername: string;
+  menu: string;
+  DataBase: string;
+  DataLib: string;
+  favorites: {
+    text: string;
+    iconCls: string;
+    children: node[];
+  };
+}

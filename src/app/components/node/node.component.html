@@ -27,13 +27,14 @@
   ></app-nodetext>
 </div>
 } @if(favoritePopupIsVisible){
-<div
+<button
   class="favoriten"
   [ngStyle]="{
     top: favoritePopupPosition.y + 'px',
     left: favoritePopupPosition.x + 'px'
   }"
+  (click)="addToFavorite(node)"
 >
   Favoriten
-</div>
+</button>
 }

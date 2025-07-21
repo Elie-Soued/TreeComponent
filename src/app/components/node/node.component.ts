@@ -55,4 +55,8 @@ export class NodeComponent {
   onEscape() {
     this.favoriteService.closeFavoritePopup();
   }
+
+  addToFavorite(node: node) {
+    this.favoriteService.addToFavorites(node);
+  }
 }
