@@ -3,15 +3,19 @@ import { NodeComponent } from './node.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodeService } from '../../services/node.service';
+import { FavoritesService } from '../../services/favorites.service';
 import { MatTree } from '@angular/material/tree';
 import { type node } from '../../types';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, of } from 'rxjs';
 
 describe('NodeComponent', () => {
   let component: NodeComponent;
   let fixture: ComponentFixture<NodeComponent>;
   let nodeService: jasmine.SpyObj<NodeService>;
+  let favoritesService: jasmine.SpyObj<FavoritesService>;
   let mockTree: jasmine.SpyObj<MatTree<node>>;
+  let favoritePopupSubject: BehaviorSubject<any>;
 
   const mockNode = {
     text: 'Stammdatenverwaltung',
@@ -27,7 +31,20 @@ describe('NodeComponent', () => {
   };
 
   beforeEach(async () => {
+    favoritePopupSubject = new BehaviorSubject({
+      visible: false,
+      node: null,
+      position: { x: 0, y: 0 },
+    });
+
     nodeService = jasmine.createSpyObj('NodeService', ['isNodeMatch']);
+    favoritesService = jasmine.createSpyObj('FavoritesService', [
+      'showFavoritePopup',
+      'closeFavoritePopup',
+    ]);
+
+    favoritesService.FavoritePopup$ = favoritePopupSubject.asObservable();
+
     mockTree = jasmine.createSpyObj<MatTree<node>>('MatTree', [
       'isExpanded',
       'toggle',
@@ -39,8 +56,12 @@ describe('NodeComponent', () => {
         provideHttpClientTesting(),
 
         {
-          provide: nodeService,
+          provide: NodeService,
           useValue: nodeService,
+        },
+        {
+          provide: FavoritesService,
+          useValue: favoritesService,
         },
       ],
       imports: [NodeComponent],
@@ -88,5 +109,35 @@ describe('NodeComponent', () => {
     const button = fixture.debugElement.query(By.css('#nodeBtn')).nativeElement;
     button.click();
     expect(mockTree.toggle).toHaveBeenCalled();
+  });
+
+  it('display the favorite popup', () => {
+    // Arrange
+    const mockEvent = new MouseEvent('contextmenu', {
+      bubbles: true,
+      clientX: 100,
+      clientY: 200,
+    });
+    const span = fixture.debugElement.query(By.css('app-nodetext'));
+
+    //Action
+    span.triggerEventHandler('contextmenu', mockEvent);
+    favoritePopupSubject.next({
+      visible: true,
+      node: mockNode,
+      position: { x: 100, y: 200 },
+    });
+
+    fixture.detectChanges();
+
+    //Arrange
+    const favoritePopup = fixture.debugElement.query(By.css('.favoriten'));
+
+    // Assert
+    expect(favoritePopup).toBeTruthy();
+    expect(favoritesService.showFavoritePopup).toHaveBeenCalledWith(mockNode, {
+      x: 100,
+      y: 200,
+    });
   });
 });
