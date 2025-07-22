@@ -57,7 +57,10 @@ export class NodeComponent {
   }
 
   addToFavorite(node: node) {
-    this.favoriteService.addNodeToTree(node);
-    this.favoriteService.addToFavorites(node);
+    this.favoriteService.addNodeToFavorites(node);
+  }
+
+  removeFromFavorite(node: node) {
+    this.favoriteService.removeNodeFromFavorites(node);
   }
 }

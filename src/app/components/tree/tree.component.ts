@@ -39,11 +39,8 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit(): void {
     this.loadTree();
-
-    this.favoriteService.reloadTree$.subscribe((node) => {
-      if (node) {
-        this.updateTree(node);
-      }
+    this.favoriteService.updateTree$.subscribe((nodes) => {
+      this.updateTree(nodes);
     });
   }
 
@@ -54,17 +51,16 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
 
-  updateTree(node: node) {
+  updateTree(nodes: node[]) {
     const favoritesNode = this.dataSource.find((n) => n.text === 'Favoriten');
     if (favoritesNode) {
-      favoritesNode.children = favoritesNode.children ?? [];
-      favoritesNode.children.push(node);
+      favoritesNode.children = nodes;
       this.dataSource = [...this.dataSource];
       this.initialData = [...this.dataSource];
     } else {
       this.dataSource.push({
         text: 'Favoriten',
-        children: [node],
+        children: [...nodes],
         iconCls: '',
       });
       this.dataSource = [...this.dataSource];

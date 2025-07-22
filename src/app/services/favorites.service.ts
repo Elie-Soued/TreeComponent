@@ -19,38 +19,36 @@ export class FavoritesService {
     node: null,
     position: { x: 0, y: 0 },
   });
-
-  private updateTree = new BehaviorSubject<node>({
-    text: '',
-    iconCls: '',
-    children: [],
-  });
-
+  private updateTreeUI = new BehaviorSubject<node[] | []>([]);
+  private FAVORITE_URL: string = environment.FAVORITE_URL;
+  private BASE_URL: string = environment.BASE_URL;
+  private payload: favorite_payload = environment.favorite_payload;
   FavoritePopup$ = this.FavoritePopup.asObservable();
-  reloadTree$ = this.updateTree.asObservable();
-
-  FAVORITE_URL: string = environment.FAVORITE_URL;
-  BASE_URL: string = environment.BASE_URL;
-  payload: favorite_payload = environment.favorite_payload;
+  updateTree$ = this.updateTreeUI.asObservable();
 
   constructor(private http: HttpClient, private utils: UtilsService) {}
 
-  addToFavorites(node: node): void {
+  public addNodeToFavorites(node: node): void {
     this.getFavorites().subscribe((favorites) => {
       this.payload.favorites.children = [...favorites, node];
-
-      this.http
-        .post(this.FAVORITE_URL, this.utils.buildRequestBody(this.payload), {
-          headers: this.utils.getHeaders(),
-        })
-        .subscribe({
-          next: (response) => console.log(response),
-          error: (error) => console.error(error),
-        });
+      this.updateTree();
     });
   }
 
-  showFavoritePopup(node: node, position: { x: number; y: number }) {
+  public removeNodeFromFavorites(node: node): void {
+    this.getFavorites().subscribe((favorites) => {
+      const filteredFavorites = favorites.filter(
+        (fav) => fav.text !== node.text
+      );
+      this.payload.favorites.children = filteredFavorites;
+      this.updateTree();
+    });
+  }
+
+  public showFavoritePopup(
+    node: node,
+    position: { x: number; y: number }
+  ): void {
     this.FavoritePopup.next({
       visible: true,
       node,
@@ -58,7 +56,7 @@ export class FavoritesService {
     });
   }
 
-  closeFavoritePopup() {
+  public closeFavoritePopup(): void {
     this.FavoritePopup.next({
       visible: false,
       node: null,
@@ -66,7 +64,7 @@ export class FavoritesService {
     });
   }
 
-  getFavorites(): Observable<node[]> {
+  private getFavorites(): Observable<node[]> {
     return this.http
       .get<data>(this.BASE_URL)
       .pipe(
@@ -78,7 +76,16 @@ export class FavoritesService {
       );
   }
 
-  addNodeToTree(node: node) {
-    this.updateTree.next(node);
+  private updateTree(): void {
+    this.updateTreeUI.next(this.payload.favorites.children);
+
+    this.http
+      .post(this.FAVORITE_URL, this.utils.buildRequestBody(this.payload), {
+        headers: this.utils.getHeaders(),
+      })
+      .subscribe({
+        next: (response) => console.log(response),
+        error: (error) => console.error(error),
+      });
   }
 }

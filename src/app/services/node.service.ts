@@ -23,7 +23,7 @@ export class NodeService {
     tree: MatTree<node>
   ): void {
     for (const node of nodes) {
-      // Expand fpr match with ancestors
+      // Expand match with ancestors
       if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
         ancestors.forEach((ancestor) => tree.expand(ancestor));
       }
