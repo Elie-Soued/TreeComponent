@@ -7,6 +7,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { MatTree } from '@angular/material/tree';
+import { environment } from '../../environments/environment';
 
 describe('NodeService', () => {
   let service: NodeService;
@@ -116,7 +117,7 @@ describe('NodeService', () => {
     service.getInitialData().subscribe((data) => {
       expect(data).toEqual(mockData);
     });
-    const req = httpClient.expectOne('menu.json');
+    const req = httpClient.expectOne(environment.BASE_URL);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });

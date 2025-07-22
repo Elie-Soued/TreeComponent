@@ -3,15 +3,17 @@ import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
 import { Observable } from 'rxjs';
 import { type data, type node } from '../types';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NodeService {
+  URL: string = environment.BASE_URL;
   constructor(private http: HttpClient) {}
 
   getInitialData(): Observable<data> {
-    return this.http.get<data>('menu.json');
+    return this.http.get<data>(this.URL);
   }
 
   expandMatchingNodes(

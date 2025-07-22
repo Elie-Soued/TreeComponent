@@ -12,6 +12,7 @@ import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
 import { type data, type node } from '../../types';
+import { FavoritesService } from '../../services/favorites.service';
 
 @Component({
   selector: 'app-tree',
@@ -31,13 +32,44 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   hasChild = (_: number, node: node) =>
     !!node.children && node.children.length > 0;
 
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    private favoriteService: FavoritesService
+  ) {}
 
   ngOnInit(): void {
+    this.loadTree();
+
+    this.favoriteService.reloadTree$.subscribe((node) => {
+      if (node) {
+        this.updateTree(node);
+      }
+    });
+  }
+
+  loadTree(): void {
     this.nodeService.getInitialData().subscribe((response: data) => {
       this.initialData = response.children;
       this.dataSource = response.children;
     });
+  }
+
+  updateTree(node: node) {
+    const favoritesNode = this.dataSource.find((n) => n.text === 'Favoriten');
+    if (favoritesNode) {
+      favoritesNode.children = favoritesNode.children ?? [];
+      favoritesNode.children.push(node);
+      this.dataSource = [...this.dataSource];
+      this.initialData = [...this.dataSource];
+    } else {
+      this.dataSource.push({
+        text: 'Favoriten',
+        children: [node],
+        iconCls: '',
+      });
+      this.dataSource = [...this.dataSource];
+      this.initialData = [...this.dataSource];
+    }
   }
 
   ngAfterViewInit(): void {

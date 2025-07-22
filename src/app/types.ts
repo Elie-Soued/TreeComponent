@@ -11,7 +11,7 @@ export interface data {
   children: node[];
 }
 
-export interface payload {
+export interface favorite_payload {
   language: string;
   MenuUsername: string;
   menu: string;

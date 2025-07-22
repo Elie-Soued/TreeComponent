@@ -57,6 +57,7 @@ export class NodeComponent {
   }
 
   addToFavorite(node: node) {
+    this.favoriteService.addNodeToTree(node);
     this.favoriteService.addToFavorites(node);
   }
 }

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { type node, type payload } from '../types';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { type node, type favorite_payload } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { HttpParams, HttpHeaders } from '@angular/common/http';
+import { type data } from '../types';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,11 +20,35 @@ export class FavoritesService {
     position: { x: 0, y: 0 },
   });
 
-  FavoritePopup$ = this.FavoritePopup.asObservable();
-  URL: string = environment.URL;
-  payload: payload = environment.ajax_req;
+  private updateTree = new BehaviorSubject<node>({
+    text: '',
+    iconCls: '',
+    children: [],
+  });
 
-  constructor(private http: HttpClient) {}
+  FavoritePopup$ = this.FavoritePopup.asObservable();
+  reloadTree$ = this.updateTree.asObservable();
+
+  FAVORITE_URL: string = environment.FAVORITE_URL;
+  BASE_URL: string = environment.BASE_URL;
+  payload: favorite_payload = environment.favorite_payload;
+
+  constructor(private http: HttpClient, private utils: UtilsService) {}
+
+  addToFavorites(node: node): void {
+    this.getFavorites().subscribe((favorites) => {
+      this.payload.favorites.children = [...favorites, node];
+
+      this.http
+        .post(this.FAVORITE_URL, this.utils.buildRequestBody(this.payload), {
+          headers: this.utils.getHeaders(),
+        })
+        .subscribe({
+          next: (response) => console.log(response),
+          error: (error) => console.error(error),
+        });
+    });
+  }
 
   showFavoritePopup(node: node, position: { x: number; y: number }) {
     this.FavoritePopup.next({
@@ -41,19 +66,19 @@ export class FavoritesService {
     });
   }
 
-  addToFavorites(node: node) {
-    this.payload.favorites.children.push(node);
+  getFavorites(): Observable<node[]> {
+    return this.http
+      .get<data>(this.BASE_URL)
+      .pipe(
+        map(
+          (response: data) =>
+            response.children.find((el) => el.text === 'Favoriten')?.children ??
+            []
+        )
+      );
+  }
 
-    const body = new HttpParams().set('ajax_req', JSON.stringify(this.payload));
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'X-Requested-With': 'XMLHttpRequest',
-    });
-
-    this.http.post(this.URL, body.toString(), { headers }).subscribe({
-      next: (response) => console.log(response),
-      error: (error) => console.error(error),
-    });
+  addNodeToTree(node: node) {
+    this.updateTree.next(node);
   }
 }
