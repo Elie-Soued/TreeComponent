@@ -18,13 +18,13 @@ export class NodetextComponent {
 
   constructor(public nodeService: NodeService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (this.searchValue) {
       this.highlightMatchingLetters(this.node, this.searchValue);
     }
   }
 
-  highlightMatchingLetters(node: node, searchValue: string): void {
+  private highlightMatchingLetters(node: node, searchValue: string): void {
     const lowerText = node.text.toLowerCase();
     const lowerSearch = searchValue.toLowerCase();
     const start = lowerText.indexOf(lowerSearch);
@@ -33,9 +33,9 @@ export class NodetextComponent {
     this.after = node.text.slice(start + searchValue.length);
   }
 
-  displayHighlightedText(searchValue: string | null) {
+  displayHighlightedText(searchValue: string | null): boolean | undefined {
     if (searchValue) {
-      return searchValue.trim() && searchValue.length > 2;
+      return searchValue.trim().length > 2;
     }
     return undefined;
   }

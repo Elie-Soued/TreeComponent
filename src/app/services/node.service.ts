@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class NodeService {
-  URL: string = environment.BASE_URL;
+  private URL: string = environment.BASE_URL;
   constructor(private http: HttpClient) {}
 
   getInitialData(): Observable<data> {

@@ -22,7 +22,7 @@ export class SearchbarComponent {
   @Output() searchValue = new EventEmitter<string | null>();
   searchControl = new FormControl('');
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((value: string | null) => {
@@ -30,7 +30,7 @@ export class SearchbarComponent {
       });
   }
 
-  clearForm() {
+  clearForm(): void {
     this.searchControl.setValue('');
   }
 }

@@ -51,7 +51,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
 
-  updateTree(nodes: node[]) {
+  private updateTree(nodes: node[]): void {
     const favoritesNode = this.dataSource.find((n) => n.text === 'Favoriten');
     if (favoritesNode) {
       favoritesNode.children = nodes;

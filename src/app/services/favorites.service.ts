@@ -28,14 +28,14 @@ export class FavoritesService {
 
   constructor(private http: HttpClient, private utils: UtilsService) {}
 
-  public addNodeToFavorites(node: node): void {
+  addNodeToFavorites(node: node): void {
     this.getFavorites().subscribe((favorites) => {
       this.payload.favorites.children = [...favorites, node];
       this.updateTree();
     });
   }
 
-  public removeNodeFromFavorites(node: node): void {
+  removeNodeFromFavorites(node: node): void {
     this.getFavorites().subscribe((favorites) => {
       const filteredFavorites = favorites.filter(
         (fav) => fav.text !== node.text
@@ -45,10 +45,7 @@ export class FavoritesService {
     });
   }
 
-  public showFavoritePopup(
-    node: node,
-    position: { x: number; y: number }
-  ): void {
+  showFavoritePopup(node: node, position: { x: number; y: number }): void {
     this.FavoritePopup.next({
       visible: true,
       node,
@@ -56,7 +53,7 @@ export class FavoritesService {
     });
   }
 
-  public closeFavoritePopup(): void {
+  closeFavoritePopup(): void {
     this.FavoritePopup.next({
       visible: false,
       node: null,
