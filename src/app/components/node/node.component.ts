@@ -57,10 +57,12 @@ export class NodeComponent {
   }
 
   addToFavorite(node: node) {
+    node.favorite = true;
     this.favoriteService.addNodeToFavorites(node);
   }
 
   removeFromFavorite(node: node) {
+    node.favorite = false;
     this.favoriteService.removeNodeFromFavorites(node);
   }
 }

@@ -44,6 +44,7 @@ describe('TreeComponent', () => {
         'filterNonMatchingLeafs',
         'showContextMenu',
         'hideContextMenu',
+        'setFavoriteFlag',
       ],
       {
         contextMenuState$: of({

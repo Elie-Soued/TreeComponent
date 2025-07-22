@@ -63,4 +63,14 @@ export class NodeService {
     if (!searchValue) return false;
     return node.text.toLowerCase().includes(searchValue.toLowerCase());
   }
+
+  setFavoriteFlag(nodes: node[]): node[] {
+    return nodes.map((node) => {
+      node.favorite = true;
+      if (node.children && node.children.length > 0) {
+        this.setFavoriteFlag(node.children);
+      }
+      return node;
+    });
+  }
 }

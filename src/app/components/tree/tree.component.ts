@@ -46,6 +46,14 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
 
   loadTree(): void {
     this.nodeService.getInitialData().subscribe((response: data) => {
+      const favoriteNodes = response.children.find(
+        (n) => n.text === 'Favoriten'
+      )?.children;
+
+      if (favoriteNodes) {
+        this.nodeService.setFavoriteFlag(favoriteNodes);
+      }
+
       this.initialData = response.children;
       this.dataSource = response.children;
     });
@@ -54,6 +62,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   private updateTree(nodes: node[]): void {
     const favoritesNode = this.dataSource.find((n) => n.text === 'Favoriten');
     if (favoritesNode) {
+      this.nodeService.setFavoriteFlag(nodes);
       favoritesNode.children = nodes;
       this.dataSource = [...this.dataSource];
       this.initialData = [...this.dataSource];

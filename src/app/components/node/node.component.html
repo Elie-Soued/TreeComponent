@@ -26,31 +26,42 @@
     (contextmenu)="onRightClick($event)"
   ></app-nodetext>
 </div>
-} @if(favoritePopupIsVisible){
+} @if(favoritePopupIsVisible && node.favorite){
 <div>
   <button
     class="favoriten"
-    style="border: none"
+    style="border: none; width: 105px"
     [ngStyle]="{
-      top: favoritePopupPosition.y + 'px',
-      left: favoritePopupPosition.x + 'px'
-    }"
-    (click)="addToFavorite(node)"
-  >
-    Favoriten
-  </button>
-
-  <button
-    class="favoriten"
-    style="border: none"
-    [ngStyle]="{
-      top: favoritePopupPosition.y + 30 + 'px',
+      top: favoritePopupPosition.y  + 'px',
       left: favoritePopupPosition.x + 'px',
     }"
     (click)="removeFromFavorite(node)"
   >
     löschen
   </button>
+  <button
+    class="favoriten"
+    style="border: none; width: 105px"
+    [ngStyle]="{
+      top: favoritePopupPosition.y + 30 + 'px',
+      left: favoritePopupPosition.x + 'px',
+    }"
+  >
+    umbenennen
+  </button>
 </div>
+
+}@else if (favoritePopupIsVisible) {
+<button
+  class="favoriten"
+  style="border: none"
+  [ngStyle]="{
+    top: favoritePopupPosition.y + 'px',
+    left: favoritePopupPosition.x + 'px'
+  }"
+  (click)="addToFavorite(node)"
+>
+  Favoriten
+</button>
 
 }

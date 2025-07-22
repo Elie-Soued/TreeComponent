@@ -2,6 +2,7 @@ export interface node {
   text: string;
   iconCls: string;
   children?: node[];
+  favorite?: boolean;
 }
 
 export interface data {
