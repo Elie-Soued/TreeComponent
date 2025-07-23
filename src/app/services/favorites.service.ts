@@ -39,9 +39,12 @@ export class FavoritesService {
     });
   }
 
-  renameNodeInFavorites(): void {
+  renameNodeInFavorites(nodeString: string, newValue: string): void {
+    const node = JSON.parse(nodeString);
     this.getFavorites().subscribe((favorites) => {
-      this.payload.favorites.children = [...favorites];
+      const nodeToChange = favorites.filter((fav) => fav.text === node.text)[0];
+      nodeToChange.text = newValue;
+      this.payload.favorites.children = favorites;
       this.updateTree();
     });
   }

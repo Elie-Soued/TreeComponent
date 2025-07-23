@@ -24,6 +24,7 @@ export class NodeComponent implements OnInit {
   favoritePopupPosition = { x: 0, y: 0 };
   selectedNode: node | null = null;
   isEnabled = false;
+  originalNode = '';
 
   constructor(
     public nodeService: NodeService,
@@ -68,6 +69,13 @@ export class NodeComponent implements OnInit {
 
   @HostListener('document:keydown.enter')
   onEnter() {
+    if (this.isEnabled) {
+      this.favoriteService.renameNodeInFavorites(
+        this.originalNode,
+        this.node.text
+      );
+    }
+
     this.isEnabled = false;
   }
 
@@ -82,6 +90,7 @@ export class NodeComponent implements OnInit {
   }
 
   enableInput(node: node) {
+    this.originalNode = JSON.stringify(node);
     this.favoriteService.enableNodeText(node);
   }
 }
