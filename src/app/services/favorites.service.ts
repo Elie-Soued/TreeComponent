@@ -59,6 +59,19 @@ export class FavoritesService {
     });
   }
 
+  addNewFolder(node: node) {
+    this.getFavorites().subscribe((favorites) => {
+      const nodeToChange = favorites.filter((fav) => fav.text === node.text)[0];
+
+      nodeToChange.children?.push({
+        text: 'neue Ordner',
+        iconCls: 'no-icon',
+      });
+      this.payload.favorites.children = favorites;
+      this.updateTree();
+    });
+  }
+
   enableNodeText(node: node) {
     this.enableFavoriteNode.next(node);
   }

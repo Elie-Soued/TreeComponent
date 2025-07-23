@@ -95,5 +95,7 @@ export class NodeComponent implements OnInit {
     this.favoriteService.enableNodeText(node);
   }
 
-  addNewFolder(node: node) {}
+  addNewFolder(node: node) {
+    this.favoriteService.addNewFolder(node);
+  }
 }
