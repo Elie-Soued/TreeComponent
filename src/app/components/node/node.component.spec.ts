@@ -7,7 +7,7 @@ import { FavoritesService } from '../../services/favorites.service';
 import { MatTree } from '@angular/material/tree';
 import { type node } from '../../types';
 import { By } from '@angular/platform-browser';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subject } from 'rxjs';
 
 describe('NodeComponent', () => {
   let component: NodeComponent;
@@ -16,6 +16,7 @@ describe('NodeComponent', () => {
   let favoritesService: jasmine.SpyObj<FavoritesService>;
   let mockTree: jasmine.SpyObj<MatTree<node>>;
   let favoritePopupSubject: BehaviorSubject<any>;
+  let enableFavoriteNode: Subject<any>;
 
   const mockNode = {
     text: 'Stammdatenverwaltung',
@@ -37,6 +38,8 @@ describe('NodeComponent', () => {
       position: { x: 0, y: 0 },
     });
 
+    enableFavoriteNode = new Subject();
+
     nodeService = jasmine.createSpyObj('NodeService', ['isNodeMatch']);
     favoritesService = jasmine.createSpyObj('FavoritesService', [
       'showFavoritePopup',
@@ -44,6 +47,7 @@ describe('NodeComponent', () => {
     ]);
 
     favoritesService.FavoritePopup$ = favoritePopupSubject.asObservable();
+    favoritesService.enableFavoriteNode$ = favoritePopupSubject.asObservable();
 
     mockTree = jasmine.createSpyObj<MatTree<node>>('MatTree', [
       'isExpanded',

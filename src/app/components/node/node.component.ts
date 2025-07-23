@@ -1,4 +1,4 @@
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, Input, HostListener, OnInit } from '@angular/core';
 import { NodeService } from '../../services/node.service';
 import { MatIconModule } from '@angular/material/icon';
 import { type node } from '../../types';
@@ -14,7 +14,7 @@ import { FavoritesService } from '../../services/favorites.service';
   templateUrl: './node.component.html',
   styleUrl: './node.component.scss',
 })
-export class NodeComponent {
+export class NodeComponent implements OnInit {
   @Input() isLeaf: boolean = false;
   @Input() node!: node;
   @Input() searchValue: string | null = null;
@@ -23,11 +23,20 @@ export class NodeComponent {
   favoritePopupIsVisible = false;
   favoritePopupPosition = { x: 0, y: 0 };
   selectedNode: node | null = null;
+  isEnabled = false;
 
   constructor(
     public nodeService: NodeService,
     private favoriteService: FavoritesService
-  ) {
+  ) {}
+
+  ngOnInit() {
+    this.favoriteService.enableFavoriteNode$.subscribe((node) => {
+      if (node === this.node) {
+        this.isEnabled = true;
+      }
+    });
+
     this.favoriteService.FavoritePopup$.subscribe((state) => {
       this.favoritePopupIsVisible = state.visible && state.node === this.node;
       this.favoritePopupPosition = state.position;
@@ -53,7 +62,13 @@ export class NodeComponent {
 
   @HostListener('document:keydown.escape')
   onEscape() {
+    this.isEnabled = false;
     this.favoriteService.closeFavoritePopup();
+  }
+
+  @HostListener('document:keydown.enter')
+  onEnter() {
+    this.isEnabled = false;
   }
 
   addToFavorite(node: node) {
@@ -64,5 +79,9 @@ export class NodeComponent {
   removeFromFavorite(node: node) {
     node.favorite = false;
     this.favoriteService.removeNodeFromFavorites(node);
+  }
+
+  enableInput(node: node) {
+    this.favoriteService.enableNodeText(node);
   }
 }

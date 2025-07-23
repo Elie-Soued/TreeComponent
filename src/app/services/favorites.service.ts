@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 import { type node, type favorite_payload } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -10,6 +10,10 @@ import { UtilsService } from './utils.service';
   providedIn: 'root',
 })
 export class FavoritesService {
+  private FAVORITE_URL: string = environment.FAVORITE_URL;
+  private BASE_URL: string = environment.BASE_URL;
+  private payload: favorite_payload = environment.favorite_payload;
+
   private FavoritePopup = new BehaviorSubject<{
     visible: boolean;
     node: node | null;
@@ -20,17 +24,24 @@ export class FavoritesService {
     position: { x: 0, y: 0 },
   });
   private updateTreeUI = new BehaviorSubject<node[] | []>([]);
-  private FAVORITE_URL: string = environment.FAVORITE_URL;
-  private BASE_URL: string = environment.BASE_URL;
-  private payload: favorite_payload = environment.favorite_payload;
+  private enableFavoriteNode = new Subject<node>();
+
   FavoritePopup$ = this.FavoritePopup.asObservable();
   updateTree$ = this.updateTreeUI.asObservable();
+  enableFavoriteNode$ = this.enableFavoriteNode.asObservable();
 
   constructor(private http: HttpClient, private utils: UtilsService) {}
 
   addNodeToFavorites(node: node): void {
     this.getFavorites().subscribe((favorites) => {
       this.payload.favorites.children = [...favorites, node];
+      this.updateTree();
+    });
+  }
+
+  renameNodeInFavorites(): void {
+    this.getFavorites().subscribe((favorites) => {
+      this.payload.favorites.children = [...favorites];
       this.updateTree();
     });
   }
@@ -43,6 +54,10 @@ export class FavoritesService {
       this.payload.favorites.children = filteredFavorites;
       this.updateTree();
     });
+  }
+
+  enableNodeText(node: node) {
+    this.enableFavoriteNode.next(node);
   }
 
   showFavoritePopup(node: node, position: { x: number; y: number }): void {

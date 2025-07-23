@@ -5,6 +5,7 @@
     [node]="node"
     [searchValue]="searchValue"
     (contextmenu)="onRightClick($event)"
+    [isEnabled]="isEnabled"
   ></app-nodetext>
 </div>
 
@@ -24,6 +25,7 @@
     [node]="node"
     [searchValue]="searchValue"
     (contextmenu)="onRightClick($event)"
+    [isEnabled]="isEnabled"
   ></app-nodetext>
 </div>
 } @if(favoritePopupIsVisible && node.favorite){
@@ -46,6 +48,7 @@
       top: favoritePopupPosition.y + 30 + 'px',
       left: favoritePopupPosition.x + 'px',
     }"
+    (click)="enableInput(node)"
   >
     umbenennen
   </button>

@@ -6,8 +6,14 @@
     ><span id="after" class="no-space">{{ after }}</span>
   </p>
   } @else{
-  <p class="not-matched" id="noMatch">
-    {{ node.text }}
-  </p>
+
+  <input
+    #nodeTextInput
+    id="noMatch"
+    class="not-matched"
+    [(ngModel)]="node.text"
+    [disabled]="!isEnabled"
+  />
+
   }
 </main>

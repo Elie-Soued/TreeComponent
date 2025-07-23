@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl } from '@angular/forms';
@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './searchbar.component.html',
   styleUrl: './searchbar.component.scss',
 })
-export class SearchbarComponent {
+export class SearchbarComponent implements OnInit {
   @Output() searchValue = new EventEmitter<string | null>();
   searchControl = new FormControl('');
 
