@@ -59,13 +59,15 @@ export class FavoritesService {
     });
   }
 
-  addNewFolder(node: node) {
+  addNewFolder(node: node, timeStamp: string) {
     this.getFavorites().subscribe((favorites) => {
       const nodeToChange = favorites.filter((fav) => fav.text === node.text)[0];
 
       nodeToChange.children?.push({
         text: 'neue Ordner',
         iconCls: 'no-icon',
+        call: timeStamp,
+        children: [],
       });
       this.payload.favorites.children = favorites;
       this.updateTree();

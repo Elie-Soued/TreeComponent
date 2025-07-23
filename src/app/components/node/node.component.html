@@ -29,10 +29,21 @@
   ></app-nodetext>
 </div>
 
-} @if(favoritePopupIsVisible && node.favorite && node.children){
+} @if( favoritePopupIsVisible && node.text === "Favoriten"){
+
 <div>
   <app-favorite-button
-    [title]="'neue Ordner'"
+    [title]="'neuer Ordner'"
+    [position]="favoritePopupPosition"
+    (buttonClick)="addNewFolder(node)"
+  >
+  </app-favorite-button>
+</div>
+
+} @else if(favoritePopupIsVisible && node.favorite && node.children){
+<div>
+  <app-favorite-button
+    [title]="'neuer Ordner'"
     [position]="favoritePopupPosition"
     (buttonClick)="addNewFolder(node)"
   >

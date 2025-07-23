@@ -4,14 +4,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { type node } from '../../types';
 import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
-import { NgStyle } from '@angular/common';
 import { FavoritesService } from '../../services/favorites.service';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 
 @Component({
   selector: 'app-node',
   standalone: true,
-  imports: [MatIconModule, NodetextComponent, NgStyle, FavoriteButtonComponent],
+  imports: [MatIconModule, NodetextComponent, FavoriteButtonComponent],
   templateUrl: './node.component.html',
   styleUrl: './node.component.scss',
 })
@@ -96,6 +95,11 @@ export class NodeComponent implements OnInit {
   }
 
   addNewFolder(node: node) {
-    this.favoriteService.addNewFolder(node);
+    const now = new Date();
+    const timeStamp = now
+      .toISOString()
+      .replace(/[-:T.Z]/g, '')
+      .slice(2, 14);
+    this.favoriteService.addNewFolder(node, timeStamp);
   }
 }

@@ -3,6 +3,7 @@ export interface node {
   iconCls: string;
   children?: node[];
   favorite?: boolean;
+  call?: string;
 }
 
 export interface data {
