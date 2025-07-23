@@ -1,0 +1,11 @@
+<button
+  class="favoriten"
+  style="border: none; width: 105px"
+  [ngStyle]="{
+      top: position.y  + 'px',
+      left: position.x + 'px',
+    }"
+  (click)="onClick()"
+>
+  {{ title }}
+</button>

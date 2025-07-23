@@ -28,43 +28,54 @@
     [isEnabled]="isEnabled"
   ></app-nodetext>
 </div>
-} @if(favoritePopupIsVisible && node.favorite){
+
+} @if(favoritePopupIsVisible && node.favorite && node.children){
 <div>
-  <button
-    class="favoriten"
-    style="border: none; width: 105px"
-    [ngStyle]="{
-      top: favoritePopupPosition.y  + 'px',
-      left: favoritePopupPosition.x + 'px',
-    }"
-    (click)="removeFromFavorite(node)"
+  <app-favorite-button
+    [title]="'neue Ordner'"
+    [position]="favoritePopupPosition"
+    (buttonClick)="addNewFolder(node)"
   >
-    löschen
-  </button>
-  <button
-    class="favoriten"
-    style="border: none; width: 105px"
-    [ngStyle]="{
-      top: favoritePopupPosition.y + 30 + 'px',
-      left: favoritePopupPosition.x + 'px',
-    }"
-    (click)="enableInput(node)"
+  </app-favorite-button>
+
+  <app-favorite-button
+    [title]="'löschen'"
+    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
+    (buttonClick)="removeFromFavorite(node)"
   >
-    umbenennen
-  </button>
+  </app-favorite-button>
+
+  <app-favorite-button
+    [title]="'umbenennen'"
+    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 60 }"
+    (buttonClick)="enableInput(node)"
+  >
+  </app-favorite-button>
+</div>
+
+} @else if(favoritePopupIsVisible && node.favorite){
+<div>
+  <app-favorite-button
+    [title]="'löschen'"
+    [position]="favoritePopupPosition"
+    (buttonClick)="removeFromFavorite(node)"
+  >
+  </app-favorite-button>
+  <app-favorite-button
+    [title]="'umbenennen'"
+    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
+    (buttonClick)="enableInput(node)"
+  >
+  </app-favorite-button>
 </div>
 
 }@else if (favoritePopupIsVisible) {
-<button
-  class="favoriten"
-  style="border: none"
-  [ngStyle]="{
-    top: favoritePopupPosition.y + 'px',
-    left: favoritePopupPosition.x + 'px'
-  }"
-  (click)="addToFavorite(node)"
+
+<app-favorite-button
+  [title]="'favoriten'"
+  [position]="favoritePopupPosition"
+  (buttonClick)="addToFavorite(node)"
 >
-  Favoriten
-</button>
+</app-favorite-button>
 
 }

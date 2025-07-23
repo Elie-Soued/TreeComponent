@@ -6,11 +6,12 @@ import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
 import { NgStyle } from '@angular/common';
 import { FavoritesService } from '../../services/favorites.service';
+import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 
 @Component({
   selector: 'app-node',
   standalone: true,
-  imports: [MatIconModule, NodetextComponent, NgStyle],
+  imports: [MatIconModule, NodetextComponent, NgStyle, FavoriteButtonComponent],
   templateUrl: './node.component.html',
   styleUrl: './node.component.scss',
 })
@@ -93,4 +94,6 @@ export class NodeComponent implements OnInit {
     this.originalNode = JSON.stringify(node);
     this.favoriteService.enableNodeText(node);
   }
+
+  addNewFolder(node: node) {}
 }
