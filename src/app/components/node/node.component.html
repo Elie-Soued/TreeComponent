@@ -1,6 +1,21 @@
 @if(isLeaf) {
 <div class="leaf-container">
+  @if(node.text === "neuer Ordner"){
+  <button
+    id="nodeBtn"
+    (click)="toggleNode(node)"
+    [attr.aria-label]="'Toggle ' + node.text"
+    class="node-btn"
+  >
+    <mat-icon class="small-icon" id="nodeIcon">
+      {{ tree.isExpanded(node) ? "remove" : "add" }}
+    </mat-icon>
+  </button>
+
+  } @else {
   <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
+  }
+
   <app-nodetext
     [node]="node"
     [searchValue]="searchValue"

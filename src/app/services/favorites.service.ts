@@ -67,7 +67,7 @@ export class FavoritesService {
   createNewFolder(node: node, timeStamp: string, isRoot: boolean): void {
     this.getFavorites().subscribe((favorites) => {
       const newFolder = {
-        text: 'neue Ordner',
+        text: 'neuer Ordner',
         iconCls: 'no-icon',
         call: timeStamp,
         children: [],
