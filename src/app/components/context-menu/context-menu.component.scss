@@ -1,0 +1,20 @@
+// Context Menu Component Styles
+
+.context-menu-container {
+  position: relative;
+  z-index: 1000; // Ensure it appears above other elements
+
+  // Optional: Add container styling if needed
+  // The individual buttons will be positioned by the favorite-button component
+
+  // If you want to add any hover effects or transitions to the container
+  &:hover {
+    // Add any container-level hover effects here if needed
+  }
+}
+
+// If you need to override any button spacing or positioning
+app-favorite-button {
+  // Add any specific styling for buttons within this context menu
+  // For example, if you want to add some margin or padding adjustments
+}

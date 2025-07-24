@@ -25,3 +25,13 @@ export interface favorite_payload {
     children: node[];
   };
 }
+
+export interface ContextMenuAction {
+  type:
+    | 'addToFavorites'
+    | 'removeFromFavorites'
+    | 'createFolder'
+    | 'enableInput';
+  node: node;
+  isRoot?: boolean;
+}
