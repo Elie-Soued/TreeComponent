@@ -51,30 +51,44 @@ export class FavoritesService {
 
   removeNodeFromFavorites(node: node): void {
     this.getFavorites().subscribe((favorites) => {
-      const filteredFavorites = favorites.filter(
-        (fav) => fav.text !== node.text
-      );
+      let filteredFavorites;
+
+      if (node.call) {
+        filteredFavorites = this.removeNodeRecursively(node, favorites, 'call');
+      } else {
+        filteredFavorites = this.removeNodeRecursively(node, favorites, 'text');
+      }
+
       this.payload.favorites.children = filteredFavorites;
       this.updateTree();
     });
   }
 
-  addNewFolder(node: node, timeStamp: string) {
+  createNewFolder(node: node, timeStamp: string, isRoot: boolean): void {
     this.getFavorites().subscribe((favorites) => {
-      const nodeToChange = favorites.filter((fav) => fav.text === node.text)[0];
-
-      nodeToChange.children?.push({
+      const newFolder = {
         text: 'neue Ordner',
         iconCls: 'no-icon',
         call: timeStamp,
         children: [],
-      });
-      this.payload.favorites.children = favorites;
+      };
+
+      if (isRoot) {
+        this.payload.favorites.children = [...favorites, newFolder];
+      } else {
+        const nodeInFavorite = this.searchNodeRecursively(node, favorites);
+
+        if (nodeInFavorite) {
+          nodeInFavorite.children?.push(newFolder);
+          this.payload.favorites.children = favorites;
+        }
+      }
+
       this.updateTree();
     });
   }
 
-  enableNodeText(node: node) {
+  enableNodeText(node: node): void {
     this.enableFavoriteNode.next(node);
   }
 
@@ -117,5 +131,54 @@ export class FavoritesService {
         next: (response) => console.log(response),
         error: (error) => console.error(error),
       });
+  }
+
+  private searchNodeRecursively(
+    targetNode: node,
+    favorites: node[]
+  ): node | undefined {
+    const foundNode = favorites.find((fav) => fav.text === targetNode.text);
+
+    if (foundNode) {
+      return foundNode;
+    }
+
+    for (const fav of favorites) {
+      if (fav.children && fav.children.length > 0) {
+        const nestedResult = this.searchNodeRecursively(
+          targetNode,
+          fav.children
+        );
+        if (nestedResult) {
+          return nestedResult;
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  private removeNodeRecursively(
+    targetNode: node,
+    favorites: node[],
+    searchBy: keyof node
+  ): node[] {
+    const filteredFavorites = favorites.filter(
+      (fav) => fav[searchBy] !== targetNode[searchBy]
+    );
+
+    return filteredFavorites.map((fav) => {
+      if (fav.children && fav.children.length > 0) {
+        return {
+          ...fav,
+          children: this.removeNodeRecursively(
+            targetNode,
+            fav.children,
+            searchBy
+          ),
+        };
+      }
+      return fav;
+    });
   }
 }

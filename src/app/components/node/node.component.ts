@@ -31,7 +31,7 @@ export class NodeComponent implements OnInit {
     private favoriteService: FavoritesService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.favoriteService.enableFavoriteNode$.subscribe((node) => {
       if (node === this.node) {
         this.isEnabled = true;
@@ -48,7 +48,7 @@ export class NodeComponent implements OnInit {
     this.tree.toggle(node);
   }
 
-  onRightClick(event: MouseEvent) {
+  onRightClick(event: MouseEvent): void {
     event.preventDefault();
     this.favoriteService.showFavoritePopup(this.node, {
       x: event.clientX,
@@ -57,18 +57,18 @@ export class NodeComponent implements OnInit {
   }
 
   @HostListener('document:click')
-  hideFavorites() {
+  hideFavorites(): void {
     this.favoriteService.closeFavoritePopup();
   }
 
   @HostListener('document:keydown.escape')
-  onEscape() {
+  onEscape(): void {
     this.isEnabled = false;
     this.favoriteService.closeFavoritePopup();
   }
 
   @HostListener('document:keydown.enter')
-  onEnter() {
+  onEnter(): void {
     if (this.isEnabled) {
       this.favoriteService.renameNodeInFavorites(
         this.originalNode,
@@ -79,27 +79,30 @@ export class NodeComponent implements OnInit {
     this.isEnabled = false;
   }
 
-  addToFavorite(node: node) {
+  addNodeToFavorite(node: node): void {
     node.favorite = true;
     this.favoriteService.addNodeToFavorites(node);
   }
 
-  removeFromFavorite(node: node) {
+  createFolderInFavorite(node: node, isRoot = false): void {
+    this.favoriteService.createNewFolder(node, this.getTimeStamp(), isRoot);
+  }
+
+  removeNodeFromFavorite(node: node): void {
     node.favorite = false;
     this.favoriteService.removeNodeFromFavorites(node);
   }
 
-  enableInput(node: node) {
+  enableInput(node: node): void {
     this.originalNode = JSON.stringify(node);
     this.favoriteService.enableNodeText(node);
   }
 
-  addNewFolder(node: node) {
+  private getTimeStamp(): string {
     const now = new Date();
-    const timeStamp = now
+    return now
       .toISOString()
       .replace(/[-:T.Z]/g, '')
       .slice(2, 14);
-    this.favoriteService.addNewFolder(node, timeStamp);
   }
 }

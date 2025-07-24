@@ -35,7 +35,7 @@
   <app-favorite-button
     [title]="'neuer Ordner'"
     [position]="favoritePopupPosition"
-    (buttonClick)="addNewFolder(node)"
+    (buttonClick)="createFolderInFavorite(node, true)"
   >
   </app-favorite-button>
 </div>
@@ -45,14 +45,14 @@
   <app-favorite-button
     [title]="'neuer Ordner'"
     [position]="favoritePopupPosition"
-    (buttonClick)="addNewFolder(node)"
+    (buttonClick)="createFolderInFavorite(node)"
   >
   </app-favorite-button>
 
   <app-favorite-button
     [title]="'löschen'"
     [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
-    (buttonClick)="removeFromFavorite(node)"
+    (buttonClick)="removeNodeFromFavorite(node)"
   >
   </app-favorite-button>
 
@@ -69,7 +69,7 @@
   <app-favorite-button
     [title]="'löschen'"
     [position]="favoritePopupPosition"
-    (buttonClick)="removeFromFavorite(node)"
+    (buttonClick)="removeNodeFromFavorite(node)"
   >
   </app-favorite-button>
   <app-favorite-button
@@ -85,7 +85,7 @@
 <app-favorite-button
   [title]="'favoriten'"
   [position]="favoritePopupPosition"
-  (buttonClick)="addToFavorite(node)"
+  (buttonClick)="addNodeToFavorite(node)"
 >
 </app-favorite-button>
 
