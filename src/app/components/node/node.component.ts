@@ -1,11 +1,18 @@
-import { Component, Input, HostListener, OnInit } from '@angular/core';
-import { NodeService } from '../../services/node.service';
+import {
+  Component,
+  Input,
+  HostListener,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
+
 import { MatIconModule } from '@angular/material/icon';
 import { type node } from '../../types';
 import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
 import { FavoritesService } from '../../services/favorites.service';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-node',
@@ -14,7 +21,7 @@ import { FavoriteButtonComponent } from '../favorite-button/favorite-button.comp
   templateUrl: './node.component.html',
   styleUrl: './node.component.scss',
 })
-export class NodeComponent implements OnInit {
+export class NodeComponent implements OnInit, OnDestroy {
   @Input() isLeaf: boolean = false;
   @Input() node!: node;
   @Input() searchValue: string | null = null;
@@ -22,26 +29,27 @@ export class NodeComponent implements OnInit {
 
   favoritePopupIsVisible = false;
   favoritePopupPosition = { x: 0, y: 0 };
-  selectedNode: node | null = null;
   isEnabled = false;
-  originalNode = '';
 
-  constructor(
-    public nodeService: NodeService,
-    private favoriteService: FavoritesService
-  ) {}
+  private originalNode = '';
+  private favoritePopupSubscription: Subscription | undefined;
+  private enableFavoriteNodeSubscription: Subscription | undefined;
+
+  constructor(private favoriteService: FavoritesService) {}
 
   ngOnInit(): void {
-    this.favoriteService.enableFavoriteNode$.subscribe((node) => {
-      if (node === this.node) {
-        this.isEnabled = true;
-      }
-    });
+    this.enableFavoriteNodeSubscription =
+      this.favoriteService.enableFavoriteNode$.subscribe((node) => {
+        if (node === this.node) {
+          this.isEnabled = true;
+        }
+      });
 
-    this.favoriteService.FavoritePopup$.subscribe((state) => {
-      this.favoritePopupIsVisible = state.visible && state.node === this.node;
-      this.favoritePopupPosition = state.position;
-    });
+    this.favoritePopupSubscription =
+      this.favoriteService.FavoritePopup$.subscribe((state) => {
+        this.favoritePopupIsVisible = state.visible && state.node === this.node;
+        this.favoritePopupPosition = state.position;
+      });
   }
 
   toggleNode(node: node): void {
@@ -104,5 +112,10 @@ export class NodeComponent implements OnInit {
       .toISOString()
       .replace(/[-:T.Z]/g, '')
       .slice(2, 14);
+  }
+
+  ngOnDestroy(): void {
+    this.favoritePopupSubscription?.unsubscribe();
+    this.enableFavoriteNodeSubscription?.unsubscribe();
   }
 }

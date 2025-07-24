@@ -6,6 +6,7 @@ import {
   SimpleChanges,
   OnChanges,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 
 import { MatTree, MatTreeModule } from '@angular/material/tree';
@@ -13,6 +14,7 @@ import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
 import { type data, type node } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tree',
@@ -21,7 +23,9 @@ import { FavoritesService } from '../../services/favorites.service';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss',
 })
-export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
+export class TreeComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+{
   @ViewChild('tree') tree!: MatTree<node>;
   @Input() searchValue: string | null = '';
   dataSource: node[] = [];
@@ -32,6 +36,8 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   hasChild = (_: number, node: node) =>
     !!node.children && node.children.length > 0;
 
+  private updateTreeSubscription: Subscription | undefined;
+
   constructor(
     private nodeService: NodeService,
     private favoriteService: FavoritesService
@@ -39,9 +45,11 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnInit(): void {
     this.loadTree();
-    this.favoriteService.updateTree$.subscribe((nodes) => {
-      this.updateTree(nodes);
-    });
+    this.updateTreeSubscription = this.favoriteService.updateTree$.subscribe(
+      (nodes) => {
+        this.updateTree(nodes);
+      }
+    );
   }
 
   loadTree(): void {
@@ -111,5 +119,9 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
         );
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.updateTreeSubscription?.unsubscribe();
   }
 }
