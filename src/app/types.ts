@@ -5,14 +5,12 @@ export interface node {
   favorite?: boolean;
   call?: string;
 }
-
 export interface data {
   Interface: string;
   NodeToLoad: string;
   Result: boolean;
   children: node[];
 }
-
 export interface favorite_payload {
   language: string;
   MenuUsername: string;
@@ -25,13 +23,32 @@ export interface favorite_payload {
     children: node[];
   };
 }
-
 export interface ContextMenuAction {
-  type:
-    | 'addToFavorites'
-    | 'removeFromFavorites'
-    | 'createFolder'
-    | 'enableInput';
+  type: 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
   node: node;
   isRoot?: boolean;
 }
+export interface position {
+  x: number;
+  y: number;
+}
+export interface environment_type {
+  production: boolean;
+  BASE_URL: string;
+  FAVORITE_URL: string;
+  favorite_payload: favorite_payload;
+}
+export interface popup_state {
+  visible: boolean;
+  node: node | null;
+  position: position;
+}
+export type Change<T> = {
+  currentValue: T;
+  previousValue: T;
+  firstChange: boolean;
+  isFirstChange: () => boolean;
+};
+export type Changes = {
+  searchValue: Change<string>;
+};

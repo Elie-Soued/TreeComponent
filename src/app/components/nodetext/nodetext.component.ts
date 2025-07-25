@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnChanges,
+  AfterViewChecked,
+} from '@angular/core';
 import { NodeService } from '../../services/node.service';
 import { type node } from '../../types';
 import { FormsModule } from '@angular/forms';
@@ -10,18 +18,34 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './nodetext.component.html',
   styleUrl: './nodetext.component.scss',
 })
-export class NodetextComponent implements OnInit {
+export class NodetextComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() searchValue: string | null = null;
+
   @Input() node!: node;
+
   @Input() isEnabled?: boolean;
-  private shouldFocus = false;
+
+  private shouldFocus: boolean = false;
+
   before: string = '';
+
   match: string = '';
+
   after: string = '';
 
   @ViewChild('nodeTextInput') input!: ElementRef<HTMLInputElement>;
 
   constructor(public nodeService: NodeService) {}
+
+  private highlightMatchingLetters(node: node, searchValue: string): void {
+    const lowerText: string = node.text.toLowerCase();
+    const lowerSearch: string = searchValue.toLowerCase();
+    const start: number = lowerText.indexOf(lowerSearch);
+
+    this.before = node.text.slice(0, start);
+    this.match = node.text.slice(start, start + searchValue.length);
+    this.after = node.text.slice(start + searchValue.length);
+  }
 
   ngOnInit(): void {
     if (this.searchValue) {
@@ -29,39 +53,33 @@ export class NodetextComponent implements OnInit {
     }
   }
 
-  ngOnChanges() {
+  ngOnChanges(): void {
     if (this.isEnabled) {
       this.shouldFocus = true;
     }
   }
 
-  ngAfterViewChecked() {
-    if (this.shouldFocus && this.input) {
+  ngAfterViewChecked(): void {
+    if (this.shouldFocus) {
       setTimeout(() => {
-        const inputEl = this.input.nativeElement;
+        const inputEl: HTMLInputElement = this.input.nativeElement;
+
         inputEl.focus();
 
-        const length = inputEl.value.length;
-        inputEl.setSelectionRange(length, length);
+        const inputLength: number = inputEl.value.length;
 
+        inputEl.setSelectionRange(inputLength, inputLength);
         this.shouldFocus = false;
       });
     }
   }
 
-  private highlightMatchingLetters(node: node, searchValue: string): void {
-    const lowerText = node.text.toLowerCase();
-    const lowerSearch = searchValue.toLowerCase();
-    const start = lowerText.indexOf(lowerSearch);
-    this.before = node.text.slice(0, start);
-    this.match = node.text.slice(start, start + searchValue.length);
-    this.after = node.text.slice(start + searchValue.length);
-  }
-
+  // eslint-disable-next-line @tseslint/class-methods-use-this
   displayHighlightedText(searchValue: string | null): boolean | undefined {
     if (searchValue) {
       return searchValue.trim().length > 2;
     }
+
     return undefined;
   }
 }

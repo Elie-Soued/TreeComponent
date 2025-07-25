@@ -1,48 +1,48 @@
-@if(favoritePopupIsVisible && node.text === "Favoriten") {
-<div class="context-menu-container">
-  <app-favorite-button
-    [title]="'neuer Ordner'"
-    [position]="favoritePopupPosition"
-    (buttonClick)="onCreateFolder(true)"
-  />
-</div>
-} @else if(favoritePopupIsVisible && node.favorite && node.children) {
-<div class="context-menu-container">
-  <app-favorite-button
-    [title]="'neuer Ordner'"
-    [position]="favoritePopupPosition"
-    (buttonClick)="onCreateFolder(false)"
-  />
-  <app-favorite-button
-    [title]="'löschen'"
-    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
-    (buttonClick)="onRemoveFromFavorites()"
-  />
-  <app-favorite-button
-    [title]="'umbenennen'"
-    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 60 }"
-    (buttonClick)="onEnableInput()"
-  />
-</div>
-} @else if(favoritePopupIsVisible && node.favorite) {
-<div class="context-menu-container">
-  <app-favorite-button
-    [title]="'löschen'"
-    [position]="favoritePopupPosition"
-    (buttonClick)="onRemoveFromFavorites()"
-  />
-  <app-favorite-button
-    [title]="'umbenennen'"
-    [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
-    (buttonClick)="onEnableInput()"
-  />
-</div>
-} @else if(favoritePopupIsVisible) {
-<div class="context-menu-container">
-  <app-favorite-button
-    [title]="'favoriten'"
-    [position]="favoritePopupPosition"
-    (buttonClick)="onAddToFavorites()"
-  />
-</div>
+@if (favoritePopupIsVisible && node.text === 'Favoriten') {
+  <div class="context-menu-container">
+    <app-favorite-button
+      [title]="'neuer Ordner'"
+      [position]="favoritePopupPosition"
+      (buttonClick)="onCreateFolder(true)"
+    />
+  </div>
+} @else if (favoritePopupIsVisible && node.favorite && node.children) {
+  <div class="context-menu-container">
+    <app-favorite-button
+      [title]="'neuer Ordner'"
+      [position]="favoritePopupPosition"
+      (buttonClick)="onCreateFolder(false)"
+    />
+    <app-favorite-button
+      [title]="'löschen'"
+      [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
+      (buttonClick)="onRemoveFromFavorites()"
+    />
+    <app-favorite-button
+      [title]="'umbenennen'"
+      [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 60 }"
+      (buttonClick)="onEnableInput()"
+    />
+  </div>
+} @else if (favoritePopupIsVisible && node.favorite) {
+  <div class="context-menu-container">
+    <app-favorite-button
+      [title]="'löschen'"
+      [position]="favoritePopupPosition"
+      (buttonClick)="onRemoveFromFavorites()"
+    />
+    <app-favorite-button
+      [title]="'umbenennen'"
+      [position]="{ x: favoritePopupPosition.x, y: favoritePopupPosition.y + 30 }"
+      (buttonClick)="onEnableInput()"
+    />
+  </div>
+} @else if (favoritePopupIsVisible) {
+  <div class="context-menu-container">
+    <app-favorite-button
+      [title]="'favoriten'"
+      [position]="favoritePopupPosition"
+      (buttonClick)="onAddToFavorites()"
+    />
+  </div>
 }

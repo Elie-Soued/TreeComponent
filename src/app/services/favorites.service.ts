@@ -1,9 +1,9 @@
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
-import { type node, type favorite_payload } from '../types';
+import { type node, type favorite_payload, type data, type popup_state } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { type data } from '../types';
 import { UtilsService } from './utils.service';
 
 @Injectable({
@@ -11,38 +11,45 @@ import { UtilsService } from './utils.service';
 })
 export class FavoritesService {
   private FAVORITE_URL: string = environment.FAVORITE_URL;
+
   private BASE_URL: string = environment.BASE_URL;
+
   private payload: favorite_payload = environment.favorite_payload;
 
-  private FavoritePopup = new BehaviorSubject<{
-    visible: boolean;
-    node: node | null;
-    position: { x: number; y: number };
-  }>({
+  private FavoritePopup: BehaviorSubject<popup_state> = new BehaviorSubject<popup_state>({
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
   });
-  private updateTreeUI = new BehaviorSubject<node[] | []>([]);
-  private enableFavoriteNode = new Subject<node>();
 
-  FavoritePopup$ = this.FavoritePopup.asObservable();
-  updateTree$ = this.updateTreeUI.asObservable();
-  enableFavoriteNode$ = this.enableFavoriteNode.asObservable();
+  private updateTreeUI: BehaviorSubject<node[] | []> = new BehaviorSubject<node[] | []>([]);
 
-  constructor(private http: HttpClient, private utils: UtilsService) {}
+  private enableFavoriteNode: Subject<node> = new Subject<node>();
+
+  FavoritePopup$: Observable<popup_state> = this.FavoritePopup.asObservable();
+
+  updateTree$: Observable<node[] | []> = this.updateTreeUI.asObservable();
+
+  enableFavoriteNode$: Observable<node> = this.enableFavoriteNode.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private utils: UtilsService,
+  ) {}
 
   addNodeToFavorites(node: node): void {
-    this.getFavorites().subscribe((favorites) => {
+    this.getFavorites().subscribe((favorites: node[]) => {
       this.payload.favorites.children = [...favorites, node];
       this.updateTree();
     });
   }
 
   renameNodeInFavorites(nodeString: string, newValue: string): void {
-    const node = JSON.parse(nodeString);
-    this.getFavorites().subscribe((favorites) => {
-      const nodeToChange = favorites.filter((fav) => fav.text === node.text)[0];
+    const node: node = JSON.parse(nodeString) as node;
+
+    this.getFavorites().subscribe((favorites: node[]) => {
+      const nodeToChange: node = favorites.filter((fav: node) => fav.text === node.text)[0];
+
       nodeToChange.text = newValue;
       this.payload.favorites.children = favorites;
       this.updateTree();
@@ -50,14 +57,10 @@ export class FavoritesService {
   }
 
   removeNodeFromFavorites(node: node): void {
-    this.getFavorites().subscribe((favorites) => {
-      let filteredFavorites;
-
-      if (node.call) {
-        filteredFavorites = this.removeNodeRecursively(node, favorites, 'call');
-      } else {
-        filteredFavorites = this.removeNodeRecursively(node, favorites, 'text');
-      }
+    this.getFavorites().subscribe((favorites: node[]) => {
+      const filteredFavorites: node[] = node.call
+        ? this.removeNodeRecursively(node, favorites, 'call')
+        : this.removeNodeRecursively(node, favorites, 'text');
 
       this.payload.favorites.children = filteredFavorites;
       this.updateTree();
@@ -65,8 +68,8 @@ export class FavoritesService {
   }
 
   createNewFolder(node: node, timeStamp: string, isRoot: boolean): void {
-    this.getFavorites().subscribe((favorites) => {
-      const newFolder = {
+    this.getFavorites().subscribe((favorites: node[]) => {
+      const newFolder: node = {
         text: 'neuer Ordner',
         iconCls: 'no-icon',
         call: timeStamp,
@@ -76,7 +79,7 @@ export class FavoritesService {
       if (isRoot) {
         this.payload.favorites.children = [...favorites, newFolder];
       } else {
-        const nodeInFavorite = this.searchNodeRecursively(node, favorites);
+        const nodeInFavorite: node | undefined = this.searchNodeRecursively(node, favorites);
 
         if (nodeInFavorite) {
           nodeInFavorite.children?.push(newFolder);
@@ -114,30 +117,22 @@ export class FavoritesService {
       .pipe(
         map(
           (response: data) =>
-            response.children.find((el) => el.text === 'Favoriten')?.children ??
-            []
-        )
+            response.children.find((el: node) => el.text === 'Favoriten')?.children ?? [],
+        ),
       );
   }
 
   private updateTree(): void {
     this.updateTreeUI.next(this.payload.favorites.children);
-
     this.http
-      .post(this.FAVORITE_URL, this.utils.buildRequestBody(this.payload), {
-        headers: this.utils.getHeaders(),
+      .post(this.FAVORITE_URL, UtilsService.buildRequestBody(this.payload), {
+        headers: UtilsService.getHeaders(),
       })
-      .subscribe({
-        next: (response) => console.log(response),
-        error: (error) => console.error(error),
-      });
+      .subscribe();
   }
 
-  private searchNodeRecursively(
-    targetNode: node,
-    favorites: node[]
-  ): node | undefined {
-    const foundNode = favorites.find((fav) => fav.text === targetNode.text);
+  private searchNodeRecursively(targetNode: node, favorites: node[]): node | undefined {
+    const foundNode: node | undefined = favorites.find((fav: node) => fav.text === targetNode.text);
 
     if (foundNode) {
       return foundNode;
@@ -145,10 +140,8 @@ export class FavoritesService {
 
     for (const fav of favorites) {
       if (fav.children && fav.children.length > 0) {
-        const nestedResult = this.searchNodeRecursively(
-          targetNode,
-          fav.children
-        );
+        const nestedResult: node | undefined = this.searchNodeRecursively(targetNode, fav.children);
+
         if (nestedResult) {
           return nestedResult;
         }
@@ -158,26 +151,19 @@ export class FavoritesService {
     return undefined;
   }
 
-  private removeNodeRecursively(
-    targetNode: node,
-    favorites: node[],
-    searchBy: keyof node
-  ): node[] {
-    const filteredFavorites = favorites.filter(
-      (fav) => fav[searchBy] !== targetNode[searchBy]
+  private removeNodeRecursively(targetNode: node, favorites: node[], searchBy: keyof node): node[] {
+    const filteredFavorites: node[] = favorites.filter(
+      (fav: node) => fav[searchBy] !== targetNode[searchBy],
     );
 
-    return filteredFavorites.map((fav) => {
+    return filteredFavorites.map((fav: node) => {
       if (fav.children && fav.children.length > 0) {
         return {
           ...fav,
-          children: this.removeNodeRecursively(
-            targetNode,
-            fav.children,
-            searchBy
-          ),
+          children: this.removeNodeRecursively(targetNode, fav.children, searchBy),
         };
       }
+
       return fav;
     });
   }

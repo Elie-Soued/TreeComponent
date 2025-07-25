@@ -3,12 +3,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodetextComponent } from './nodetext.component';
 import { By } from '@angular/platform-browser';
+import { type node } from '../../types';
 
 describe('NodetextComponent', () => {
   let component: NodetextComponent;
   let fixture: ComponentFixture<NodetextComponent>;
 
-  const mockNode = {
+  const mockNode: node = {
     text: 'Stammdatenverwaltung',
     iconCls: 'stamm.ico',
     children: [
@@ -16,7 +17,6 @@ describe('NodetextComponent', () => {
         text: 'Kundenstamm',
         call: 'R10ST00001',
         iconCls: 'prosoz_16.ico',
-        leaf: true,
       },
     ],
   };
@@ -26,24 +26,21 @@ describe('NodetextComponent', () => {
       providers: [provideHttpClient(), provideHttpClientTesting()],
       imports: [NodetextComponent],
     }).compileComponents();
-
     fixture = TestBed.createComponent(NodetextComponent);
     component = fixture.componentInstance;
     component.node = mockNode;
     component.searchValue = 'pilex';
     fixture.detectChanges();
   });
-
   it('Normal text is displayed when no searchValue is entered', () => {
     component.searchValue = '';
     fixture.detectChanges();
-    const noMatchParagraph = fixture.debugElement.query(
-      By.css('#noMatch')
-    ).nativeElement;
+
+    const noMatchParagraph: HTMLElement = fixture.debugElement.query(By.css('#noMatch'))
+      .nativeElement as HTMLElement;
 
     expect(noMatchParagraph).toBeTruthy();
   });
-
   it('Letters are highlighted when there is a match', () => {
     component.searchValue = 'daten';
     component.node = {
@@ -54,20 +51,21 @@ describe('NodetextComponent', () => {
     component.ngOnInit();
     fixture.detectChanges();
 
-    const matchParagraph = fixture.debugElement.query(
-      By.css('#match')
-    ).nativeElement;
+    const matchParagraph: HTMLElement = fixture.debugElement.query(By.css('#match'))
+      .nativeElement as HTMLElement;
+
     expect(matchParagraph).toBeTruthy();
 
-    const before = fixture.debugElement.query(By.css('#before')).nativeElement;
-    const matchedText = fixture.debugElement.query(
-      By.css('#matchedText')
-    ).nativeElement;
-    const after = fixture.debugElement.query(By.css('#after')).nativeElement;
+    const before: HTMLElement = fixture.debugElement.query(By.css('#before'))
+      .nativeElement as HTMLElement;
+    const matchedText: HTMLElement = fixture.debugElement.query(By.css('#matchedText'))
+      .nativeElement as HTMLElement;
+    const after: HTMLElement = fixture.debugElement.query(By.css('#after'))
+      .nativeElement as HTMLElement;
 
-    expect(before.innerText).toBe('Stamm');
-    expect(matchedText.innerText).toBe('daten');
+    expect(before.textContent).toBe('Stamm');
+    expect(matchedText.textContent).toBe('daten');
     expect(matchedText.classList.contains('matched-text')).toBeTrue();
-    expect(after.innerText).toBe('verwaltung');
+    expect(after.textContent).toBe('verwaltung');
   });
 });

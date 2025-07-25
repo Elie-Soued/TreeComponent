@@ -1,11 +1,5 @@
-import {
-  Component,
-  Input,
-  HostListener,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
-
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
+import { Component, Input, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { type node, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
@@ -13,6 +7,7 @@ import { NodetextComponent } from '../nodetext/nodetext.component';
 import { FavoritesService } from '../../services/favorites.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { Subscription } from 'rxjs';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-node',
@@ -23,35 +18,40 @@ import { Subscription } from 'rxjs';
 })
 export class NodeComponent implements OnInit, OnDestroy {
   @Input() isLeaf: boolean = false;
+
   @Input() node!: node;
+
   @Input() searchValue: string | null = null;
+
   @Input() tree!: MatTree<node>;
 
-  isEnabled = false;
+  isEnabled: boolean = false;
 
-  private originalNode = '';
+  private originalNode: string = '';
+
   private enableFavoriteNodeSubscription: Subscription | undefined;
 
   constructor(private favoriteService: FavoritesService) {}
 
   ngOnInit(): void {
-    this.enableFavoriteNodeSubscription =
-      this.favoriteService.enableFavoriteNode$.subscribe((node) => {
+    this.enableFavoriteNodeSubscription = this.favoriteService.enableFavoriteNode$.subscribe(
+      (node: node) => {
         if (node === this.node) {
           this.isEnabled = true;
         }
-      });
+      },
+    );
   }
 
   toggleNode(node: node): void {
     this.tree.toggle(node);
   }
 
-  onRightClick(event: MouseEvent): void {
-    event.preventDefault();
+  onRightClick(e: MouseEvent): void {
+    e.preventDefault();
     this.favoriteService.showFavoritePopup(this.node, {
-      x: event.clientX,
-      y: event.clientY,
+      x: e.clientX,
+      y: e.clientY,
     });
   }
 
@@ -69,10 +69,7 @@ export class NodeComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.enter')
   onEnter(): void {
     if (this.isEnabled) {
-      this.favoriteService.renameNodeInFavorites(
-        this.originalNode,
-        this.node.text
-      );
+      this.favoriteService.renameNodeInFavorites(this.originalNode, this.node.text);
     }
 
     this.isEnabled = false;
@@ -83,8 +80,8 @@ export class NodeComponent implements OnInit, OnDestroy {
     this.favoriteService.addNodeToFavorites(node);
   }
 
-  private createFolderInFavorite(node: node, isRoot = false): void {
-    this.favoriteService.createNewFolder(node, this.getTimeStamp(), isRoot);
+  private createFolderInFavorite(node: node, isRoot: boolean = false): void {
+    this.favoriteService.createNewFolder(node, UtilsService.getTimeStamp(), isRoot);
   }
 
   private removeNodeFromFavorite(node: node): void {
@@ -97,28 +94,31 @@ export class NodeComponent implements OnInit, OnDestroy {
     this.favoriteService.enableNodeText(node);
   }
 
-  private getTimeStamp(): string {
-    const now = new Date();
-    return now
-      .toISOString()
-      .replace(/[-:T.Z]/g, '')
-      .slice(2, 14);
-  }
-
   onMenuAction(action: ContextMenuAction): void {
     switch (action.type) {
-      case 'addToFavorites':
+      case 'addToFavorites': {
         this.addNodeToFavorite(action.node);
+
         break;
-      case 'removeFromFavorites':
+      }
+
+      case 'removeFromFavorites': {
         this.removeNodeFromFavorite(action.node);
+
         break;
-      case 'createFolder':
+      }
+
+      case 'createFolder': {
         this.createFolderInFavorite(action.node, action.isRoot || false);
+
         break;
-      case 'enableInput':
+      }
+
+      case 'enableInput': {
         this.enableInput(action.node);
+
         break;
+      }
     }
   }
 

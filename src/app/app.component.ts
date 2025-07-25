@@ -12,7 +12,7 @@ import { SearchbarComponent } from './components/searchbar/searchbar.component';
 export class AppComponent {
   searchValue: string | null = null;
 
-  onSearchValueChange(value: string | null) {
+  onSearchValueChange(value: string | null): void {
     this.searchValue = value;
   }
 }

@@ -1,6 +1,30 @@
-@if(isLeaf) {
-<div class="leaf-container">
-  @if(node.text === "neuer Ordner"){
+@if (isLeaf) {
+  <div class="leaf-container">
+    @if (node.text === 'neuer Ordner') {
+      <div class="node-container">
+        <button
+          id="nodeBtn"
+          (click)="toggleNode(node)"
+          [attr.aria-label]="'Toggle ' + node.text"
+          class="node-btn"
+        >
+          <mat-icon class="small-icon" id="nodeIcon">
+            {{ tree.isExpanded(node) ? 'remove' : 'add' }}
+          </mat-icon>
+        </button>
+      </div>
+    } @else {
+      <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
+    }
+
+    <app-nodetext
+      [node]="node"
+      [searchValue]="searchValue"
+      (contextmenu)="onRightClick($event)"
+      [isEnabled]="isEnabled"
+    />
+  </div>
+} @else {
   <div class="node-container">
     <button
       id="nodeBtn"
@@ -9,41 +33,16 @@
       class="node-btn"
     >
       <mat-icon class="small-icon" id="nodeIcon">
-        {{ tree.isExpanded(node) ? "remove" : "add" }}
+        {{ tree.isExpanded(node) ? 'remove' : 'add' }}
       </mat-icon>
     </button>
+    <app-nodetext
+      [node]="node"
+      [searchValue]="searchValue"
+      (contextmenu)="onRightClick($event)"
+      [isEnabled]="isEnabled"
+    />
   </div>
-
-  } @else {
-  <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
-  }
-
-  <app-nodetext
-    [node]="node"
-    [searchValue]="searchValue"
-    (contextmenu)="onRightClick($event)"
-    [isEnabled]="isEnabled"
-  />
-</div>
-} @else {
-<div class="node-container">
-  <button
-    id="nodeBtn"
-    (click)="toggleNode(node)"
-    [attr.aria-label]="'Toggle ' + node.text"
-    class="node-btn"
-  >
-    <mat-icon class="small-icon" id="nodeIcon">
-      {{ tree.isExpanded(node) ? "remove" : "add" }}
-    </mat-icon>
-  </button>
-  <app-nodetext
-    [node]="node"
-    [searchValue]="searchValue"
-    (contextmenu)="onRightClick($event)"
-    [isEnabled]="isEnabled"
-  />
-</div>
 }
 
 <app-context-menu [node]="node" (menuAction)="onMenuAction($event)" />

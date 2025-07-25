@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { NgStyle } from '@angular/common';
+import { type position } from '../../types';
 
 @Component({
   selector: 'app-favorite-button',
@@ -10,10 +11,12 @@ import { NgStyle } from '@angular/common';
 })
 export class FavoriteButtonComponent {
   @Input() title!: string;
-  @Input() position: any;
-  @Output() buttonClick = new EventEmitter<void>();
 
-  onClick() {
+  @Input() position!: position;
+
+  @Output() buttonClick: EventEmitter<void> = new EventEmitter<void>();
+
+  onClick(): void {
     this.buttonClick.emit();
   }
 }

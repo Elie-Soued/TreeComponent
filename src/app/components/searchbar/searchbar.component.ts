@@ -1,26 +1,21 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subscription } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-searchbar',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-  ],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule],
   templateUrl: './searchbar.component.html',
   styleUrl: './searchbar.component.scss',
 })
-export class SearchbarComponent implements OnInit {
-  @Output() searchValue = new EventEmitter<string | null>();
-  searchControl = new FormControl('');
+export class SearchbarComponent implements OnInit, OnDestroy {
+  @Output() searchValue: EventEmitter<string | null> = new EventEmitter<string | null>();
+
+  searchControl: FormControl = new FormControl('');
 
   private valueChangeSubscription: Subscription | undefined;
 
@@ -36,7 +31,7 @@ export class SearchbarComponent implements OnInit {
     this.searchControl.setValue('');
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.valueChangeSubscription?.unsubscribe();
   }
 }

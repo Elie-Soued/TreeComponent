@@ -1,13 +1,6 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
-import { type node, type ContextMenuAction } from '../../types';
+import { type node, type ContextMenuAction, type position, type popup_state } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
 
@@ -20,21 +13,24 @@ import { Subscription } from 'rxjs';
 })
 export class ContextMenuComponent implements OnInit, OnDestroy {
   @Input() node!: node;
-  @Output() menuAction = new EventEmitter<ContextMenuAction>();
 
-  favoritePopupIsVisible = false;
-  favoritePopupPosition = { x: 0, y: 0 };
+  @Output() menuAction: EventEmitter<ContextMenuAction> = new EventEmitter<ContextMenuAction>();
+
+  favoritePopupIsVisible: boolean = false;
+
+  favoritePopupPosition: position = { x: 0, y: 0 };
 
   private favoritePopupSubscription: Subscription | undefined;
 
   constructor(private favoriteService: FavoritesService) {}
 
   ngOnInit(): void {
-    this.favoritePopupSubscription =
-      this.favoriteService.FavoritePopup$.subscribe((state) => {
+    this.favoritePopupSubscription = this.favoriteService.FavoritePopup$.subscribe(
+      (state: popup_state) => {
         this.favoritePopupIsVisible = state.visible && state.node === this.node;
         this.favoritePopupPosition = state.position;
-      });
+      },
+    );
   }
 
   onAddToFavorites(): void {

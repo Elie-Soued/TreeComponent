@@ -1,3 +1,4 @@
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
@@ -10,6 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class NodeService {
   private URL: string = environment.BASE_URL;
+
   constructor(private http: HttpClient) {}
 
   getInitialData(): Observable<data> {
@@ -19,57 +21,62 @@ export class NodeService {
   expandMatchingNodes(
     nodes: node[],
     searchTerm: string,
-    ancestors: node[] = [],
-    tree: MatTree<node>
+    tree: MatTree<node>,
+    ancestors: node[] | [] = [],
   ): void {
     for (const node of nodes) {
       // Expand match with ancestors
       if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
-        ancestors.forEach((ancestor) => tree.expand(ancestor));
+        ancestors.forEach((ancestor: node) => {
+          tree.expand(ancestor);
+        });
       }
 
       // As long as a node has children, collect its ancestors
       if (node.children?.length) {
-        this.expandMatchingNodes(
-          node.children,
-          searchTerm,
-          [...ancestors, node],
-          tree
-        );
+        this.expandMatchingNodes(node.children, searchTerm, tree, [...ancestors, node]);
       }
     }
   }
 
   filterNonMatchingLeafs(nodes: node[], searchTerm: string): node[] {
-    return nodes
-      .map((node) => {
-        const children = node.children
-          ? this.filterNonMatchingLeafs(node.children, searchTerm)
-          : [];
+    return (
+      nodes
+        .map((node: node) => {
+          const children: node[] = node.children
+            ? this.filterNonMatchingLeafs(node.children, searchTerm)
+            : [];
 
-        if (this.isNodeMatch(node, searchTerm) || children.length) {
-          return {
-            ...node,
-            children: children.length ? children : [],
-          };
-        }
+          if (this.isNodeMatch(node, searchTerm) || children.length) {
+            return {
+              ...node,
+              children: children.length ? children : [],
+            };
+          }
 
-        return null;
-      })
-      .filter((node) => node !== null);
+          return null;
+        })
+
+        // eslint-disable-next-line @tseslint/typedef
+        .filter((node) => node !== null)
+    );
   }
 
+  // eslint-disable-next-line @tseslint/class-methods-use-this
   isNodeMatch(node: node, searchValue: string | null): boolean {
     if (!searchValue) return false;
+
     return node.text.toLowerCase().includes(searchValue.toLowerCase());
   }
 
   setFavoriteFlag(nodes: node[]): node[] {
-    return nodes.map((node) => {
+    return nodes.map((node: node) => {
       node.favorite = true;
+
       if (node.children && node.children.length > 0) {
         this.setFavoriteFlag(node.children);
       }
+
       return node;
     });
   }
