@@ -23,8 +23,9 @@ export interface favorite_payload {
     children: node[];
   };
 }
+export type actionTypes = 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
 export interface ContextMenuAction {
-  type: 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
+  type: actionTypes;
   node: node;
   isRoot?: boolean;
 }

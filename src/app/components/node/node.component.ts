@@ -109,7 +109,7 @@ export class NodeComponent implements OnInit, OnDestroy {
       }
 
       case 'createFolder': {
-        this.createFolderInFavorite(action.node, action.isRoot || false);
+        this.createFolderInFavorite(action.node, action.isRoot ?? false);
 
         break;
       }

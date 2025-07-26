@@ -1,6 +1,13 @@
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
-import { type node, type ContextMenuAction, type position, type popup_state } from '../../types';
+import {
+  type node,
+  type ContextMenuAction,
+  type position,
+  type popup_state,
+  type actionTypes,
+} from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
 
@@ -33,32 +40,11 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  onAddToFavorites(): void {
+  onMenuAction(type: actionTypes, isRoot: boolean = false): void {
     this.menuAction.emit({
-      type: 'addToFavorites',
-      node: this.node,
-    });
-  }
-
-  onRemoveFromFavorites(): void {
-    this.menuAction.emit({
-      type: 'removeFromFavorites',
-      node: this.node,
-    });
-  }
-
-  onCreateFolder(isRoot: boolean): void {
-    this.menuAction.emit({
-      type: 'createFolder',
+      type,
       node: this.node,
       isRoot,
-    });
-  }
-
-  onEnableInput(): void {
-    this.menuAction.emit({
-      type: 'enableInput',
-      node: this.node,
     });
   }
 
