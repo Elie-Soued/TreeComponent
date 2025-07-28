@@ -1,9 +1,17 @@
-@if (favoritePopupIsVisible && node.text === 'Favoriten') {
+@if (favoritePopupIsVisible && node.text === 'Favoriten' && !isLeftClick) {
   <div class="context-menu-container">
     <app-favorite-button
       [title]="'neuer Ordner'"
       [position]="favoritePopupPosition"
       (buttonClick)="onMenuAction('createFolder', true)"
+    />
+  </div>
+} @else if (favoritePopupIsVisible && node.favorite && isLeftClick) {
+  <div class="context-menu-container">
+    <app-favorite-button
+      [title]="node.text"
+      [position]="draggedPosition"
+      [isLeftClick]="isLeftClick"
     />
   </div>
 } @else if (
@@ -39,7 +47,7 @@
       (buttonClick)="onMenuAction('enableInput')"
     />
   </div>
-} @else if (favoritePopupIsVisible) {
+} @else if (favoritePopupIsVisible && !isLeftClick) {
   <div class="context-menu-container">
     <app-favorite-button
       [title]="'favoriten'"

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Component, Input, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, HostListener, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { type node, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
@@ -8,6 +8,7 @@ import { NodetextComponent } from '../nodetext/nodetext.component';
 import { FavoritesService } from '../../services/favorites.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { Subscription } from 'rxjs';
+import { DragService } from '../../services/drag.service';
 
 @Component({
   selector: 'app-node',
@@ -31,7 +32,11 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   private enableFavoriteNodeSubscription: Subscription | undefined;
 
-  constructor(private favoriteService: FavoritesService) {}
+  constructor(
+    private favoriteService: FavoritesService,
+    private dragService: DragService,
+    private elementRef: ElementRef<HTMLElement>,
+  ) {}
 
   ngOnInit(): void {
     this.enableFavoriteNodeSubscription = this.favoriteService.enableFavoriteNode$.subscribe(
@@ -47,12 +52,30 @@ export class NodeComponent implements OnInit, OnDestroy {
     this.tree.toggle(node);
   }
 
-  onRightClick(e: MouseEvent): void {
-    e.preventDefault();
-    this.favoriteService.showFavoritePopup(this.node, {
-      x: e.clientX,
-      y: e.clientY,
-    });
+  sendPosition(e: MouseEvent, preventDefault: boolean, isLeftClick: boolean): void {
+    // To avoid triggering the mousedown event when right clicking
+
+    if (e.type === 'mousedown' && e.button === 2) {
+      return;
+    }
+
+    if (preventDefault) {
+      e.preventDefault();
+    }
+
+    // Check if this is a drag start (left click on favorite node)
+    if (isLeftClick && this.node.favorite) {
+      this.dragService.startDrag(e, this.node, this.elementRef.nativeElement);
+    }
+
+    this.favoriteService.showFavoritePopup(
+      this.node,
+      {
+        x: e.clientX,
+        y: e.clientY,
+      },
+      isLeftClick,
+    );
   }
 
   @HostListener('document:click')

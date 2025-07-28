@@ -10,6 +10,7 @@ import {
 } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
+import { DragService } from '../../services/drag.service';
 
 @Component({
   selector: 'app-context-menu',
@@ -27,15 +28,30 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   favoritePopupPosition: position = { x: 0, y: 0 };
 
+  draggedPosition: position = { x: 0, y: 0 };
+
   private favoritePopupSubscription: Subscription | undefined;
 
-  constructor(private favoriteService: FavoritesService) {}
+  private draggedPositionSubscription: Subscription | undefined;
+
+  isLeftClick: boolean = false;
+
+  constructor(
+    private favoriteService: FavoritesService,
+    private dragService: DragService,
+  ) {}
 
   ngOnInit(): void {
     this.favoritePopupSubscription = this.favoriteService.FavoritePopup$.subscribe(
       (state: popup_state) => {
         this.favoritePopupIsVisible = state.visible && state.node === this.node;
         this.favoritePopupPosition = state.position;
+        this.isLeftClick = state.isLeftClick;
+      },
+    );
+    this.draggedPositionSubscription = this.dragService.shareDraggedPosition$.subscribe(
+      (position: position) => {
+        this.draggedPosition = position;
       },
     );
   }
@@ -50,5 +66,6 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.favoritePopupSubscription?.unsubscribe();
+    this.draggedPositionSubscription?.unsubscribe();
   }
 }

@@ -43,6 +43,7 @@ export interface popup_state {
   visible: boolean;
   node: node | null;
   position: position;
+  isLeftClick: boolean;
 }
 export type Change<T> = {
   currentValue: T;

@@ -30,3 +30,7 @@ main {
   min-width: 300px;
   border: none;
 }
+
+input[disabled] {
+  pointer-events: none;
+}

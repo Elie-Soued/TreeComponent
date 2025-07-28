@@ -23,6 +23,7 @@ export class FavoritesService {
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
+    isLeftClick: false,
   });
 
   private updateTreeUI: BehaviorSubject<node[] | []> = new BehaviorSubject<node[] | []>([]);
@@ -112,11 +113,12 @@ export class FavoritesService {
     this.enableFavoriteNode.next(node);
   }
 
-  showFavoritePopup(node: node, position: { x: number; y: number }): void {
+  showFavoritePopup(node: node, position: { x: number; y: number }, isLeftClick: boolean): void {
     this.FavoritePopup.next({
       visible: true,
       node,
       position,
+      isLeftClick,
     });
   }
 
@@ -125,6 +127,7 @@ export class FavoritesService {
       visible: false,
       node: null,
       position: { x: 0, y: 0 },
+      isLeftClick: false,
     });
   }
 

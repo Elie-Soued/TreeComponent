@@ -1,11 +1,31 @@
-<button
-  class="favoriten"
-  style="border: none; width: 105px"
-  [ngStyle]="{
-    top: position.y + 'px',
-    left: position.x + 'px',
-  }"
-  (click)="onClick()"
->
-  {{ title }}
-</button>
+@if (isLeftClick) {
+  <div
+    class="favoriten"
+    style="border: none; min-width: 105px; width: auto; display: flex; flex-direction: row"
+    [ngStyle]="{
+      top: position.y + 'px',
+      left: position.x + 'px',
+    }"
+    (click)="onClick()"
+  >
+    <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn">
+      <mat-icon class="small-icon" id="nodeIcon">
+        {{ 'add' }}
+      </mat-icon>
+    </button>
+
+    {{ title }}
+  </div>
+} @else {
+  <button
+    class="favoriten hoverable"
+    style="border: none; width: 105px"
+    [ngStyle]="{
+      top: position.y + 'px',
+      left: position.x + 'px',
+    }"
+    (click)="onClick()"
+  >
+    {{ title }}
+  </button>
+}
