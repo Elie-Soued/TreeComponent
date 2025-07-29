@@ -34,6 +34,7 @@ describe('NodeComponent', () => {
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
+    isLeftClick: false,
   };
 
   beforeEach(async () => {
@@ -123,6 +124,7 @@ describe('NodeComponent', () => {
       visible: true,
       node: mockNode,
       position: { x: 100, y: 200 },
+      isLeftClick: false,
     });
     fixture.detectChanges();
 
@@ -132,9 +134,13 @@ describe('NodeComponent', () => {
     // Assert
     expect(favoritePopup).toBeTruthy();
     // eslint-disable-next-line @tseslint/unbound-method
-    expect(favoritesService.showFavoritePopup).toHaveBeenCalledWith(mockNode, {
-      x: 100,
-      y: 200,
-    });
+    expect(favoritesService.showFavoritePopup).toHaveBeenCalledWith(
+      mockNode,
+      {
+        x: 100,
+        y: 200,
+      },
+      false,
+    );
   });
 });

@@ -30,7 +30,7 @@ describe('FavoritesService', () => {
   it('showFavoritePopup', (done) => {
     const position: position = { x: 100, y: 200 };
 
-    service.showFavoritePopup(mockNode, position);
+    service.showFavoritePopup(mockNode, position, false);
     service.FavoritePopup$.subscribe((state: popup_state) => {
       expect(state.visible).toBe(true);
       expect(state.position).toBe(position);
