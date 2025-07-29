@@ -1,32 +1,7 @@
-@if (isLeaf) {
-  <div class="leaf-container">
-    @if (node.text === 'neuer Ordner') {
-      <div class="node-container">
-        <button
-          id="nodeBtn"
-          (click)="toggleNode(node)"
-          [attr.aria-label]="'Toggle ' + node.text"
-          class="node-btn"
-        >
-          <mat-icon class="small-icon" id="nodeIcon">
-            {{ tree.isExpanded(node) ? 'remove' : 'add' }}
-          </mat-icon>
-        </button>
-      </div>
-    } @else {
-      <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
-    }
-
-    <app-nodetext
-      [node]="node"
-      [searchValue]="searchValue"
-      (contextmenu)="sendPosition($event, true, false)"
-      [isEnabled]="isEnabled"
-      (mousedown)="sendPosition($event, false, true)"
-    />
-  </div>
-} @else {
-  <div class="node-container">
+<div class="container">
+  @if (isLeaf && node.text !== 'neuer Ordner') {
+    <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
+  } @else {
     <button
       id="nodeBtn"
       (click)="toggleNode(node)"
@@ -37,14 +12,15 @@
         {{ tree.isExpanded(node) ? 'remove' : 'add' }}
       </mat-icon>
     </button>
-    <app-nodetext
-      [node]="node"
-      [searchValue]="searchValue"
-      (contextmenu)="sendPosition($event, true, false)"
-      [isEnabled]="isEnabled"
-      (mousedown)="sendPosition($event, false, true)"
-    />
-  </div>
-}
+  }
+
+  <app-nodetext
+    [node]="node"
+    [searchValue]="searchValue"
+    (contextmenu)="sendPosition($event, true, false)"
+    [isEnabled]="isEnabled"
+    (mousedown)="node.favorite ? sendPosition($event, false, true) : toggleNode(node)"
+  />
+</div>
 
 <app-context-menu [node]="node" (menuAction)="onMenuAction($event)" />
