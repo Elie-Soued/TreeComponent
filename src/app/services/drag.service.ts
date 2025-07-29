@@ -24,7 +24,11 @@ export class DragService {
     y: 0,
   });
 
+  private isOverFavorite: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   shareDraggedPosition$: Observable<position> = this.shareDraggedPosition.asObservable();
+
+  isOverFavorite$: Observable<boolean> = this.isOverFavorite.asObservable();
 
   startDrag(e: MouseEvent, node: node, element: HTMLElement): void {
     this.isDragging = true;
@@ -42,6 +46,7 @@ export class DragService {
       y: e.clientY - this.elementOffset.y,
     };
     this.shareDraggedPosition.next(this.currentMousePosition);
+    this.checkFavoriteHover(e);
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
     document.body.style.userSelect = 'none';
@@ -55,6 +60,7 @@ export class DragService {
       y: e.clientY - this.elementOffset.y,
     };
     this.shareDraggedPosition.next(this.currentMousePosition);
+    this.checkFavoriteHover(e);
   };
 
   onMouseUp = (e: MouseEvent): void => {
@@ -63,10 +69,18 @@ export class DragService {
     this.handleDrop(e);
     this.isDragging = false;
     this.draggedNode = null;
+    this.isOverFavorite.next(false);
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     document.body.style.userSelect = '';
   };
+
+  private checkFavoriteHover(e: MouseEvent): void {
+    const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);
+    const favoriteElement: Element | null | undefined = elementBelow?.closest('.favorite');
+
+    this.isOverFavorite.next(Boolean(favoriteElement));
+  }
 
   handleDrop(e: MouseEvent): void {
     const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);

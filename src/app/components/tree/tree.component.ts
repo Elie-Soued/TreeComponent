@@ -15,11 +15,12 @@ import { NodeComponent } from '../node/node.component';
 import { type data, type node } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tree',
   standalone: true,
-  imports: [MatTreeModule, NodeComponent],
+  imports: [MatTreeModule, NodeComponent, CommonModule],
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss',
 })

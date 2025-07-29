@@ -8,11 +8,19 @@
     }"
     (click)="onClick()"
   >
-    <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn">
-      <mat-icon class="small-icon" id="nodeIcon">
-        {{ 'add' }}
-      </mat-icon>
-    </button>
+    @if (isOverFavorite) {
+      <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn">
+        <mat-icon class="small-icon" id="nodeIcon">
+          {{ 'add' }}
+        </mat-icon>
+      </button>
+    } @else {
+      <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn node-btn--red">
+        <mat-icon class="small-icon" id="nodeIcon">
+          {{ 'remove' }}
+        </mat-icon>
+      </button>
+    }
 
     {{ title }}
   </div>

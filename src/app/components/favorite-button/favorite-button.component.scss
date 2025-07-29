@@ -11,6 +11,7 @@
     background-color 0.3s ease,
     color 0.3s ease;
   cursor: pointer;
+  pointer-events: none;
 }
 
 .favoriten.hoverable:hover {
@@ -35,15 +36,18 @@
   padding: 0.25rem;
   width: 20px;
   height: 20px;
-  // Below are styles relative to btn-secondary sm
   font-size: 0.875rem; // btn-sm → around 14px
-  background-color: green; // btn-secondary (adjust as needed)
   color: #fff;
   border: 1px solid transparent;
   border-radius: 0.5rem;
   cursor: pointer;
+  background-color: green;
+
   &:hover {
     background-color: #5c636a;
+  }
+  &--red {
+    background-color: red;
   }
 }
 

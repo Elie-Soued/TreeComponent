@@ -1,10 +1,18 @@
 <main [hidden]="!dataSource.length">
   <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
-    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+    <mat-tree-node
+      [ngClass]="node.favorite ? 'favorite' : ''"
+      *matTreeNodeDef="let node"
+      matTreeNodePadding
+    >
       <app-node [isLeaf]="true" [node]="node" [searchValue]="searchValue" [tree]="tree"></app-node>
     </mat-tree-node>
 
-    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <mat-tree-node
+      [ngClass]="node.favorite ? 'favorite' : ''"
+      *matTreeNodeDef="let node; when: hasChild"
+      matTreeNodePadding
+    >
       <app-node [isLeaf]="false" [node]="node" [searchValue]="searchValue" [tree]="tree"></app-node>
     </mat-tree-node>
   </mat-tree>

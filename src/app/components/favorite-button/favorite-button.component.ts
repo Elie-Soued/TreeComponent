@@ -1,7 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
+/* eslint-disable @tseslint/explicit-module-boundary-types */
+/* eslint-disable @tseslint/explicit-function-return-type */
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { type position } from '../../types';
 import { MatIconModule } from '@angular/material/icon';
+import { DragService } from '../../services/drag.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-favorite-button',
@@ -10,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './favorite-button.component.html',
   styleUrl: './favorite-button.component.scss',
 })
-export class FavoriteButtonComponent {
+export class FavoriteButtonComponent implements OnInit, OnDestroy {
   @Input() title!: string;
 
   @Input() position!: position;
@@ -19,7 +24,25 @@ export class FavoriteButtonComponent {
 
   @Output() buttonClick: EventEmitter<void> = new EventEmitter<void>();
 
+  private hoversOverFavoriteSubscription: Subscription | undefined;
+
+  isOverFavorite: boolean = false;
+
+  constructor(private dragService: DragService) {}
+
+  ngOnInit() {
+    this.hoversOverFavoriteSubscription = this.dragService.isOverFavorite$.subscribe(
+      (state: boolean) => {
+        this.isOverFavorite = state;
+      },
+    );
+  }
+
   onClick(): void {
     this.buttonClick.emit();
+  }
+
+  ngOnDestroy() {
+    this.hoversOverFavoriteSubscription?.unsubscribe();
   }
 }
