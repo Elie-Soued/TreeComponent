@@ -14,13 +14,24 @@
     </button>
   }
 
-  <app-nodetext
-    [node]="node"
-    [searchValue]="searchValue"
-    (contextmenu)="sendPosition($event, true, false)"
-    [isEnabled]="isEnabled"
-    (mousedown)="node.favorite ? sendPosition($event, false, true) : toggleNode(node)"
-  />
+  @if (node.favorite) {
+    <app-nodetext
+      class="favorite"
+      [node]="node"
+      [searchValue]="searchValue"
+      (contextmenu)="sendPosition($event, true, false)"
+      [isEnabled]="isEnabled"
+      (mousedown)="sendPosition($event, false, true)"
+    />
+  } @else {
+    <app-nodetext
+      [node]="node"
+      [searchValue]="searchValue"
+      (contextmenu)="sendPosition($event, true, false)"
+      [isEnabled]="isEnabled"
+      (click)="toggleNode(node)"
+    />
+  }
 </div>
 
 <app-context-menu [node]="node" (menuAction)="onMenuAction($event)" />

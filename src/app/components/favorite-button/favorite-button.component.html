@@ -3,6 +3,7 @@
     class="favoriten"
     style="border: none; min-width: 105px; width: auto; display: flex; flex-direction: row"
     [ngStyle]="{
+      'pointer-events': isDragged ? 'none' : 'auto',
       top: position.y + 'px',
       left: position.x + 'px',
     }"

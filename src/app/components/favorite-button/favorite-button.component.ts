@@ -28,12 +28,15 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
 
   isOverFavorite: boolean = false;
 
+  isDragged: boolean = false;
+
   constructor(private dragService: DragService) {}
 
   ngOnInit() {
     this.hoversOverFavoriteSubscription = this.dragService.isOverFavorite$.subscribe(
       (state: boolean) => {
         this.isOverFavorite = state;
+        this.isDragged = true;
       },
     );
   }
