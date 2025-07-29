@@ -213,4 +213,44 @@ export class FavoritesService {
       return fav;
     });
   }
+
+  dropNode(sourceNode: node | null, targetNodeText: string | null): Observable<void> {
+    if (!sourceNode || !targetNodeText) {
+      return this.updateTree();
+    }
+
+    return this.getFavorites().pipe(
+      switchMap((favorites: node[]) => {
+        const searchBy: keyof node = sourceNode.call ? 'call' : 'text';
+        const updatedFavorites: node[] = this.removeNodeRecursively(
+          sourceNode,
+          favorites,
+          searchBy,
+        );
+
+        if (targetNodeText === 'Favoriten') {
+          this.payload.favorites.children = [...favorites, sourceNode];
+
+          return this.updateTree();
+        }
+
+        const targetNode: node | undefined = this.searchNodeRecursively(
+          { text: targetNodeText } as node,
+          updatedFavorites,
+          'text',
+        );
+
+        if (targetNode) {
+          targetNode.children ??= [];
+          targetNode.children.push(sourceNode);
+        } else {
+          console.warn(`Target node "${targetNodeText}" not found.`);
+        }
+
+        this.payload.favorites.children = updatedFavorites;
+
+        return this.updateTree();
+      }),
+    );
+  }
 }

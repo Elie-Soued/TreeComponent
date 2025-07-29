@@ -60,6 +60,14 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   loadTree(): void {
     this.nodeService.getInitialData().subscribe((response: data) => {
+      const favoriteDirectory: node | undefined = response.children.find(
+        (n: node) => n.text === 'Favoriten',
+      );
+
+      if (favoriteDirectory) {
+        favoriteDirectory.favorite = true;
+      }
+
       const favoriteNodes: node[] | undefined = response.children.find(
         (n: node) => n.text === 'Favoriten',
       )?.children;

@@ -4,6 +4,7 @@
 import { Injectable } from '@angular/core';
 import { type position, type node } from '../types';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { FavoritesService } from './favorites.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +27,13 @@ export class DragService {
 
   private isOverFavorite: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  private isFavorite: boolean = false;
+
   shareDraggedPosition$: Observable<position> = this.shareDraggedPosition.asObservable();
 
   isOverFavorite$: Observable<boolean> = this.isOverFavorite.asObservable();
+
+  constructor(private favoriteService: FavoritesService) {}
 
   startDrag(e: MouseEvent, node: node, element: HTMLElement): void {
     this.isDragging = true;
@@ -79,18 +84,24 @@ export class DragService {
     const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);
     const favoriteElement: Element | null | undefined = elementBelow?.closest('.favorite');
 
-    this.isOverFavorite.next(Boolean(favoriteElement));
+    this.isFavorite = Boolean(favoriteElement);
+    this.isOverFavorite.next(this.isFavorite);
   }
 
   handleDrop(e: MouseEvent): void {
     const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);
-    const dropTarget: Element | null | undefined =
-      elementBelow?.closest('.drop-target') &&
-      elementBelow.closest('app-node') &&
-      elementBelow.closest('.node-container');
+    const dropTarget: Element | null | undefined = elementBelow?.closest('app-node');
 
     if (dropTarget) {
-      console.log('Valid drop target:', dropTarget);
+      const inputElement: Element | null = dropTarget.querySelector('input[ng-reflect-model]');
+
+      if (inputElement) {
+        const nodeValue: string | null = inputElement.getAttribute('ng-reflect-model');
+
+        if (this.isFavorite && this.draggedNode && nodeValue !== this.draggedNode.text) {
+          this.favoriteService.dropNode(this.draggedNode, nodeValue).subscribe();
+        }
+      }
     }
   }
 }
