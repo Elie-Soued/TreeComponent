@@ -1,6 +1,6 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable } from '@angular/core';
-import { type position, type node } from '../types';
+import { type Position, type TreeNode } from '../types';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FavoritesService } from './favorites.service';
 
@@ -10,15 +10,15 @@ import { FavoritesService } from './favorites.service';
 export class DragService {
   isDragging: boolean = false;
 
-  dragStartPosition: position = { x: 0, y: 0 };
+  dragStartPosition: Position = { x: 0, y: 0 };
 
-  currentMousePosition: position = { x: 0, y: 0 };
+  currentMousePosition: Position = { x: 0, y: 0 };
 
-  draggedNode: node | null = null;
+  draggedNode: TreeNode | null = null;
 
-  elementOffset: position = { x: 0, y: 0 };
+  elementOffset: Position = { x: 0, y: 0 };
 
-  private shareDraggedPosition: BehaviorSubject<position> = new BehaviorSubject<position>({
+  private shareDraggedPosition: BehaviorSubject<Position> = new BehaviorSubject<Position>({
     x: 0,
     y: 0,
   });
@@ -31,13 +31,13 @@ export class DragService {
 
   private isFavorite: boolean = false;
 
-  shareDraggedPosition$: Observable<position> = this.shareDraggedPosition.asObservable();
+  shareDraggedPosition$: Observable<Position> = this.shareDraggedPosition.asObservable();
 
   isOverFavorite$: Observable<boolean> = this.isOverFavorite.asObservable();
 
   constructor(private favoriteService: FavoritesService) {}
 
-  startDrag(e: MouseEvent, node: node, draggedElement: HTMLElement, tree: HTMLElement): void {
+  startDrag(e: MouseEvent, node: TreeNode, draggedElement: HTMLElement, tree: HTMLElement): void {
     this.isDragging = true;
     this.draggedNode = node;
     this.treeElement = tree;

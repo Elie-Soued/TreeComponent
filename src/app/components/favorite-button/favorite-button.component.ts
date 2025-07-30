@@ -1,7 +1,7 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { type position } from '../../types';
+import { type Position } from '../../types';
 import { MatIconModule } from '@angular/material/icon';
 import { DragService } from '../../services/drag.service';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 export class FavoriteButtonComponent implements OnInit, OnDestroy {
   @Input() title!: string;
 
-  @Input() position!: position;
+  @Input() position!: Position;
 
   @Input() isLeftClick: boolean = false;
 

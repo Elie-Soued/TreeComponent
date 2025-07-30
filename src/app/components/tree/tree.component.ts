@@ -12,7 +12,7 @@ import {
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
-import { type data, type node } from '../../types';
+import { type Data, type TreeNode } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -25,23 +25,23 @@ import { CommonModule } from '@angular/common';
   styleUrl: './tree.component.scss',
 })
 export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-  @ViewChild('tree') tree!: MatTree<node>;
+  @ViewChild('tree') tree!: MatTree<TreeNode>;
 
   @Input() searchValue: string | null = '';
 
-  dataSource: node[] = [];
+  dataSource: TreeNode[] = [];
 
-  initialData: node[] = [];
+  initialData: TreeNode[] = [];
 
   isTreeReady: boolean = false;
 
   minimunSearchCharacter: number = 3;
 
   // eslint-disable-next-line @tseslint/explicit-function-return-type, @tseslint/explicit-module-boundary-types, @tseslint/class-methods-use-this
-  childrenAccessor = (node: node) => node.children ?? [];
+  childrenAccessor = (node: TreeNode) => node.children ?? [];
 
   // eslint-disable-next-line @tseslint/explicit-function-return-type, @tseslint/explicit-module-boundary-types, @tseslint/class-methods-use-this
-  hasChild = (_: number, node: node) =>
+  hasChild = (_: number, node: TreeNode) =>
     Boolean(node.children) && node.children && node.children.length > 0;
 
   private updateTreeSubscription: Subscription | undefined;
@@ -53,23 +53,25 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   ngOnInit(): void {
     this.loadTree();
-    this.updateTreeSubscription = this.favoriteService.updateTree$.subscribe((nodes: node[]) => {
-      this.updateTree(nodes);
-    });
+    this.updateTreeSubscription = this.favoriteService.updateTree$.subscribe(
+      (nodes: TreeNode[]) => {
+        this.updateTree(nodes);
+      },
+    );
   }
 
   loadTree(): void {
-    this.nodeService.getInitialData().subscribe((response: data) => {
-      const favoriteDirectory: node | undefined = response.children.find(
-        (n: node) => n.text === 'Favoriten',
+    this.nodeService.getInitialData().subscribe((response: Data) => {
+      const favoriteDirectory: TreeNode | undefined = response.children.find(
+        (n: TreeNode) => n.text === 'Favoriten',
       );
 
       if (favoriteDirectory) {
         favoriteDirectory.favorite = true;
       }
 
-      const favoriteNodes: node[] | undefined = response.children.find(
-        (n: node) => n.text === 'Favoriten',
+      const favoriteNodes: TreeNode[] | undefined = response.children.find(
+        (n: TreeNode) => n.text === 'Favoriten',
       )?.children;
 
       if (favoriteNodes) {
@@ -81,9 +83,9 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
     });
   }
 
-  private updateTree(nodes: node[]): void {
-    const favoritesNode: node | undefined = this.dataSource.find(
-      (n: node) => n.text === 'Favoriten',
+  private updateTree(nodes: TreeNode[]): void {
+    const favoritesNode: TreeNode | undefined = this.dataSource.find(
+      (n: TreeNode) => n.text === 'Favoriten',
     );
 
     if (favoritesNode) {
@@ -118,7 +120,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         this.dataSource = this.initialData;
         this.tree.collapseAll();
       } else {
-        const filteredNodes: node[] = this.nodeService.filterNonMatchingLeafs(
+        const filteredNodes: TreeNode[] = this.nodeService.filterNonMatchingLeafs(
           this.dataSource,
           // eslint-disable-next-line @tseslint/no-non-null-assertion
           this.searchValue!,

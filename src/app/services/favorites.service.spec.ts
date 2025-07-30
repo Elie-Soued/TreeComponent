@@ -4,12 +4,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { FavoritesService } from './favorites.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { type node, type popup_state, type position } from '../types';
+import { type TreeNode, type PopupState, type Position } from '../types';
 
 describe('FavoritesService', () => {
   let service: FavoritesService;
 
-  const mockNode: node = {
+  const mockNode: TreeNode = {
     text: 'Stammdatenverwaltung',
     iconCls: 'stamm.ico',
     children: [
@@ -28,10 +28,10 @@ describe('FavoritesService', () => {
     service = TestBed.inject(FavoritesService);
   });
   it('showFavoritePopup', (done) => {
-    const position: position = { x: 100, y: 200 };
+    const position: Position = { x: 100, y: 200 };
 
     service.showFavoritePopup(mockNode, position, false);
-    service.FavoritePopup$.subscribe((state: popup_state) => {
+    service.FavoritePopup$.subscribe((state: PopupState) => {
       expect(state.visible).toBe(true);
       expect(state.position).toBe(position);
       expect(state.node).toBe(mockNode);
@@ -40,7 +40,7 @@ describe('FavoritesService', () => {
   });
   it('closeFavoritePopup', (done) => {
     service.closeFavoritePopup();
-    service.FavoritePopup$.subscribe((state: popup_state) => {
+    service.FavoritePopup$.subscribe((state: PopupState) => {
       expect(state.visible).toBe(false);
       expect(state.position).toEqual({ x: 0, y: 0 });
       expect(state.node).toBe(null);

@@ -1,17 +1,17 @@
-export interface node {
+export interface TreeNode {
   text: string;
   iconCls: string;
-  children?: node[];
+  children?: TreeNode[];
   favorite?: boolean;
   call?: string;
 }
-export interface data {
+export interface Data {
   Interface: string;
   NodeToLoad: string;
   Result: boolean;
-  children: node[];
+  children: TreeNode[];
 }
-export interface favorite_payload {
+export interface FavoritePayload {
   language: string;
   MenuUsername: string;
   menu: string;
@@ -20,29 +20,29 @@ export interface favorite_payload {
   favorites: {
     text: string;
     iconCls: string;
-    children: node[];
+    children: TreeNode[];
   };
 }
-export type actionTypes = 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
+export type ActionTypes = 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
 export interface ContextMenuAction {
-  type: actionTypes;
-  node: node;
+  type: ActionTypes;
+  node: TreeNode;
   isRoot?: boolean;
 }
-export interface position {
+export interface Position {
   x: number;
   y: number;
 }
-export interface environment_type {
+export interface EnvironmentType {
   production: boolean;
   BASE_URL: string;
   FAVORITE_URL: string;
-  favorite_payload: favorite_payload;
+  favorite_payload: FavoritePayload;
 }
-export interface popup_state {
+export interface PopupState {
   visible: boolean;
-  node: node | null;
-  position: position;
+  node: TreeNode | null;
+  position: Position;
   isLeftClick: boolean;
 }
 export type Change<T> = {

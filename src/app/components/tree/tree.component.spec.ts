@@ -5,8 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { NodeService } from '../../services/node.service';
 import { of } from 'rxjs';
-import { type node, type data, type Changes } from '../../types';
-import { MatTree } from '@angular/material/tree';
+import { type Data } from '../../types';
 import { DebugElement } from '@angular/core';
 
 describe('TreeComponent', () => {
@@ -14,7 +13,7 @@ describe('TreeComponent', () => {
   let fixture: ComponentFixture<TreeComponent>;
   let nodeService: jasmine.SpyObj<NodeService>;
 
-  const mockData: data = {
+  const mockData: Data = {
     Interface: 'menu.load',
     NodeToLoad: 'R10ALL00',
     Result: true,

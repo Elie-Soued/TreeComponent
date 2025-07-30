@@ -1,14 +1,14 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type favorite_payload } from '../types';
+import { type FavoritePayload } from '../types';
 
 @Injectable({
   providedIn: 'root',
 })
 // eslint-disable-next-line @tseslint/no-extraneous-class
 export class UtilsService {
-  static buildRequestBody(payload: favorite_payload): HttpParams {
+  static buildRequestBody(payload: FavoritePayload): HttpParams {
     return new HttpParams().set('ajax_req', JSON.stringify(payload));
   }
 

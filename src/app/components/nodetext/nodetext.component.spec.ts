@@ -3,13 +3,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodetextComponent } from './nodetext.component';
 import { By } from '@angular/platform-browser';
-import { type node } from '../../types';
+import { type TreeNode } from '../../types';
 
 describe('NodetextComponent', () => {
   let component: NodetextComponent;
   let fixture: ComponentFixture<NodetextComponent>;
 
-  const mockNode: node = {
+  const mockNode: TreeNode = {
     text: 'Stammdatenverwaltung',
     iconCls: 'stamm.ico',
     children: [

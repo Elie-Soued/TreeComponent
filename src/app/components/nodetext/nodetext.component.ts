@@ -8,7 +8,7 @@ import {
   AfterViewChecked,
 } from '@angular/core';
 import { NodeService } from '../../services/node.service';
-import { type node } from '../../types';
+import { type TreeNode } from '../../types';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 export class NodetextComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() searchValue: string | null = null;
 
-  @Input() node!: node;
+  @Input() node!: TreeNode;
 
   @Input() isEnabled?: boolean;
 
@@ -37,7 +37,7 @@ export class NodetextComponent implements OnInit, OnChanges, AfterViewChecked {
 
   constructor(public nodeService: NodeService) {}
 
-  private highlightMatchingLetters(node: node, searchValue: string): void {
+  private highlightMatchingLetters(node: TreeNode, searchValue: string): void {
     const lowerText: string = node.text.toLowerCase();
     const lowerSearch: string = searchValue.toLowerCase();
     const start: number = lowerText.indexOf(lowerSearch);

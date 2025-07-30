@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
 import { Observable } from 'rxjs';
-import { type data, type node } from '../types';
+import { type Data, type TreeNode } from '../types';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -14,20 +14,20 @@ export class NodeService {
 
   constructor(private http: HttpClient) {}
 
-  getInitialData(): Observable<data> {
-    return this.http.get<data>(this.URL);
+  getInitialData(): Observable<Data> {
+    return this.http.get<Data>(this.URL);
   }
 
   expandMatchingNodes(
-    nodes: node[],
+    nodes: TreeNode[],
     searchTerm: string,
-    tree: MatTree<node>,
-    ancestors: node[] | [] = [],
+    tree: MatTree<TreeNode>,
+    ancestors: TreeNode[] | [] = [],
   ): void {
     for (const node of nodes) {
       // Expand match with ancestors
       if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
-        ancestors.forEach((ancestor: node) => {
+        ancestors.forEach((ancestor: TreeNode) => {
           tree.expand(ancestor);
         });
       }
@@ -39,11 +39,11 @@ export class NodeService {
     }
   }
 
-  filterNonMatchingLeafs(nodes: node[], searchTerm: string): node[] {
+  filterNonMatchingLeafs(nodes: TreeNode[], searchTerm: string): TreeNode[] {
     return (
       nodes
-        .map((node: node) => {
-          const children: node[] = node.children
+        .map((node: TreeNode) => {
+          const children: TreeNode[] = node.children
             ? this.filterNonMatchingLeafs(node.children, searchTerm)
             : [];
 
@@ -63,14 +63,14 @@ export class NodeService {
   }
 
   // eslint-disable-next-line @tseslint/class-methods-use-this
-  isNodeMatch(node: node, searchValue: string | null): boolean {
+  isNodeMatch(node: TreeNode, searchValue: string | null): boolean {
     if (!searchValue) return false;
 
     return node.text.toLowerCase().includes(searchValue.toLowerCase());
   }
 
-  setFavoriteFlag(nodes: node[]): node[] {
-    return nodes.map((node: node) => {
+  setFavoriteFlag(nodes: TreeNode[]): TreeNode[] {
+    return nodes.map((node: TreeNode) => {
       node.favorite = true;
 
       if (node.children && node.children.length > 0) {

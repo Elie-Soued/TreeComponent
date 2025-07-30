@@ -2,11 +2,11 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 import {
-  type node,
+  type TreeNode,
   type ContextMenuAction,
-  type position,
-  type popup_state,
-  type actionTypes,
+  type Position,
+  type PopupState,
+  type ActionTypes,
 } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
@@ -20,15 +20,15 @@ import { DragService } from '../../services/drag.service';
   styleUrls: ['./context-menu.component.scss'],
 })
 export class ContextMenuComponent implements OnInit, OnDestroy {
-  @Input() node!: node;
+  @Input() node!: TreeNode;
 
   @Output() menuAction: EventEmitter<ContextMenuAction> = new EventEmitter<ContextMenuAction>();
 
   favoritePopupIsVisible: boolean = false;
 
-  favoritePopupPosition: position = { x: 0, y: 0 };
+  favoritePopupPosition: Position = { x: 0, y: 0 };
 
-  draggedPosition: position = { x: 0, y: 0 };
+  draggedPosition: Position = { x: 0, y: 0 };
 
   private favoritePopupSubscription: Subscription | undefined;
 
@@ -43,20 +43,20 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.favoritePopupSubscription = this.favoriteService.FavoritePopup$.subscribe(
-      (state: popup_state) => {
+      (state: PopupState) => {
         this.favoritePopupIsVisible = state.visible && state.node === this.node;
         this.favoritePopupPosition = state.position;
         this.isLeftClick = state.isLeftClick;
       },
     );
     this.draggedPositionSubscription = this.dragService.shareDraggedPosition$.subscribe(
-      (position: position) => {
+      (position: Position) => {
         this.draggedPosition = position;
       },
     );
   }
 
-  onMenuAction(type: actionTypes, isRoot: boolean = false): void {
+  onMenuAction(type: ActionTypes, isRoot: boolean = false): void {
     this.menuAction.emit({
       type,
       node: this.node,

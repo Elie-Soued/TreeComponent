@@ -2,7 +2,7 @@
 /* eslint-disable @tseslint/no-non-null-assertion */
 /* eslint-disable @tseslint/unbound-method */
 import { TestBed } from '@angular/core/testing';
-import { type node, type data } from '../types';
+import { type TreeNode, type Data } from '../types';
 import { NodeService } from './node.service';
 import { provideHttpClient } from '@angular/common/http';
 import {
@@ -17,7 +17,7 @@ describe('NodeService', () => {
   let service: NodeService;
   let httpClient: HttpTestingController;
 
-  const mockData: data = {
+  const mockData: Data = {
     Interface: 'menu.load',
     NodeToLoad: 'R10ALL00',
     Result: true,
@@ -29,7 +29,7 @@ describe('NodeService', () => {
       },
     ],
   };
-  const mockData2: data = {
+  const mockData2: Data = {
     Interface: 'menu.load',
     NodeToLoad: 'R10ALL00',
     Result: true,
@@ -70,7 +70,7 @@ describe('NodeService', () => {
       },
     ],
   };
-  const treeData: node[] = [
+  const treeData: TreeNode[] = [
     {
       text: 'Parent 1',
       iconCls: '',
@@ -114,7 +114,7 @@ describe('NodeService', () => {
     httpClient = TestBed.inject(HttpTestingController);
   });
   it('getInitialData is working correctly', () => {
-    service.getInitialData().subscribe((data: data) => {
+    service.getInitialData().subscribe((data: Data) => {
       expect(data).toEqual(mockData);
     });
 
@@ -124,9 +124,9 @@ describe('NodeService', () => {
     req.flush(mockData);
   });
   it('expandMatchingNodes expands correct ancestors for matching nodes', () => {
-    const mockTree: MatTree<node> = {
+    const mockTree: MatTree<TreeNode> = {
       expand: jasmine.createSpy('expand'),
-    } as unknown as MatTree<node>;
+    } as unknown as MatTree<TreeNode>;
 
     service.expandMatchingNodes(treeData, 'match', mockTree, []);
     // Check that it expanded correct ancestors
@@ -136,7 +136,7 @@ describe('NodeService', () => {
     expect(mockTree.expand).toHaveBeenCalledWith(treeData[1].children![0]);
   });
   it('isNodeMatch is working correctly', () => {
-    const mockNode: node = {
+    const mockNode: TreeNode = {
       text: 'test',
       iconCls: '',
       children: [],
@@ -146,7 +146,7 @@ describe('NodeService', () => {
     expect(service.isNodeMatch(mockNode, 'test')).toBeTruthy();
   });
   it('filterNonMatchingLeafs is filtering the correct nodes', () => {
-    const ouf: node[] = service.filterNonMatchingLeafs(mockData2.children, 'Pilex');
+    const ouf: TreeNode[] = service.filterNonMatchingLeafs(mockData2.children, 'Pilex');
 
     expect(ouf.length).toBe(1);
     expect(ouf[0].text).toBe('Pilex CornFlex');

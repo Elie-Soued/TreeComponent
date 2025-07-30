@@ -1,7 +1,7 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Component, Input, HostListener, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { type node, type ContextMenuAction } from '../../types';
+import { type TreeNode, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
 import { FavoritesService } from '../../services/favorites.service';
@@ -19,11 +19,11 @@ import { DragService } from '../../services/drag.service';
 export class NodeComponent implements OnInit, OnDestroy {
   @Input() isLeaf: boolean = false;
 
-  @Input() node!: node;
+  @Input() node!: TreeNode;
 
   @Input() searchValue: string | null = null;
 
-  @Input() tree!: MatTree<node>;
+  @Input() tree!: MatTree<TreeNode>;
 
   isEnabled: boolean = false;
 
@@ -39,7 +39,7 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.enableFavoriteNodeSubscription = this.favoriteService.enableFavoriteNode$.subscribe(
-      (node: node) => {
+      (node: TreeNode) => {
         if (node === this.node) {
           this.isEnabled = true;
         }
@@ -47,7 +47,7 @@ export class NodeComponent implements OnInit, OnDestroy {
     );
   }
 
-  toggleNode(node: node): void {
+  toggleNode(node: TreeNode): void {
     this.tree.toggle(node);
   }
 
@@ -106,15 +106,15 @@ export class NodeComponent implements OnInit, OnDestroy {
     this.isEnabled = false;
   }
 
-  private addNodeToFavorite(node: node): void {
+  private addNodeToFavorite(node: TreeNode): void {
     this.favoriteService.addNodeToFavorites(node).subscribe();
   }
 
-  private createFolderInFavorite(node: node, isRoot: boolean = false): void {
+  private createFolderInFavorite(node: TreeNode, isRoot: boolean = false): void {
     this.favoriteService.createNewFolder(node, isRoot).subscribe();
   }
 
-  private removeNodeFromFavorite(node: node): void {
+  private removeNodeFromFavorite(node: TreeNode): void {
     node.favorite = false;
     this.favoriteService.removeNodeFromFavorites(node).subscribe({
       error: () => {
@@ -123,7 +123,7 @@ export class NodeComponent implements OnInit, OnDestroy {
     });
   }
 
-  private enableInput(node: node): void {
+  private enableInput(node: TreeNode): void {
     this.originalNode = JSON.stringify(node);
     this.favoriteService.enableNodeText(node);
   }

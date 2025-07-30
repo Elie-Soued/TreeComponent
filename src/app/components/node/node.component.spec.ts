@@ -5,7 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodeService } from '../../services/node.service';
 import { FavoritesService } from '../../services/favorites.service';
 import { MatTree } from '@angular/material/tree';
-import { type node, type popup_state } from '../../types';
+import { type TreeNode, type PopupState } from '../../types';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -15,11 +15,11 @@ describe('NodeComponent', () => {
   let fixture: ComponentFixture<NodeComponent>;
   let nodeService: jasmine.SpyObj<NodeService>;
   let favoritesService: jasmine.SpyObj<FavoritesService>;
-  let mockTree: jasmine.SpyObj<MatTree<node>>;
-  let favoritePopupSubject: BehaviorSubject<popup_state>;
-  let enableFavoriteNode: Subject<node>;
+  let mockTree: jasmine.SpyObj<MatTree<TreeNode>>;
+  let favoritePopupSubject: BehaviorSubject<PopupState>;
+  let enableFavoriteNode: Subject<TreeNode>;
 
-  const mockNode: node = {
+  const mockNode: TreeNode = {
     text: 'Stammdatenverwaltung',
     iconCls: 'stamm.ico',
     children: [
@@ -30,7 +30,7 @@ describe('NodeComponent', () => {
       },
     ],
   };
-  const initialPopupState: popup_state = {
+  const initialPopupState: PopupState = {
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
@@ -49,7 +49,7 @@ describe('NodeComponent', () => {
     ]) as jasmine.SpyObj<FavoritesService>;
     favoritesService.FavoritePopup$ = favoritePopupSubject.asObservable();
     favoritesService.enableFavoriteNode$ = enableFavoriteNode.asObservable();
-    mockTree = jasmine.createSpyObj<MatTree<node>>('MatTree', ['isExpanded', 'toggle']);
+    mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', ['isExpanded', 'toggle']);
     await TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),

@@ -4,7 +4,7 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, Subject, switchMap, tap, catchError } from 'rxjs';
-import { type node, type favorite_payload, type data, type popup_state } from '../types';
+import { type TreeNode, type FavoritePayload, type Data, type PopupState } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { UtilsService } from './utils.service';
@@ -17,31 +17,31 @@ export class FavoritesService {
 
   private BASE_URL: string = environment.BASE_URL;
 
-  private payload: favorite_payload = environment.favorite_payload;
+  private payload: FavoritePayload = environment.favorite_payload;
 
-  private FavoritePopup: BehaviorSubject<popup_state> = new BehaviorSubject<popup_state>({
+  private FavoritePopup: BehaviorSubject<PopupState> = new BehaviorSubject<PopupState>({
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
     isLeftClick: false,
   });
 
-  private updateTreeUI: BehaviorSubject<node[] | []> = new BehaviorSubject<node[] | []>([]);
+  private updateTreeUI: BehaviorSubject<TreeNode[] | []> = new BehaviorSubject<TreeNode[] | []>([]);
 
-  private enableFavoriteNode: Subject<node> = new Subject<node>();
+  private enableFavoriteNode: Subject<TreeNode> = new Subject<TreeNode>();
 
-  FavoritePopup$: Observable<popup_state> = this.FavoritePopup.asObservable();
+  FavoritePopup$: Observable<PopupState> = this.FavoritePopup.asObservable();
 
-  updateTree$: Observable<node[] | []> = this.updateTreeUI.asObservable();
+  updateTree$: Observable<TreeNode[] | []> = this.updateTreeUI.asObservable();
 
-  enableFavoriteNode$: Observable<node> = this.enableFavoriteNode.asObservable();
+  enableFavoriteNode$: Observable<TreeNode> = this.enableFavoriteNode.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  addNodeToFavorites(node: node): Observable<void> {
+  addNodeToFavorites(node: TreeNode): Observable<void> {
     return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
-        const favoriteCopy: node = this.createFavoriteCopy(node);
+      switchMap((favorites: TreeNode[]) => {
+        const favoriteCopy: TreeNode = this.createFavoriteCopy(node);
 
         this.payload.favorites.children = [...favorites, favoriteCopy];
 
@@ -51,12 +51,16 @@ export class FavoritesService {
   }
 
   renameNodeInFavorites(nodeString: string, newValue: string): Observable<void> {
-    const node: node = JSON.parse(nodeString) as node;
+    const node: TreeNode = JSON.parse(nodeString) as TreeNode;
 
     return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
+      switchMap((favorites: TreeNode[]) => {
         // In case we would like to rename nested file/folders
-        const nodeToChange: node | undefined = this.searchNodeRecursively(node, favorites, 'text');
+        const nodeToChange: TreeNode | undefined = this.searchNodeRecursively(
+          node,
+          favorites,
+          'text',
+        );
 
         if (nodeToChange) {
           nodeToChange.text = newValue;
@@ -68,10 +72,10 @@ export class FavoritesService {
     );
   }
 
-  removeNodeFromFavorites(node: node): Observable<void> {
+  removeNodeFromFavorites(node: TreeNode): Observable<void> {
     return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
-        const filteredFavorites: node[] = node.call
+      switchMap((favorites: TreeNode[]) => {
+        const filteredFavorites: TreeNode[] = node.call
           ? this.removeNodeRecursively(node, favorites, 'call')
           : this.removeNodeRecursively(node, favorites, 'text');
 
@@ -82,8 +86,8 @@ export class FavoritesService {
     );
   }
 
-  createNewFolder(parentNode: node, isRoot: boolean): Observable<void> {
-    const childNode: node = {
+  createNewFolder(parentNode: TreeNode, isRoot: boolean): Observable<void> {
+    const childNode: TreeNode = {
       text: 'neuer Ordner',
       iconCls: 'no-icon',
       children: [],
@@ -91,11 +95,11 @@ export class FavoritesService {
     };
 
     return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
+      switchMap((favorites: TreeNode[]) => {
         if (isRoot) {
           this.payload.favorites.children = [...favorites, childNode];
         } else {
-          const nodeInFavorite: node | undefined =
+          const nodeInFavorite: TreeNode | undefined =
             parentNode.text === 'neuer Ordner' && parentNode.call
               ? this.searchNodeRecursively(parentNode, favorites, 'call')
               : this.searchNodeRecursively(parentNode, favorites, 'text');
@@ -112,11 +116,15 @@ export class FavoritesService {
     );
   }
 
-  enableNodeText(node: node): void {
+  enableNodeText(node: TreeNode): void {
     this.enableFavoriteNode.next(node);
   }
 
-  showFavoritePopup(node: node, position: { x: number; y: number }, isLeftClick: boolean): void {
+  showFavoritePopup(
+    node: TreeNode,
+    position: { x: number; y: number },
+    isLeftClick: boolean,
+  ): void {
     this.FavoritePopup.next({
       visible: true,
       node,
@@ -134,15 +142,15 @@ export class FavoritesService {
     });
   }
 
-  dropNode(sourceNode: node | null, targetNodeText: string | null): Observable<void> {
+  dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): Observable<void> {
     if (!sourceNode || !targetNodeText) {
       return this.updateTree();
     }
 
     return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
-        const searchBy: keyof node = sourceNode.call ? 'call' : 'text';
-        const updatedFavorites: node[] = this.removeNodeRecursively(
+      switchMap((favorites: TreeNode[]) => {
+        const searchBy: keyof TreeNode = sourceNode.call ? 'call' : 'text';
+        const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
           sourceNode,
           favorites,
           searchBy,
@@ -154,8 +162,8 @@ export class FavoritesService {
           return this.updateTree();
         }
 
-        const targetNode: node | undefined = this.searchNodeRecursively(
-          { text: targetNodeText } as node,
+        const targetNode: TreeNode | undefined = this.searchNodeRecursively(
+          { text: targetNodeText } as TreeNode,
           updatedFavorites,
           'text',
         );
@@ -174,13 +182,13 @@ export class FavoritesService {
     );
   }
 
-  private getFavorites(): Observable<node[]> {
+  private getFavorites(): Observable<TreeNode[]> {
     return this.http
-      .get<data>(this.BASE_URL)
+      .get<Data>(this.BASE_URL)
       .pipe(
         map(
-          (response: data) =>
-            response.children.find((el: node) => el.text === 'Favoriten')?.children ?? [],
+          (response: Data) =>
+            response.children.find((el: TreeNode) => el.text === 'Favoriten')?.children ?? [],
         ),
       );
   }
@@ -201,7 +209,7 @@ export class FavoritesService {
           console.error('Error saving to backend:', error);
 
           return this.getFavorites().pipe(
-            tap((favorites: node[]) => {
+            tap((favorites: TreeNode[]) => {
               this.updateTreeUI.next(favorites);
             }),
             map(() => undefined),
@@ -211,12 +219,12 @@ export class FavoritesService {
   }
 
   private searchNodeRecursively(
-    targetNode: node,
-    favorites: node[],
-    searchBy: keyof node,
-  ): node | undefined {
-    const foundNode: node | undefined = favorites.find(
-      (fav: node) => fav[searchBy] === targetNode[searchBy],
+    targetNode: TreeNode,
+    favorites: TreeNode[],
+    searchBy: keyof TreeNode,
+  ): TreeNode | undefined {
+    const foundNode: TreeNode | undefined = favorites.find(
+      (fav: TreeNode) => fav[searchBy] === targetNode[searchBy],
     );
 
     if (foundNode) {
@@ -225,7 +233,7 @@ export class FavoritesService {
 
     for (const fav of favorites) {
       if (fav.children && fav.children.length > 0) {
-        const nestedResult: node | undefined = this.searchNodeRecursively(
+        const nestedResult: TreeNode | undefined = this.searchNodeRecursively(
           targetNode,
           fav.children,
           searchBy,
@@ -240,12 +248,16 @@ export class FavoritesService {
     return undefined;
   }
 
-  private removeNodeRecursively(targetNode: node, favorites: node[], searchBy: keyof node): node[] {
-    const filteredFavorites: node[] = favorites.filter(
-      (fav: node) => fav[searchBy] !== targetNode[searchBy],
+  private removeNodeRecursively(
+    targetNode: TreeNode,
+    favorites: TreeNode[],
+    searchBy: keyof TreeNode,
+  ): TreeNode[] {
+    const filteredFavorites: TreeNode[] = favorites.filter(
+      (fav: TreeNode) => fav[searchBy] !== targetNode[searchBy],
     );
 
-    return filteredFavorites.map((fav: node) => {
+    return filteredFavorites.map((fav: TreeNode) => {
       if (fav.children && fav.children.length > 0) {
         return {
           ...fav,
@@ -257,12 +269,12 @@ export class FavoritesService {
     });
   }
 
-  private createFavoriteCopy(node: node): node {
-    const copy: node = {
+  private createFavoriteCopy(node: TreeNode): TreeNode {
+    const copy: TreeNode = {
       ...node,
       favorite: true,
       children: node.children
-        ? node.children.map((child: node) => this.createFavoriteCopy(child))
+        ? node.children.map((child: TreeNode) => this.createFavoriteCopy(child))
         : undefined,
     };
 
