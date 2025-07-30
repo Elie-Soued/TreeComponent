@@ -17,7 +17,7 @@
     } @else {
       <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn node-btn--red">
         <mat-icon class="small-icon" id="nodeIcon">
-          {{ 'remove' }}
+          {{ 'close' }}
         </mat-icon>
       </button>
     }
@@ -26,6 +26,7 @@
 } @else {
   <button
     class="favoriten hoverable"
+    style="border: none"
     [ngStyle]="{
       top: position.y + 'px',
       left: position.x + 'px',
