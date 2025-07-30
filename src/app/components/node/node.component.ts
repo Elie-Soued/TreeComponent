@@ -107,12 +107,7 @@ export class NodeComponent implements OnInit, OnDestroy {
   }
 
   private addNodeToFavorite(node: node): void {
-    node.favorite = true;
-    this.favoriteService.addNodeToFavorites(node).subscribe({
-      error: () => {
-        node.favorite = false;
-      },
-    });
+    this.favoriteService.addNodeToFavorites(node).subscribe();
   }
 
   private createFolderInFavorite(node: node, isRoot: boolean = false): void {

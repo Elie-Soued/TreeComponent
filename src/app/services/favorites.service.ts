@@ -41,7 +41,9 @@ export class FavoritesService {
   addNodeToFavorites(node: node): Observable<void> {
     return this.getFavorites().pipe(
       switchMap((favorites: node[]) => {
-        this.payload.favorites.children = [...favorites, node];
+        const favoriteCopy: node = this.createFavoriteCopy(node);
+
+        this.payload.favorites.children = [...favorites, favoriteCopy];
 
         return this.updateTree();
       }),
@@ -85,6 +87,7 @@ export class FavoritesService {
       text: 'neuer Ordner',
       iconCls: 'no-icon',
       children: [],
+      favorite: true,
     };
 
     return this.getFavorites().pipe(
@@ -129,6 +132,46 @@ export class FavoritesService {
       position: { x: 0, y: 0 },
       isLeftClick: false,
     });
+  }
+
+  dropNode(sourceNode: node | null, targetNodeText: string | null): Observable<void> {
+    if (!sourceNode || !targetNodeText) {
+      return this.updateTree();
+    }
+
+    return this.getFavorites().pipe(
+      switchMap((favorites: node[]) => {
+        const searchBy: keyof node = sourceNode.call ? 'call' : 'text';
+        const updatedFavorites: node[] = this.removeNodeRecursively(
+          sourceNode,
+          favorites,
+          searchBy,
+        );
+
+        if (targetNodeText === 'Favoriten') {
+          this.payload.favorites.children = [...favorites, sourceNode];
+
+          return this.updateTree();
+        }
+
+        const targetNode: node | undefined = this.searchNodeRecursively(
+          { text: targetNodeText } as node,
+          updatedFavorites,
+          'text',
+        );
+
+        if (targetNode) {
+          targetNode.children ??= [];
+          targetNode.children.push(sourceNode);
+        } else {
+          console.warn(`Target node "${targetNodeText}" not found.`);
+        }
+
+        this.payload.favorites.children = updatedFavorites;
+
+        return this.updateTree();
+      }),
+    );
   }
 
   private getFavorites(): Observable<node[]> {
@@ -214,43 +257,15 @@ export class FavoritesService {
     });
   }
 
-  dropNode(sourceNode: node | null, targetNodeText: string | null): Observable<void> {
-    if (!sourceNode || !targetNodeText) {
-      return this.updateTree();
-    }
+  private createFavoriteCopy(node: node): node {
+    const copy: node = {
+      ...node,
+      favorite: true,
+      children: node.children
+        ? node.children.map((child: node) => this.createFavoriteCopy(child))
+        : undefined,
+    };
 
-    return this.getFavorites().pipe(
-      switchMap((favorites: node[]) => {
-        const searchBy: keyof node = sourceNode.call ? 'call' : 'text';
-        const updatedFavorites: node[] = this.removeNodeRecursively(
-          sourceNode,
-          favorites,
-          searchBy,
-        );
-
-        if (targetNodeText === 'Favoriten') {
-          this.payload.favorites.children = [...favorites, sourceNode];
-
-          return this.updateTree();
-        }
-
-        const targetNode: node | undefined = this.searchNodeRecursively(
-          { text: targetNodeText } as node,
-          updatedFavorites,
-          'text',
-        );
-
-        if (targetNode) {
-          targetNode.children ??= [];
-          targetNode.children.push(sourceNode);
-        } else {
-          console.warn(`Target node "${targetNodeText}" not found.`);
-        }
-
-        this.payload.favorites.children = updatedFavorites;
-
-        return this.updateTree();
-      }),
-    );
+    return copy;
   }
 }
