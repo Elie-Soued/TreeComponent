@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @tseslint/class-methods-use-this */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable } from '@angular/core';
 import { type position, type node } from '../types';

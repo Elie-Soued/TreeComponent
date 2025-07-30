@@ -1,6 +1,4 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-/* eslint-disable @tseslint/explicit-module-boundary-types */
-/* eslint-disable @tseslint/explicit-function-return-type */
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { type position } from '../../types';
@@ -32,7 +30,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
 
   constructor(private dragService: DragService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.hoversOverFavoriteSubscription = this.dragService.isOverFavorite$.subscribe(
       (state: boolean) => {
         this.isOverFavorite = state;
@@ -45,7 +43,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
     this.buttonClick.emit();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.hoversOverFavoriteSubscription?.unsubscribe();
   }
 }

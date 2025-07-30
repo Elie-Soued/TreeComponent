@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Component, Input, HostListener, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -110,8 +109,7 @@ export class NodeComponent implements OnInit, OnDestroy {
   private addNodeToFavorite(node: node): void {
     node.favorite = true;
     this.favoriteService.addNodeToFavorites(node).subscribe({
-      error: (error: Error) => {
-        console.error('Error adding node to favorites:', error);
+      error: () => {
         node.favorite = false;
       },
     });
@@ -124,8 +122,7 @@ export class NodeComponent implements OnInit, OnDestroy {
   private removeNodeFromFavorite(node: node): void {
     node.favorite = false;
     this.favoriteService.removeNodeFromFavorites(node).subscribe({
-      error: (error: Error) => {
-        console.error('Error removing node from favorites:', error);
+      error: () => {
         node.favorite = true;
       },
     });
