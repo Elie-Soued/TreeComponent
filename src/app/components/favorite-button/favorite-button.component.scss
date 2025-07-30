@@ -2,8 +2,11 @@
   position: fixed;
   border: 1px solid lightgray;
   background-color: white;
-  width: 100px;
+  min-width: 105px;
+  width: auto;
   text-align: center;
+  display: flex;
+  flex-direction: row;
   padding: 0.25rem;
   margin: 0.25rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -33,6 +36,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.25rem;
+  margin: 0.25rem;
   width: 20px;
   height: 20px;
   font-size: 0.875rem; // btn-sm → around 14px
@@ -54,4 +58,8 @@
   font-weight: bold;
   font-size: 0.75rem;
   direction: rtl;
+}
+
+span {
+  margin: 0.25rem;
 }

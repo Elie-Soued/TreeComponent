@@ -1,7 +1,6 @@
 @if (isLeftClick) {
   <div
     class="favoriten"
-    style="border: none; min-width: 105px; width: auto; display: flex; flex-direction: row"
     [ngStyle]="{
       'pointer-events': isDragged ? 'none' : 'auto',
       top: position.y + 'px',
@@ -22,13 +21,11 @@
         </mat-icon>
       </button>
     }
-
-    {{ title }}
+    <span> {{ title }}</span>
   </div>
 } @else {
   <button
     class="favoriten hoverable"
-    style="border: none; width: 105px"
     [ngStyle]="{
       top: position.y + 'px',
       left: position.x + 'px',
