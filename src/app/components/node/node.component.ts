@@ -64,6 +64,12 @@ export class NodeComponent implements OnInit, OnDestroy {
     }
 
     if (isLeftClick && this.node.favorite) {
+      if (this.node.text === 'Favoriten') {
+        this.tree.toggle(this.node);
+
+        return;
+      }
+
       const treeReference: HTMLElement | null = this.elementRef.nativeElement.closest('mat-tree');
 
       if (treeReference) {
