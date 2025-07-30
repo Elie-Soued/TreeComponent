@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FavoriteButtonComponent } from './favorite-button.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('FavoriteButtonComponent', () => {
   let component: FavoriteButtonComponent;
@@ -7,6 +9,7 @@ describe('FavoriteButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
       imports: [FavoriteButtonComponent],
     }).compileComponents();
     fixture = TestBed.createComponent(FavoriteButtonComponent);
