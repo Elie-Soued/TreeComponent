@@ -63,9 +63,12 @@ export class NodeComponent implements OnInit, OnDestroy {
       e.preventDefault();
     }
 
-    // Check if this is a drag start (left click on favorite node)
     if (isLeftClick && this.node.favorite) {
-      this.dragService.startDrag(e, this.node, this.elementRef.nativeElement);
+      const treeReference: HTMLElement | null = this.elementRef.nativeElement.closest('mat-tree');
+
+      if (treeReference) {
+        this.dragService.startDrag(e, this.node, this.elementRef.nativeElement, treeReference);
+      }
     }
 
     this.favoriteService.showFavoritePopup(

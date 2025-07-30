@@ -25,6 +25,10 @@ export class DragService {
     y: 0,
   });
 
+  private treeElement!: HTMLElement;
+
+  private boundaries: { left: number; top: number; right: number; bottom: number } | null = null;
+
   private isOverFavorite: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private isFavorite: boolean = false;
@@ -35,15 +39,23 @@ export class DragService {
 
   constructor(private favoriteService: FavoritesService) {}
 
-  startDrag(e: MouseEvent, node: node, element: HTMLElement): void {
+  startDrag(e: MouseEvent, node: node, draggedElement: HTMLElement, tree: HTMLElement): void {
     this.isDragging = true;
     this.draggedNode = node;
+    this.treeElement = tree;
 
-    const rect: DOMRect = element.getBoundingClientRect();
+    const rect: DOMRect = draggedElement.getBoundingClientRect();
+    const rectTree: DOMRect = this.treeElement.getBoundingClientRect();
 
     this.elementOffset = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
+    };
+    this.boundaries = {
+      left: rectTree.left,
+      top: rectTree.top,
+      right: rectTree.right - rect.width,
+      bottom: rectTree.bottom - rect.height,
     };
     this.dragStartPosition = { x: rect.left, y: rect.top };
     this.currentMousePosition = {
@@ -58,12 +70,14 @@ export class DragService {
   }
 
   onMouseMove = (e: MouseEvent): void => {
-    if (!this.isDragging) return;
+    if (!this.isDragging || !this.boundaries) return;
 
-    this.currentMousePosition = {
-      x: e.clientX - this.elementOffset.x,
-      y: e.clientY - this.elementOffset.y,
-    };
+    let newX: number = e.clientX - this.elementOffset.x;
+    let newY: number = e.clientY - this.elementOffset.y;
+
+    newX = Math.max(this.boundaries.left, Math.min(this.boundaries.right, newX));
+    newY = Math.max(this.boundaries.top, Math.min(this.boundaries.bottom, newY));
+    this.currentMousePosition = { x: newX, y: newY };
     this.shareDraggedPosition.next(this.currentMousePosition);
     this.checkFavoriteHover(e);
   };
