@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, tap, catchError } from 'rxjs/operators';
 import { type TreeNode, type Data } from '../types';
 import { environment } from '../../environments/environment';
-import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +30,7 @@ export class DataService {
 
           if (favoriteDirectory.children) {
             this.setFavoriteFlags(favoriteDirectory.children);
-            UtilsService.setUniqueIDs(favoriteDirectory.children);
+            this.setUniqueIDs(favoriteDirectory.children);
           }
         }
 
@@ -93,6 +92,16 @@ export class DataService {
 
       if (node.children) {
         this.setFavoriteFlags(node.children);
+      }
+    });
+  }
+
+  private setUniqueIDs(nodes: TreeNode[]): void {
+    nodes.forEach((node: TreeNode) => {
+      node.id = crypto.randomUUID();
+
+      if (node.children) {
+        this.setUniqueIDs(node.children);
       }
     });
   }
