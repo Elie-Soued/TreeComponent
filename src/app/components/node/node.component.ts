@@ -27,8 +27,6 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   isEnabled: boolean = false;
 
-  private originalNode: string = '';
-
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -106,46 +104,28 @@ export class NodeComponent implements OnInit, OnDestroy {
     this.isEnabled = false;
   }
 
-  private addNodeToFavorite(node: TreeNode): void {
-    this.favoriteService.addNodeToFavorites(node);
-  }
-
-  private createFolderInFavorite(node: TreeNode, isRoot: boolean = false): void {
-    this.favoriteService.createNewFolder(node, isRoot);
-  }
-
-  private removeNodeFromFavorite(node: TreeNode): void {
-    node.favorite = false;
-    this.favoriteService.removeNodeFromFavorites(node);
-  }
-
-  private enableInput(node: TreeNode): void {
-    this.originalNode = JSON.stringify(node);
-    this.favoriteService.enableNodeText(node);
-  }
-
   onMenuAction(action: ContextMenuAction): void {
     switch (action.type) {
       case 'addToFavorites': {
-        this.addNodeToFavorite(action.node);
+        this.favoriteService.addNodeToFavorites(action.node);
 
         break;
       }
 
       case 'removeFromFavorites': {
-        this.removeNodeFromFavorite(action.node);
+        this.favoriteService.removeNodeFromFavorites(action.node);
 
         break;
       }
 
       case 'createFolder': {
-        this.createFolderInFavorite(action.node, action.isRoot ?? false);
+        this.favoriteService.createNewFolder(action.node, action.isRoot ?? false);
 
         break;
       }
 
       case 'enableInput': {
-        this.enableInput(action.node);
+        this.favoriteService.enableNodeText(action.node);
 
         break;
       }
