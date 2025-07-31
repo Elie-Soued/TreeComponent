@@ -29,7 +29,7 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   private originalNode: string = '';
 
-  private enableFavoriteNodeSubscription: Subscription | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private favoriteService: FavoritesService,
@@ -38,12 +38,12 @@ export class NodeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.enableFavoriteNodeSubscription = this.favoriteService.enableFavoriteNode$.subscribe(
-      (node: TreeNode) => {
+    this.subscriptions.add(
+      this.favoriteService.enableFavoriteNode$.subscribe((node: TreeNode) => {
         if (node === this.node) {
           this.isEnabled = true;
         }
-      },
+      }),
     );
   }
 
@@ -153,6 +153,6 @@ export class NodeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.enableFavoriteNodeSubscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 }

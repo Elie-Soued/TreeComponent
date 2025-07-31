@@ -22,7 +22,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
 
   @Output() buttonClick: EventEmitter<void> = new EventEmitter<void>();
 
-  private hoversOverFavoriteSubscription: Subscription | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   isOverFavorite: boolean = false;
 
@@ -31,11 +31,11 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   constructor(private dragService: DragService) {}
 
   ngOnInit(): void {
-    this.hoversOverFavoriteSubscription = this.dragService.isOverFavorite$.subscribe(
-      (state: boolean) => {
+    this.subscriptions.add(
+      this.dragService.isOverFavorite$.subscribe((state: boolean) => {
         this.isOverFavorite = state;
         this.isDragged = true;
-      },
+      }),
     );
   }
 
@@ -44,6 +44,6 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.hoversOverFavoriteSubscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 }

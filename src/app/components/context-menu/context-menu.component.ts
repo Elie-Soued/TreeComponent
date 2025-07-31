@@ -30,9 +30,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   draggedPosition: Position = { x: 0, y: 0 };
 
-  private favoritePopupSubscription: Subscription | undefined;
-
-  private draggedPositionSubscription: Subscription | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   isLeftClick: boolean = false;
 
@@ -42,17 +40,17 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.favoritePopupSubscription = this.favoriteService.FavoritePopup$.subscribe(
-      (state: PopupState) => {
+    this.subscriptions.add(
+      this.favoriteService.FavoritePopup$.subscribe((state: PopupState) => {
         this.favoritePopupIsVisible = state.visible && state.node === this.node;
         this.favoritePopupPosition = state.position;
         this.isLeftClick = state.isLeftClick;
-      },
+      }),
     );
-    this.draggedPositionSubscription = this.dragService.shareDraggedPosition$.subscribe(
-      (position: Position) => {
+    this.subscriptions.add(
+      this.dragService.shareDraggedPosition$.subscribe((position: Position) => {
         this.draggedPosition = position;
-      },
+      }),
     );
   }
 
@@ -65,7 +63,6 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.favoritePopupSubscription?.unsubscribe();
-    this.draggedPositionSubscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 }

@@ -17,14 +17,16 @@ export class SearchbarComponent implements OnInit, OnDestroy {
 
   searchControl: FormControl = new FormControl('');
 
-  private valueChangeSubscription: Subscription | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   ngOnInit(): void {
-    this.valueChangeSubscription = this.searchControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((value: string | null) => {
-        this.searchValue.emit(value);
-      });
+    this.subscriptions.add(
+      this.searchControl.valueChanges
+        .pipe(debounceTime(300), distinctUntilChanged())
+        .subscribe((value: string | null) => {
+          this.searchValue.emit(value);
+        }),
+    );
   }
 
   clearForm(): void {
@@ -32,6 +34,6 @@ export class SearchbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.valueChangeSubscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 }

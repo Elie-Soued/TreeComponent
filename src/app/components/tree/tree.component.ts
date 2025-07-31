@@ -1,7 +1,9 @@
+/* eslint-disable @tseslint/explicit-function-return-type */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import {
   Component,
   OnInit,
+  OnDestroy,
   ViewChild,
   Input,
   SimpleChanges,
@@ -14,6 +16,7 @@ import { NodeComponent } from '../node/node.component';
 import { type TreeNode } from '../../types';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../../services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tree',
@@ -22,7 +25,7 @@ import { DataService } from '../../services/data.service';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss',
 })
-export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
+export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('tree') tree!: MatTree<TreeNode>;
 
   @Input() searchValue: string | null = '';
@@ -34,6 +37,8 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   isTreeReady: boolean = false;
 
   minimunSearchCharacter: number = 3;
+
+  private subscriptions: Subscription = new Subscription();
 
   // eslint-disable-next-line @tseslint/explicit-function-return-type, @tseslint/explicit-module-boundary-types, @tseslint/class-methods-use-this
   childrenAccessor = (node: TreeNode) => node.children ?? [];
@@ -48,7 +53,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.loadInitialData().subscribe();
+    this.subscriptions.add(this.dataService.loadInitialData().subscribe());
     this.updateTreeData();
   }
 
@@ -65,18 +70,20 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   private updateTreeData(): void {
-    this.dataService.treeData$.subscribe((data: TreeNode[]) => {
-      const favoritesNode: TreeNode | undefined = data.find(
-        (node: TreeNode) => node.text === 'Favoriten',
-      );
+    this.subscriptions.add(
+      this.dataService.treeData$.subscribe((data: TreeNode[]) => {
+        const favoritesNode: TreeNode | undefined = data.find(
+          (node: TreeNode) => node.text === 'Favoriten',
+        );
 
-      if (favoritesNode) {
-        this.tree.expand(favoritesNode);
-      }
+        if (favoritesNode) {
+          this.tree.expand(favoritesNode);
+        }
 
-      this.initialData = [...data];
-      this.dataSource = [...data];
-    });
+        this.initialData = [...data];
+        this.dataSource = [...data];
+      }),
+    );
   }
 
   private filterTree(): void {
@@ -92,5 +99,9 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataSource = filteredNodes;
       this.nodeService.expandMatchingNodes(this.dataSource, this.searchValue, this.tree, []);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }
