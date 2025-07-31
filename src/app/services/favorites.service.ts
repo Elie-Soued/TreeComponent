@@ -1,21 +1,17 @@
-/* eslint-disable @tseslint/no-unnecessary-condition */
-/* eslint-disable @unicorn/no-useless-undefined */
-/* eslint-disable no-console */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, Subject, switchMap, tap, catchError } from 'rxjs';
-import { type TreeNode, type FavoritePayload, type Data, type PopupState } from '../types';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { type TreeNode, type FavoritePayload, type PopupState } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { UtilsService } from './utils.service';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavoritesService {
   private FAVORITE_URL: string = environment.FAVORITE_URL;
-
-  private BASE_URL: string = environment.BASE_URL;
 
   private payload: FavoritePayload = environment.favorite_payload;
 
@@ -26,94 +22,115 @@ export class FavoritesService {
     isLeftClick: false,
   });
 
-  private updateTreeUI: BehaviorSubject<TreeNode[] | []> = new BehaviorSubject<TreeNode[] | []>([]);
-
   private enableFavoriteNode: Subject<TreeNode> = new Subject<TreeNode>();
 
   FavoritePopup$: Observable<PopupState> = this.FavoritePopup.asObservable();
 
-  updateTree$: Observable<TreeNode[] | []> = this.updateTreeUI.asObservable();
-
   enableFavoriteNode$: Observable<TreeNode> = this.enableFavoriteNode.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private dataService: DataService,
+  ) {}
 
-  addNodeToFavorites(node: TreeNode): Observable<void> {
-    return this.getFavorites().pipe(
-      switchMap((favorites: TreeNode[]) => {
-        const favoriteCopy: TreeNode = this.createFavoriteCopy(node);
+  addNodeToFavorites(node: TreeNode): void {
+    const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
+    const favoriteCopy: TreeNode = this.createFavoriteCopy(node);
 
-        this.payload.favorites.children = [...favorites, favoriteCopy];
+    favoriteCopy.favorite = true;
+    favoriteCopy.id = crypto.randomUUID();
 
-        return this.updateTree();
-      }),
-    );
+    const updatedFavorites: TreeNode[] = [...currentFavorites, favoriteCopy];
+
+    // Update UI immediately
+    this.dataService.updateFavorites(updatedFavorites);
+    // Update backend
+    this.saveFavoritesToBackend(updatedFavorites);
   }
 
-  renameNodeInFavorites(nodeString: string, newValue: string): Observable<void> {
-    const node: TreeNode = JSON.parse(nodeString) as TreeNode;
+  renameNodeInFavorites(): void {
+    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
 
-    return this.getFavorites().pipe(
-      switchMap((favorites: TreeNode[]) => {
-        // In case we would like to rename nested file/folders
-        const nodeToChange: TreeNode | undefined = this.searchNodeRecursively(
-          node,
-          favorites,
-          'text',
-        );
-
-        if (nodeToChange) {
-          nodeToChange.text = newValue;
-          this.payload.favorites.children = favorites;
-        }
-
-        return this.updateTree();
-      }),
-    );
+    // Update UI immediately
+    this.dataService.updateFavorites(currentFavorites);
+    // Update backend
+    this.saveFavoritesToBackend(currentFavorites);
   }
 
-  removeNodeFromFavorites(node: TreeNode): Observable<void> {
-    return this.getFavorites().pipe(
-      switchMap((favorites: TreeNode[]) => {
-        const filteredFavorites: TreeNode[] = node.call
-          ? this.removeNodeRecursively(node, favorites, 'call')
-          : this.removeNodeRecursively(node, favorites, 'text');
+  removeNodeFromFavorites(node: TreeNode): void {
+    const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
+    const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
-        this.payload.favorites.children = filteredFavorites;
-
-        return this.updateTree();
-      }),
-    );
+    // Update UI immediately
+    this.dataService.updateFavorites(filteredFavorites);
+    // Update backend
+    this.saveFavoritesToBackend(filteredFavorites);
   }
 
-  createNewFolder(parentNode: TreeNode, isRoot: boolean): Observable<void> {
+  createNewFolder(parentNode: TreeNode, isRoot: boolean): void {
     const childNode: TreeNode = {
       text: 'neuer Ordner',
       iconCls: 'no-icon',
       children: [],
       favorite: true,
+      id: crypto.randomUUID(),
     };
+    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
 
-    return this.getFavorites().pipe(
-      switchMap((favorites: TreeNode[]) => {
-        if (isRoot) {
-          this.payload.favorites.children = [...favorites, childNode];
-        } else {
-          const nodeInFavorite: TreeNode | undefined =
-            parentNode.text === 'neuer Ordner' && parentNode.call
-              ? this.searchNodeRecursively(parentNode, favorites, 'call')
-              : this.searchNodeRecursively(parentNode, favorites, 'text');
+    if (isRoot) {
+      currentFavorites.push(childNode);
+    } else {
+      const nodeInFavorite: TreeNode | undefined = this.searchNodeRecursively(
+        parentNode,
+        currentFavorites,
+        'id',
+      );
 
-          if (nodeInFavorite) {
-            nodeInFavorite.children ??= [];
-            nodeInFavorite.children.push(childNode);
-            this.payload.favorites.children = favorites;
-          }
-        }
+      if (nodeInFavorite) {
+        nodeInFavorite.children ??= [];
+        nodeInFavorite.children.push(childNode);
+      }
+    }
 
-        return this.updateTree();
-      }),
+    // Update UI immediately
+    this.dataService.updateFavorites(currentFavorites);
+    // Update backend
+    this.saveFavoritesToBackend(currentFavorites);
+  }
+
+  dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): void {
+    if (!sourceNode || !targetNodeText) {
+      return;
+    }
+
+    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
+    // Remove the sourceNode from its current location
+    const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
+      sourceNode,
+      currentFavorites,
+      'id',
     );
+
+    // Add it to the target location
+    if (targetNodeText === 'Favoriten') {
+      updatedFavorites.push(sourceNode);
+    } else {
+      const targetNode: TreeNode | undefined = this.searchNodeRecursively(
+        { text: targetNodeText } as TreeNode,
+        updatedFavorites,
+        'text',
+      );
+
+      if (targetNode) {
+        targetNode.children ??= [];
+        targetNode.children.push(sourceNode);
+      }
+    }
+
+    // Update UI immediately
+    this.dataService.updateFavorites(updatedFavorites);
+    // Update backend
+    this.saveFavoritesToBackend(updatedFavorites);
   }
 
   enableNodeText(node: TreeNode): void {
@@ -142,80 +159,17 @@ export class FavoritesService {
     });
   }
 
-  dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): Observable<void> {
-    if (!sourceNode || !targetNodeText) {
-      return this.updateTree();
-    }
-
-    return this.getFavorites().pipe(
-      switchMap((favorites: TreeNode[]) => {
-        const searchBy: keyof TreeNode = sourceNode.call ? 'call' : 'text';
-        const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
-          sourceNode,
-          favorites,
-          searchBy,
-        );
-
-        if (targetNodeText === 'Favoriten') {
-          this.payload.favorites.children = [...favorites, sourceNode];
-
-          return this.updateTree();
-        }
-
-        const targetNode: TreeNode | undefined = this.searchNodeRecursively(
-          { text: targetNodeText } as TreeNode,
-          updatedFavorites,
-          'text',
-        );
-
-        if (targetNode) {
-          targetNode.children ??= [];
-          targetNode.children.push(sourceNode);
-        } else {
-          console.warn(`Target node "${targetNodeText}" not found.`);
-        }
-
-        this.payload.favorites.children = updatedFavorites;
-
-        return this.updateTree();
-      }),
-    );
-  }
-
-  private getFavorites(): Observable<TreeNode[]> {
-    return this.http
-      .get<Data>(this.BASE_URL)
-      .pipe(
-        map(
-          (response: Data) =>
-            response.children.find((el: TreeNode) => el.text === 'Favoriten')?.children ?? [],
-        ),
-      );
-  }
-
-  private updateTree(): Observable<void> {
-    this.updateTreeUI.next(this.payload.favorites.children);
-
-    return this.http
+  private saveFavoritesToBackend(favorites: TreeNode[]): void {
+    this.payload.favorites.children = favorites;
+    this.http
       .post(this.FAVORITE_URL, UtilsService.buildRequestBody(this.payload), {
         headers: UtilsService.getHeaders(),
       })
-      .pipe(
-        tap(() => {
-          console.log('Successfully saved to backend');
-        }),
-        map(() => undefined),
-        catchError((error: Error) => {
-          console.error('Error saving to backend:', error);
-
-          return this.getFavorites().pipe(
-            tap((favorites: TreeNode[]) => {
-              this.updateTreeUI.next(favorites);
-            }),
-            map(() => undefined),
-          );
-        }),
-      );
+      .subscribe({
+        error: () => {
+          this.dataService.loadInitialData().subscribe();
+        },
+      });
   }
 
   private searchNodeRecursively(

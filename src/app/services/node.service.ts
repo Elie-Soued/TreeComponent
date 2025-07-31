@@ -2,8 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
-import { Observable } from 'rxjs';
-import { type Data, type TreeNode } from '../types';
+import { type TreeNode } from '../types';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -13,10 +12,6 @@ export class NodeService {
   private URL: string = environment.BASE_URL;
 
   constructor(private http: HttpClient) {}
-
-  getInitialData(): Observable<Data> {
-    return this.http.get<Data>(this.URL);
-  }
 
   expandMatchingNodes(
     nodes: TreeNode[],
@@ -67,17 +62,5 @@ export class NodeService {
     if (!searchValue) return false;
 
     return node.text.toLowerCase().includes(searchValue.toLowerCase());
-  }
-
-  setFavoriteFlag(nodes: TreeNode[]): TreeNode[] {
-    return nodes.map((node: TreeNode) => {
-      node.favorite = true;
-
-      if (node.children && node.children.length > 0) {
-        this.setFavoriteFlag(node.children);
-      }
-
-      return node;
-    });
   }
 }

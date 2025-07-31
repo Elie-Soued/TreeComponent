@@ -4,6 +4,7 @@ export interface TreeNode {
   children?: TreeNode[];
   favorite?: boolean;
   call?: string;
+  id?: string;
 }
 export interface Data {
   Interface: string;

@@ -100,27 +100,23 @@ export class NodeComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown.enter')
   onEnter(): void {
     if (this.isEnabled) {
-      this.favoriteService.renameNodeInFavorites(this.originalNode, this.node.text).subscribe();
+      this.favoriteService.renameNodeInFavorites();
     }
 
     this.isEnabled = false;
   }
 
   private addNodeToFavorite(node: TreeNode): void {
-    this.favoriteService.addNodeToFavorites(node).subscribe();
+    this.favoriteService.addNodeToFavorites(node);
   }
 
   private createFolderInFavorite(node: TreeNode, isRoot: boolean = false): void {
-    this.favoriteService.createNewFolder(node, isRoot).subscribe();
+    this.favoriteService.createNewFolder(node, isRoot);
   }
 
   private removeNodeFromFavorite(node: TreeNode): void {
     node.favorite = false;
-    this.favoriteService.removeNodeFromFavorites(node).subscribe({
-      error: () => {
-        node.favorite = true;
-      },
-    });
+    this.favoriteService.removeNodeFromFavorites(node);
   }
 
   private enableInput(node: TreeNode): void {

@@ -111,7 +111,7 @@ export class DragService {
         const nodeValue: string | null = inputElement.getAttribute('ng-reflect-model');
 
         if (this.isFavorite && this.draggedNode && nodeValue !== this.draggedNode.text) {
-          this.favoriteService.dropNode(this.draggedNode, nodeValue).subscribe();
+          this.favoriteService.dropNode(this.draggedNode, nodeValue);
         }
       }
     }

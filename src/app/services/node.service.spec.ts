@@ -113,16 +113,7 @@ describe('NodeService', () => {
     service = TestBed.inject(NodeService);
     httpClient = TestBed.inject(HttpTestingController);
   });
-  it('getInitialData is working correctly', () => {
-    service.getInitialData().subscribe((data: Data) => {
-      expect(data).toEqual(mockData);
-    });
 
-    const req: TestRequest = httpClient.expectOne(environment.BASE_URL);
-
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
   it('expandMatchingNodes expands correct ancestors for matching nodes', () => {
     const mockTree: MatTree<TreeNode> = {
       expand: jasmine.createSpy('expand'),

@@ -1,7 +1,7 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { type FavoritePayload } from '../types';
+import { type FavoritePayload, type TreeNode } from '../types';
 
 @Injectable({
   providedIn: 'root',
@@ -26,5 +26,11 @@ export class UtilsService {
       .toISOString()
       .replaceAll(/[-:T.Z]/g, '')
       .slice(2, 14);
+  }
+
+  static setUniqueIDs(nodes: TreeNode[]): void {
+    nodes.forEach((node: TreeNode) => {
+      node.id = crypto.randomUUID();
+    });
   }
 }

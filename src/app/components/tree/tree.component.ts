@@ -7,15 +7,13 @@ import {
   SimpleChanges,
   OnChanges,
   AfterViewInit,
-  OnDestroy,
 } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
 import { NodeComponent } from '../node/node.component';
-import { type Data, type TreeNode } from '../../types';
-import { FavoritesService } from '../../services/favorites.service';
-import { Subscription } from 'rxjs';
+import { type TreeNode } from '../../types';
 import { CommonModule } from '@angular/common';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-tree',
@@ -24,7 +22,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.scss',
 })
-export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class TreeComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('tree') tree!: MatTree<TreeNode>;
 
   @Input() searchValue: string | null = '';
@@ -44,64 +42,14 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   hasChild = (_: number, node: TreeNode) =>
     Boolean(node.children) && node.children && node.children.length > 0;
 
-  private updateTreeSubscription: Subscription | undefined;
-
   constructor(
     private nodeService: NodeService,
-    private favoriteService: FavoritesService,
+    private dataService: DataService,
   ) {}
 
   ngOnInit(): void {
-    this.loadTree();
-    this.updateTreeSubscription = this.favoriteService.updateTree$.subscribe(
-      (nodes: TreeNode[]) => {
-        this.updateTree(nodes);
-      },
-    );
-  }
-
-  loadTree(): void {
-    this.nodeService.getInitialData().subscribe((response: Data) => {
-      const favoriteDirectory: TreeNode | undefined = response.children.find(
-        (n: TreeNode) => n.text === 'Favoriten',
-      );
-
-      if (favoriteDirectory) {
-        favoriteDirectory.favorite = true;
-      }
-
-      const favoriteNodes: TreeNode[] | undefined = response.children.find(
-        (n: TreeNode) => n.text === 'Favoriten',
-      )?.children;
-
-      if (favoriteNodes) {
-        this.nodeService.setFavoriteFlag(favoriteNodes);
-      }
-
-      this.initialData = response.children;
-      this.dataSource = response.children;
-    });
-  }
-
-  private updateTree(nodes: TreeNode[]): void {
-    const favoritesNode: TreeNode | undefined = this.dataSource.find(
-      (n: TreeNode) => n.text === 'Favoriten',
-    );
-
-    if (favoritesNode) {
-      this.nodeService.setFavoriteFlag(nodes);
-      favoritesNode.children = nodes;
-      this.dataSource = [...this.dataSource];
-      this.initialData = [...this.dataSource];
-    } else {
-      this.dataSource.push({
-        text: 'Favoriten',
-        children: [...nodes],
-        iconCls: '',
-      });
-      this.dataSource = [...this.dataSource];
-      this.initialData = [...this.dataSource];
-    }
+    this.dataService.loadInitialData().subscribe();
+    this.updateTreeData();
   }
 
   ngAfterViewInit(): void {
@@ -110,30 +58,39 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   ngOnChanges(changes: SimpleChanges): void {
     const searchValueChanged: boolean = !changes['searchValue'].firstChange && this.isTreeReady;
-    const searchValueIsEmpty: boolean = !this.searchValue || this.searchValue === '';
-    const searchValueIsTooShort: boolean =
-      // eslint-disable-next-line no-implicit-coercion
-      !!this.searchValue && this.searchValue.length < this.minimunSearchCharacter;
 
     if (searchValueChanged) {
-      if (searchValueIsEmpty || searchValueIsTooShort) {
-        this.dataSource = this.initialData;
-        this.tree.collapseAll();
-      } else {
-        const filteredNodes: TreeNode[] = this.nodeService.filterNonMatchingLeafs(
-          this.dataSource,
-          // eslint-disable-next-line @tseslint/no-non-null-assertion
-          this.searchValue!,
-        );
-
-        this.dataSource = filteredNodes;
-        // eslint-disable-next-line @tseslint/no-non-null-assertion
-        this.nodeService.expandMatchingNodes(this.dataSource, this.searchValue!, this.tree, []);
-      }
+      this.filterTree();
     }
   }
 
-  ngOnDestroy(): void {
-    this.updateTreeSubscription?.unsubscribe();
+  private updateTreeData(): void {
+    this.dataService.treeData$.subscribe((data: TreeNode[]) => {
+      const favoritesNode: TreeNode | undefined = data.find(
+        (node: TreeNode) => node.text === 'Favoriten',
+      );
+
+      if (favoritesNode) {
+        this.tree.expand(favoritesNode);
+      }
+
+      this.initialData = [...data];
+      this.dataSource = [...data];
+    });
+  }
+
+  private filterTree(): void {
+    if (!this.searchValue || this.searchValue.length < this.minimunSearchCharacter) {
+      this.dataSource = [...this.initialData];
+      this.tree.collapseAll();
+    } else {
+      const filteredNodes: TreeNode[] = this.nodeService.filterNonMatchingLeafs(
+        this.initialData,
+        this.searchValue,
+      );
+
+      this.dataSource = filteredNodes;
+      this.nodeService.expandMatchingNodes(this.dataSource, this.searchValue, this.tree, []);
+    }
   }
 }
