@@ -126,16 +126,6 @@ describe('NodeService', () => {
     expect(mockTree.expand).toHaveBeenCalledWith(treeData[1]);
     expect(mockTree.expand).toHaveBeenCalledWith(treeData[1].children![0]);
   });
-  it('isNodeMatch is working correctly', () => {
-    const mockNode: TreeNode = {
-      text: 'test',
-      iconCls: '',
-      children: [],
-    };
-
-    expect(service.isNodeMatch(mockNode, 'test1')).toBeFalsy();
-    expect(service.isNodeMatch(mockNode, 'test')).toBeTruthy();
-  });
   it('filterNonMatchingLeafs is filtering the correct nodes', () => {
     const ouf: TreeNode[] = service.filterNonMatchingLeafs(mockData2.children, 'Pilex');
 

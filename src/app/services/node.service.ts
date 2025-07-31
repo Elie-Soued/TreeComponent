@@ -1,18 +1,14 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { HttpClient } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
 import { type TreeNode } from '../types';
-import { environment } from '../../environments/environment';
+import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NodeService {
-  private URL: string = environment.BASE_URL;
-
-  constructor(private http: HttpClient) {}
-
   expandMatchingNodes(
     nodes: TreeNode[],
     searchTerm: string,
@@ -21,7 +17,7 @@ export class NodeService {
   ): void {
     for (const node of nodes) {
       // Expand match with ancestors
-      if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
+      if (UtilsService.isNodeMatch(node, searchTerm) && ancestors.length) {
         ancestors.forEach((ancestor: TreeNode) => {
           tree.expand(ancestor);
         });
@@ -35,32 +31,21 @@ export class NodeService {
   }
 
   filterNonMatchingLeafs(nodes: TreeNode[], searchTerm: string): TreeNode[] {
-    return (
-      nodes
-        .map((node: TreeNode) => {
-          const children: TreeNode[] = node.children
-            ? this.filterNonMatchingLeafs(node.children, searchTerm)
-            : [];
+    return nodes
+      .map((node: TreeNode): TreeNode | null => {
+        const children: TreeNode[] = node.children
+          ? this.filterNonMatchingLeafs(node.children, searchTerm)
+          : [];
 
-          if (this.isNodeMatch(node, searchTerm) || children.length) {
-            return {
-              ...node,
-              children: children.length ? children : [],
-            };
-          }
+        if (UtilsService.isNodeMatch(node, searchTerm) || children.length) {
+          return {
+            ...node,
+            children: children.length ? children : [],
+          };
+        }
 
-          return null;
-        })
-
-        // eslint-disable-next-line @tseslint/typedef
-        .filter((node) => node !== null)
-    );
-  }
-
-  // eslint-disable-next-line @tseslint/class-methods-use-this
-  isNodeMatch(node: TreeNode, searchValue: string | null): boolean {
-    if (!searchValue) return false;
-
-    return node.text.toLowerCase().includes(searchValue.toLowerCase());
+        return null;
+      })
+      .filter((node: TreeNode | null): node is TreeNode => node !== null);
   }
 }

@@ -40,9 +40,6 @@ describe('NodeComponent', () => {
   beforeEach(async () => {
     favoritePopupSubject = new BehaviorSubject(initialPopupState);
     enableFavoriteNode = new Subject();
-    nodeService = jasmine.createSpyObj('NodeService', [
-      'isNodeMatch',
-    ]) as jasmine.SpyObj<NodeService>;
     favoritesService = jasmine.createSpyObj('FavoritesService', [
       'showFavoritePopup',
       'closeFavoritePopup',
