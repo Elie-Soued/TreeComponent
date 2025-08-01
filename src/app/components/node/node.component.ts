@@ -1,5 +1,13 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Component, Input, HostListener, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  HostListener,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  inject,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { type TreeNode, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
@@ -29,11 +37,13 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  constructor(
-    private favoriteService: FavoritesService,
-    private dragService: DragService,
-    private elementRef: ElementRef<HTMLElement>,
-  ) {}
+  private favoriteService: FavoritesService = inject(FavoritesService);
+
+  private dragService: DragService = inject(DragService);
+
+  private elementRef: ElementRef<HTMLElement> = inject(
+    ElementRef<HTMLElement>,
+  ) as ElementRef<HTMLElement>;
 
   ngOnInit(): void {
     this.subscriptions.add(

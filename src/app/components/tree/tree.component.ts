@@ -11,6 +11,7 @@ import {
   SimpleChanges,
   OnChanges,
   AfterViewInit,
+  inject,
 } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
@@ -42,15 +43,14 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   private subscriptions: Subscription = new Subscription();
 
+  private nodeService: NodeService = inject(NodeService);
+
+  private dataService: DataService = inject(DataService);
+
   childrenAccessor = (node: TreeNode) => node.children ?? [];
 
   hasChild = (_: number, node: TreeNode) =>
     Boolean(node.children) && node.children && node.children.length > 0;
-
-  constructor(
-    private nodeService: NodeService,
-    private dataService: DataService,
-  ) {}
 
   ngOnInit(): void {
     this.subscriptions.add(this.dataService.loadInitialData().subscribe());

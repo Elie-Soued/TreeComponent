@@ -1,5 +1,5 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 import {
   type TreeNode,
@@ -32,12 +32,11 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  isLeftClick: boolean = false;
+  private favoriteService: FavoritesService = inject(FavoritesService);
 
-  constructor(
-    private favoriteService: FavoritesService,
-    private dragService: DragService,
-  ) {}
+  private dragService: DragService = inject(DragService);
+
+  isLeftClick: boolean = false;
 
   ngOnInit(): void {
     this.subscriptions.add(

@@ -1,5 +1,5 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { type TreeNode, type FavoritePayload, type PopupState } from '../types';
 import { HttpClient } from '@angular/common/http';
@@ -28,10 +28,9 @@ export class FavoritesService {
 
   enableFavoriteNode$: Observable<TreeNode> = this.enableFavoriteNode.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private dataService: DataService,
-  ) {}
+  private dataService: DataService = inject(DataService);
+
+  private http: HttpClient = inject(HttpClient);
 
   addNodeToFavorites(node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();

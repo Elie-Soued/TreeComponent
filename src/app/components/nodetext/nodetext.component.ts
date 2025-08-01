@@ -7,6 +7,7 @@ import {
   ElementRef,
   OnChanges,
   AfterViewChecked,
+  inject,
 } from '@angular/core';
 import { NodeService } from '../../services/node.service';
 import { type TreeNode } from '../../types';
@@ -36,7 +37,7 @@ export class NodetextComponent implements OnInit, OnChanges, AfterViewChecked {
 
   @ViewChild('nodeTextInput') input!: ElementRef<HTMLInputElement>;
 
-  constructor(public nodeService: NodeService) {}
+  public nodeService: NodeService = inject(NodeService);
 
   private highlightMatchingLetters(node: TreeNode, searchValue: string): void {
     const lowerText: string = node.text.toLowerCase();

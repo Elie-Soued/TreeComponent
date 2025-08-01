@@ -1,5 +1,5 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, inject } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { type Position } from '../../types';
 import { MatIconModule } from '@angular/material/icon';
@@ -28,7 +28,7 @@ export class FavoriteButtonComponent implements OnInit, OnDestroy {
 
   isDragged: boolean = false;
 
-  constructor(private dragService: DragService) {}
+  private dragService: DragService = inject(DragService);
 
   ngOnInit(): void {
     this.subscriptions.add(

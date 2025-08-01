@@ -1,5 +1,5 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { map, tap, catchError } from 'rxjs/operators';
@@ -16,7 +16,7 @@ export class DataService {
 
   treeData$: Observable<TreeNode[]> = this.treeData.asObservable();
 
-  constructor(private http: HttpClient) {}
+  private http: HttpClient = inject(HttpClient);
 
   loadInitialData(): Observable<TreeNode[]> {
     return this.http.get<Data>(this.BASE_URL).pipe(

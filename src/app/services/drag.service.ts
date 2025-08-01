@@ -1,5 +1,5 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { type Position, type TreeNode } from '../types';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FavoritesService } from './favorites.service';
@@ -35,7 +35,7 @@ export class DragService {
 
   isOverFavorite$: Observable<boolean> = this.isOverFavorite.asObservable();
 
-  constructor(private favoriteService: FavoritesService) {}
+  private favoriteService: FavoritesService = inject(FavoritesService);
 
   startDrag(e: MouseEvent, node: TreeNode, draggedElement: HTMLElement, tree: HTMLElement): void {
     this.isDragging = true;
