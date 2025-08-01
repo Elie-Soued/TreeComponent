@@ -1,5 +1,5 @@
 @if (favoritePopupIsVisible && node.text === 'Favoriten' && !isLeftClick) {
-  <div class="context-menu-container">
+  <div class="context-menu__container">
     <app-favorite-button
       [title]="'neuer Ordner'"
       [position]="favoritePopupPosition"
@@ -7,7 +7,7 @@
     />
   </div>
 } @else if (favoritePopupIsVisible && node.favorite && isLeftClick) {
-  <div class="context-menu-container">
+  <div class="context-menu__container">
     <app-favorite-button
       [title]="node.text"
       [position]="draggedPosition"
@@ -17,7 +17,7 @@
 } @else if (
   favoritePopupIsVisible && node.favorite && (node.children || node.text === 'neuer Ordner')
 ) {
-  <div class="context-menu-container">
+  <div class="context-menu__container">
     <app-favorite-button
       [title]="'neuer Ordner'"
       [position]="favoritePopupPosition"
@@ -35,7 +35,7 @@
     />
   </div>
 } @else if (favoritePopupIsVisible && node.favorite) {
-  <div class="context-menu-container">
+  <div class="context-menu__container">
     <app-favorite-button
       [title]="'löschen'"
       [position]="favoritePopupPosition"
@@ -48,7 +48,7 @@
     />
   </div>
 } @else if (favoritePopupIsVisible && !isLeftClick) {
-  <div class="context-menu-container">
+  <div class="context-menu__container">
     <app-favorite-button
       [title]="'favoriten'"
       [position]="favoritePopupPosition"

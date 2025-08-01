@@ -1,6 +1,6 @@
 @if (isLeftClick) {
   <div
-    class="favoriten"
+    class="favorite-button"
     [ngStyle]="{
       'pointer-events': isDragged ? 'none' : 'auto',
       top: position.y + 'px',
@@ -9,25 +9,28 @@
     (click)="onClick()"
   >
     @if (isOverFavorite) {
-      <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn">
-        <mat-icon class="small-icon" id="nodeIcon">
+      <button [attr.aria-label]="'Toggle '" class="favorite-button__button">
+        <mat-icon class="favorite-button__icon">
           {{ 'add' }}
         </mat-icon>
       </button>
     } @else {
-      <button id="nodeBtn" [attr.aria-label]="'Toggle '" class="node-btn node-btn--red">
-        <mat-icon class="small-icon" id="nodeIcon">
+      <button
+        [attr.aria-label]="'Toggle '"
+        class="favorite-button__button favorite-button__button--red"
+      >
+        <mat-icon class="favorite-button__icon">
           {{ 'close' }}
         </mat-icon>
       </button>
     }
-    <span> {{ title }}</span>
+    <span class="favorite-button__text"> {{ title }}</span>
   </div>
 } @else {
   <button
-    class="favoriten hoverable"
-    style="border: none"
+    class="favorite-button hoverable"
     [ngStyle]="{
+      border: 'none',
       top: position.y + 'px',
       left: position.x + 'px',
     }"

@@ -1,14 +1,14 @@
-<div class="container">
+<div class="tree-node">
   @if (isLeaf && node.text !== 'neuer Ordner') {
-    <button mat-icon-button disabled id="leafBtn" class="leaf-btn"></button>
+    <button mat-icon-button disabled id="leafBtn" class="tree-node__button__leaf"></button>
   } @else {
     <button
       id="nodeBtn"
       (click)="toggleNode(node)"
       [attr.aria-label]="'Toggle ' + node.text"
-      class="node-btn"
+      class="tree-node__button"
     >
-      <mat-icon class="small-icon" id="nodeIcon">
+      <mat-icon class="tree-node__button__icon" id="nodeIcon">
         {{ tree.isExpanded(node) ? 'remove' : 'add' }}
       </mat-icon>
     </button>

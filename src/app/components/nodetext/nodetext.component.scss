@@ -1,26 +1,25 @@
-main {
+.node-text {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.matched-text {
-  color: green;
-}
-
-.no-space,
-.matched-text {
-  margin: 0rem;
-  padding: 0rem;
-}
-
-.matched {
+.node-text__content {
   padding: 0.25rem;
   margin: 0rem;
   cursor: default;
 }
 
-.not-matched {
+.node-text__segment {
+  margin: 0rem;
+  padding: 0rem;
+}
+
+.node-text__segment--highlighted {
+  color: green;
+}
+
+.node-text__input {
   padding: 0.25rem;
   margin: 0rem;
   display: flex;
@@ -31,6 +30,6 @@ main {
   border: none;
 }
 
-input[disabled] {
+.node-text__input[disabled] {
   pointer-events: none;
 }

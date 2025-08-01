@@ -1,15 +1,17 @@
-<main>
+<main class="node-text">
   @if (displayHighlightedText(searchValue)) {
-    <p class="matched" id="match">
-      <span id="before" class="no-space">{{ before }}</span
-      ><span id="matchedText" class="matched-text">{{ match }}</span
-      ><span id="after" class="no-space">{{ after }}</span>
+    <p class="node-text__content" id="match">
+      <span id="before" class="node-text__segment">{{ before }}</span
+      ><span id="matchedText" class="node-text__segment node-text__segment--highlighted">{{
+        match
+      }}</span
+      ><span id="after" class="node-text__segment">{{ after }}</span>
     </p>
   } @else {
     <input
       #nodeTextInput
       id="noMatch"
-      class="not-matched"
+      class="node-text__input"
       [(ngModel)]="node.text"
       [disabled]="!isEnabled"
     />

@@ -1,4 +1,4 @@
-.favoriten {
+.favorite-button {
   position: fixed;
   border: 1px solid lightgray;
   background-color: white;
@@ -16,12 +16,12 @@
   cursor: pointer;
 }
 
-.favoriten.hoverable:hover {
+.favorite-button.hoverable:hover {
   background-color: #3399ff;
   color: white;
 }
 
-.small-icon {
+.favorite-button__icon {
   font-size: 15px;
   font-weight: bold;
   line-height: 15px;
@@ -31,7 +31,7 @@
   justify-content: center;
 }
 
-.node-btn {
+.favorite-button__button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,12 +54,6 @@
   }
 }
 
-.node-icon {
-  font-weight: bold;
-  font-size: 0.75rem;
-  direction: rtl;
-}
-
-span {
+.favorite-button__text {
   margin: 0.25rem;
 }

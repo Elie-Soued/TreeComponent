@@ -1,18 +1,14 @@
-.container {
+.tree-node {
   display: flex;
   align-items: center;
 }
 
-.leaf-btn {
+.tree-node__button__leaf {
   visibility: hidden;
   padding-right: 0.5rem;
 }
 
-.node-container {
-  padding: 0.25rem;
-}
-
-.small-icon {
+.tree-node__button__icon {
   font-size: 15px;
   font-weight: bold;
   line-height: 15px;
@@ -22,7 +18,7 @@
   justify-content: center;
 }
 
-.node-btn {
+.tree-node__button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,10 +35,4 @@
   &:hover {
     background-color: #5c636a;
   }
-}
-
-.node-icon {
-  font-weight: bold;
-  font-size: 0.75rem;
-  direction: rtl;
 }
