@@ -95,6 +95,8 @@ export class FavoritesService {
       return;
     }
 
+    let targetNode: TreeNode | undefined = undefined;
+
     const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
     // Remove the sourceNode from its current location
     const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
@@ -107,7 +109,7 @@ export class FavoritesService {
     if (targetNodeText === 'Favoriten') {
       updatedFavorites.push(sourceNode);
     } else {
-      const targetNode: TreeNode | undefined = this.searchNodeRecursively(
+      targetNode = this.searchNodeRecursively(
         { text: targetNodeText } as TreeNode,
         updatedFavorites,
         'text',
@@ -119,8 +121,10 @@ export class FavoritesService {
       }
     }
 
-    this.dataService.updateFavoritesInUI(updatedFavorites);
-    this.updateFavoritesInBackend(updatedFavorites);
+    if ((targetNode && targetNode.id !== sourceNode.id) || targetNodeText === 'Favoriten') {
+      this.dataService.updateFavoritesInUI(updatedFavorites);
+      this.updateFavoritesInBackend(updatedFavorites);
+    }
   }
 
   enableNodeText(node: TreeNode): void {
