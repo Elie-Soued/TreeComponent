@@ -41,11 +41,11 @@ describe('NodeComponent', () => {
     favoritePopupSubject = new BehaviorSubject(initialPopupState);
     enableFavoriteNode = new Subject();
     favoritesService = jasmine.createSpyObj('FavoritesService', [
-      'showFavoritePopup',
-      'closeFavoritePopup',
+      'showPopup',
+      'closePopup',
     ]) as jasmine.SpyObj<FavoritesService>;
-    favoritesService.FavoritePopup$ = favoritePopupSubject.asObservable();
-    favoritesService.enableFavoriteNode$ = enableFavoriteNode.asObservable();
+    favoritesService.popUp$ = favoritePopupSubject.asObservable();
+    favoritesService.enableNode$ = enableFavoriteNode.asObservable();
     mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', ['isExpanded', 'toggle']);
     await TestBed.configureTestingModule({
       providers: [
@@ -126,12 +126,12 @@ describe('NodeComponent', () => {
     fixture.detectChanges();
 
     // Arrange
-    const favoritePopup: DebugElement = fixture.debugElement.query(By.css('.favoriten'));
+    const favoritePopup: DebugElement = fixture.debugElement.query(By.css('.tree-node'));
 
     // Assert
     expect(favoritePopup).toBeTruthy();
     // eslint-disable-next-line @tseslint/unbound-method
-    expect(favoritesService.showFavoritePopup).toHaveBeenCalledWith(
+    expect(favoritesService.showPopup).toHaveBeenCalledWith(
       mockNode,
       {
         x: 100,

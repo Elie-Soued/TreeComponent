@@ -47,7 +47,7 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.add(
-      this.favoriteService.enableFavoriteNode$.subscribe((node: TreeNode) => {
+      this.favoriteService.enableNode$.subscribe((node: TreeNode) => {
         if (node === this.node) {
           this.isEnabled = true;
         }
@@ -84,7 +84,7 @@ export class NodeComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.favoriteService.showFavoritePopup(
+    this.favoriteService.showPopup(
       this.node,
       {
         x: e.clientX,
@@ -96,19 +96,19 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click')
   hideFavorites(): void {
-    this.favoriteService.closeFavoritePopup();
+    this.favoriteService.closePopup();
   }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.isEnabled = false;
-    this.favoriteService.closeFavoritePopup();
+    this.favoriteService.closePopup();
   }
 
   @HostListener('document:keydown.enter')
   onEnter(): void {
     if (this.isEnabled) {
-      this.favoriteService.renameNodeInFavorites();
+      this.favoriteService.renameNode();
     }
 
     this.isEnabled = false;
@@ -117,13 +117,13 @@ export class NodeComponent implements OnInit, OnDestroy {
   onMenuAction(action: ContextMenuAction): void {
     switch (action.type) {
       case 'addToFavorites': {
-        this.favoriteService.addNodeToFavorites(action.node);
+        this.favoriteService.addNode(action.node);
 
         break;
       }
 
       case 'removeFromFavorites': {
-        this.favoriteService.removeNodeFromFavorites(action.node);
+        this.favoriteService.removeNode(action.node);
 
         break;
       }

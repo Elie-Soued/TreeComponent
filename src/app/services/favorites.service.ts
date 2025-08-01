@@ -15,24 +15,24 @@ export class FavoritesService {
 
   private payload: FavoritePayload = environment.favorite_payload;
 
-  private FavoritePopup: BehaviorSubject<PopupState> = new BehaviorSubject<PopupState>({
+  private popUp: BehaviorSubject<PopupState> = new BehaviorSubject<PopupState>({
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
     isLeftClick: false,
   });
 
-  private enableFavoriteNode: Subject<TreeNode> = new Subject<TreeNode>();
+  private enableNode: Subject<TreeNode> = new Subject<TreeNode>();
 
-  FavoritePopup$: Observable<PopupState> = this.FavoritePopup.asObservable();
+  popUp$: Observable<PopupState> = this.popUp.asObservable();
 
-  enableFavoriteNode$: Observable<TreeNode> = this.enableFavoriteNode.asObservable();
+  enableNode$: Observable<TreeNode> = this.enableNode.asObservable();
 
   private dataService: DataService = inject(DataService);
 
   private http: HttpClient = inject(HttpClient);
 
-  addNodeToFavorites(node: TreeNode): void {
+  addNode(node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
     const favoriteCopy: TreeNode = this.createFavoriteCopy(node);
 
@@ -45,14 +45,14 @@ export class FavoritesService {
     this.updateFavoritesInBackend(updatedFavorites);
   }
 
-  renameNodeInFavorites(): void {
+  renameNode(): void {
     const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
 
     this.dataService.updateFavoritesInUI(currentFavorites);
     this.updateFavoritesInBackend(currentFavorites);
   }
 
-  removeNodeFromFavorites(node: TreeNode): void {
+  removeNode(node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
     const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
@@ -127,15 +127,11 @@ export class FavoritesService {
   }
 
   enableNodeText(node: TreeNode): void {
-    this.enableFavoriteNode.next(node);
+    this.enableNode.next(node);
   }
 
-  showFavoritePopup(
-    node: TreeNode,
-    position: { x: number; y: number },
-    isLeftClick: boolean,
-  ): void {
-    this.FavoritePopup.next({
+  showPopup(node: TreeNode, position: { x: number; y: number }, isLeftClick: boolean): void {
+    this.popUp.next({
       visible: true,
       node,
       position,
@@ -143,8 +139,8 @@ export class FavoritesService {
     });
   }
 
-  closeFavoritePopup(): void {
-    this.FavoritePopup.next({
+  closePopup(): void {
+    this.popUp.next({
       visible: false,
       node: null,
       position: { x: 0, y: 0 },

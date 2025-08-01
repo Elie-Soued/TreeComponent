@@ -27,20 +27,20 @@ describe('FavoritesService', () => {
     });
     service = TestBed.inject(FavoritesService);
   });
-  it('showFavoritePopup', (done) => {
+  it('showPopup', (done) => {
     const position: Position = { x: 100, y: 200 };
 
-    service.showFavoritePopup(mockNode, position, false);
-    service.FavoritePopup$.subscribe((state: PopupState) => {
+    service.showPopup(mockNode, position, false);
+    service.popUp$.subscribe((state: PopupState) => {
       expect(state.visible).toBe(true);
       expect(state.position).toBe(position);
       expect(state.node).toBe(mockNode);
       done();
     });
   });
-  it('closeFavoritePopup', (done) => {
-    service.closeFavoritePopup();
-    service.FavoritePopup$.subscribe((state: PopupState) => {
+  it('closePopup', (done) => {
+    service.closePopup();
+    service.popUp$.subscribe((state: PopupState) => {
       expect(state.visible).toBe(false);
       expect(state.position).toEqual({ x: 0, y: 0 });
       expect(state.node).toBe(null);

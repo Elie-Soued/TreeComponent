@@ -40,7 +40,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.add(
-      this.favoriteService.FavoritePopup$.subscribe((state: PopupState) => {
+      this.favoriteService.popUp$.subscribe((state: PopupState) => {
         this.favoritePopupIsVisible = state.visible && state.node === this.node;
         this.favoritePopupPosition = state.position;
         this.isLeftClick = state.isLeftClick;
