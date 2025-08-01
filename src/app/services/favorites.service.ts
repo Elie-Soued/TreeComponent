@@ -42,29 +42,23 @@ export class FavoritesService {
 
     const updatedFavorites: TreeNode[] = [...currentFavorites, favoriteCopy];
 
-    // Update UI immediately
-    this.dataService.updateFavorites(updatedFavorites);
-    // Update backend
-    this.saveFavoritesToBackend(updatedFavorites);
+    this.dataService.updateFavoritesInUI(updatedFavorites);
+    this.updateFavoritesInBackend(updatedFavorites);
   }
 
   renameNodeInFavorites(): void {
     const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
 
-    // Update UI immediately
-    this.dataService.updateFavorites(currentFavorites);
-    // Update backend
-    this.saveFavoritesToBackend(currentFavorites);
+    this.dataService.updateFavoritesInUI(currentFavorites);
+    this.updateFavoritesInBackend(currentFavorites);
   }
 
   removeNodeFromFavorites(node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
     const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
-    // Update UI immediately
-    this.dataService.updateFavorites(filteredFavorites);
-    // Update backend
-    this.saveFavoritesToBackend(filteredFavorites);
+    this.dataService.updateFavoritesInUI(filteredFavorites);
+    this.updateFavoritesInBackend(filteredFavorites);
   }
 
   createNewFolder(parentNode: TreeNode, isRoot: boolean): void {
@@ -92,10 +86,8 @@ export class FavoritesService {
       }
     }
 
-    // Update UI immediately
-    this.dataService.updateFavorites(currentFavorites);
-    // Update backend
-    this.saveFavoritesToBackend(currentFavorites);
+    this.dataService.updateFavoritesInUI(currentFavorites);
+    this.updateFavoritesInBackend(currentFavorites);
   }
 
   dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): void {
@@ -127,10 +119,8 @@ export class FavoritesService {
       }
     }
 
-    // Update UI immediately
-    this.dataService.updateFavorites(updatedFavorites);
-    // Update backend
-    this.saveFavoritesToBackend(updatedFavorites);
+    this.dataService.updateFavoritesInUI(updatedFavorites);
+    this.updateFavoritesInBackend(updatedFavorites);
   }
 
   enableNodeText(node: TreeNode): void {
@@ -159,7 +149,7 @@ export class FavoritesService {
     });
   }
 
-  private saveFavoritesToBackend(favorites: TreeNode[]): void {
+  private updateFavoritesInBackend(favorites: TreeNode[]): void {
     this.payload.favorites.children = favorites;
     this.http
       .post(this.FAVORITE_URL, UtilsService.buildRequestBody(this.payload), {

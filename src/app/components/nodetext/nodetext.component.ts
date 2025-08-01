@@ -1,3 +1,4 @@
+/* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import {
   Component,
   Input,

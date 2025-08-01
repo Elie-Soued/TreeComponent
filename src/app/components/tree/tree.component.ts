@@ -1,3 +1,5 @@
+/* eslint-disable @tseslint/explicit-module-boundary-types */
+/* eslint-disable @tseslint/class-methods-use-this */
 /* eslint-disable @tseslint/explicit-function-return-type */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import {
@@ -40,10 +42,8 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   private subscriptions: Subscription = new Subscription();
 
-  // eslint-disable-next-line @tseslint/explicit-function-return-type, @tseslint/explicit-module-boundary-types, @tseslint/class-methods-use-this
   childrenAccessor = (node: TreeNode) => node.children ?? [];
 
-  // eslint-disable-next-line @tseslint/explicit-function-return-type, @tseslint/explicit-module-boundary-types, @tseslint/class-methods-use-this
   hasChild = (_: number, node: TreeNode) =>
     Boolean(node.children) && node.children && node.children.length > 0;
 

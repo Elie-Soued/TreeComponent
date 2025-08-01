@@ -61,7 +61,7 @@ export class DataService {
     this.treeData.next(newData);
   }
 
-  updateFavorites(newFavorites: TreeNode[]): void {
+  updateFavoritesInUI(newFavorites: TreeNode[]): void {
     const currentData: TreeNode[] = [...this.getCurrentTreeData()];
     const favoriteIndex: number = currentData.findIndex(
       (node: TreeNode) => node.text === 'Favoriten',
