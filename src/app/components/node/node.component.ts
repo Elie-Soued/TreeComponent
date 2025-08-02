@@ -1,20 +1,13 @@
+/* eslint-disable @tseslint/explicit-module-boundary-types */
+/* eslint-disable @tseslint/explicit-function-return-type */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import {
-  Component,
-  Input,
-  HostListener,
-  OnInit,
-  OnDestroy,
-  ElementRef,
-  inject,
-} from '@angular/core';
+import { Component, Input, HostListener, ElementRef, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { type TreeNode, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
 import { NodetextComponent } from '../nodetext/nodetext.component';
 import { FavoritesService } from '../../services/favorites.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
-import { Subscription } from 'rxjs';
 import { DragService } from '../../services/drag.service';
 
 @Component({
@@ -24,7 +17,7 @@ import { DragService } from '../../services/drag.service';
   templateUrl: './node.component.html',
   styleUrls: ['./node.component.scss'],
 })
-export class NodeComponent implements OnInit, OnDestroy {
+export class NodeComponent {
   @Input() isLeaf: boolean = false;
 
   @Input() node!: TreeNode;
@@ -35,7 +28,7 @@ export class NodeComponent implements OnInit, OnDestroy {
 
   isEnabled: boolean = false;
 
-  private subscriptions: Subscription = new Subscription();
+  enabledNodeId: string | undefined = '';
 
   private favoriteService: FavoritesService = inject(FavoritesService);
 
@@ -45,14 +38,10 @@ export class NodeComponent implements OnInit, OnDestroy {
     ElementRef<HTMLElement>,
   ) as ElementRef<HTMLElement>;
 
-  ngOnInit(): void {
-    this.subscriptions.add(
-      this.favoriteService.enableNode$.subscribe((node: TreeNode) => {
-        if (node === this.node) {
-          this.isEnabled = true;
-        }
-      }),
-    );
+  enableNode(nodeId: string | undefined) {
+    if (this.node.id === nodeId) {
+      this.isEnabled = true;
+    }
   }
 
   toggleNode(node: TreeNode): void {
@@ -135,14 +124,10 @@ export class NodeComponent implements OnInit, OnDestroy {
       }
 
       case 'enableInput': {
-        this.favoriteService.enableNodeText(action.node);
+        this.enableNode(action.node.id);
 
         break;
       }
     }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { type TreeNode, type FavoritePayload, type PopupState } from '../types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -22,11 +22,7 @@ export class FavoritesService {
     isLeftClick: false,
   });
 
-  private enableNode: Subject<TreeNode> = new Subject<TreeNode>();
-
   popUp$: Observable<PopupState> = this.popUp.asObservable();
-
-  enableNode$: Observable<TreeNode> = this.enableNode.asObservable();
 
   private dataService: DataService = inject(DataService);
 
@@ -124,10 +120,6 @@ export class FavoritesService {
       this.dataService.updateFavoritesInUI(updatedFavorites);
       this.updateFavoritesInBackend(updatedFavorites);
     }
-  }
-
-  enableNodeText(node: TreeNode): void {
-    this.enableNode.next(node);
   }
 
   showPopup(node: TreeNode, position: { x: number; y: number }, isLeftClick: boolean): void {
