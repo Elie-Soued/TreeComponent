@@ -24,9 +24,13 @@ export interface FavoritePayload {
     children: TreeNode[];
   };
 }
-export type ActionTypes = 'addToFavorites' | 'removeFromFavorites' | 'createFolder' | 'enableInput';
+export type ContextMenuActionTypes =
+  | 'addToFavorites'
+  | 'removeFromFavorites'
+  | 'createFolder'
+  | 'enableInput';
 export interface ContextMenuAction {
-  type: ActionTypes;
+  type: ContextMenuActionTypes;
   node: TreeNode;
   isRoot?: boolean;
 }

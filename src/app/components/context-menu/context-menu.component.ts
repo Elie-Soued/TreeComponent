@@ -6,7 +6,7 @@ import {
   type ContextMenuAction,
   type Position,
   type PopupState,
-  type ActionTypes,
+  type ContextMenuActionTypes,
 } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { Subscription } from 'rxjs';
@@ -53,7 +53,7 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
     );
   }
 
-  onMenuAction(type: ActionTypes, isRoot: boolean = false): void {
+  onMenuAction(type: ContextMenuActionTypes, isRoot: boolean = false): void {
     this.menuAction.emit({
       type,
       node: this.node,
