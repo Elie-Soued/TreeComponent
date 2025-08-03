@@ -82,7 +82,7 @@ describe('NodeComponent', () => {
   it('Render a node', () => {
     const button: DebugElement = fixture.debugElement.query(By.css('#nodeBtn'));
     const icon: DebugElement = fixture.debugElement.query(By.css('#nodeIcon'));
-    const span: DebugElement = fixture.debugElement.query(By.css('app-nodetext'));
+    const span: DebugElement = fixture.debugElement.query(By.css('app-nodelabel'));
 
     expect(button).toBeTruthy();
     expect(span).toBeTruthy();
@@ -97,7 +97,7 @@ describe('NodeComponent', () => {
     fixture.detectChanges();
 
     const button: DebugElement = fixture.debugElement.query(By.css('#leafBtn'));
-    const span: DebugElement = fixture.debugElement.query(By.css('app-nodetext'));
+    const span: DebugElement = fixture.debugElement.query(By.css('app-nodelabel'));
 
     expect(button).toBeTruthy();
     expect(span).toBeTruthy();
@@ -109,7 +109,7 @@ describe('NodeComponent', () => {
       clientX: 100,
       clientY: 200,
     });
-    const span: DebugElement = fixture.debugElement.query(By.css('app-nodetext'));
+    const span: DebugElement = fixture.debugElement.query(By.css('app-nodelabel'));
 
     // Action
     span.triggerEventHandler('contextmenu', mockEvent);

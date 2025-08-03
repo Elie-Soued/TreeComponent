@@ -15,7 +15,7 @@
   }
 
   @if (node.favorite) {
-    <app-nodetext
+    <app-nodelabel
       class="favorite"
       [node]="node"
       [searchValue]="searchValue"
@@ -24,7 +24,7 @@
       (mousedown)="sendPosition($event, false, true)"
     />
   } @else {
-    <app-nodetext
+    <app-nodelabel
       [node]="node"
       [searchValue]="searchValue"
       (contextmenu)="sendPosition($event, true, false)"

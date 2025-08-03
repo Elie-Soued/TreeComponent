@@ -14,13 +14,13 @@ import { type TreeNode } from '../../types';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-nodetext',
+  selector: 'app-nodelabel',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './nodetext.component.html',
-  styleUrl: './nodetext.component.scss',
+  templateUrl: './nodelabel.component.html',
+  styleUrl: './nodelabel.component.scss',
 })
-export class NodetextComponent implements OnInit, OnChanges, AfterViewChecked {
+export class NodelabelComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() searchValue: string | null = null;
 
   @Input() node!: TreeNode;

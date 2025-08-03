@@ -5,7 +5,7 @@ import { Component, Input, HostListener, ElementRef, inject } from '@angular/cor
 import { MatIconModule } from '@angular/material/icon';
 import { type TreeNode, type ContextMenuAction } from '../../types';
 import { MatTree } from '@angular/material/tree';
-import { NodetextComponent } from '../nodetext/nodetext.component';
+import { NodelabelComponent } from '../nodelabel/nodelabel.component';
 import { FavoritesService } from '../../services/favorites.service';
 import { ContextMenuComponent } from '../context-menu/context-menu.component';
 import { DragService } from '../../services/drag.service';
@@ -13,7 +13,7 @@ import { DragService } from '../../services/drag.service';
 @Component({
   selector: 'app-node',
   standalone: true,
-  imports: [MatIconModule, NodetextComponent, ContextMenuComponent],
+  imports: [MatIconModule, NodelabelComponent, ContextMenuComponent],
   templateUrl: './node.component.html',
   styleUrls: ['./node.component.scss'],
 })
