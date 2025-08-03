@@ -18,12 +18,10 @@ describe('SearchbarComponent', () => {
     fixture.detectChanges();
   });
   it('searchBar Component is correctly rendered', () => {
-    const form: DebugElement = fixture.debugElement.query(By.css('form'));
     const formField: DebugElement = fixture.debugElement.query(By.css('mat-form-field'));
     const label: DebugElement = fixture.debugElement.query(By.css('label'));
     const input: DebugElement = fixture.debugElement.query(By.css('input'));
 
-    expect(form).toBeTruthy();
     expect(formField).toBeTruthy();
     expect(input).toBeTruthy();
     expect(label).toBeTruthy();

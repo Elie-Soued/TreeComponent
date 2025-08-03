@@ -45,7 +45,6 @@ describe('NodeComponent', () => {
       'closePopup',
     ]) as jasmine.SpyObj<FavoritesService>;
     favoritesService.popUp$ = favoritePopupSubject.asObservable();
-    favoritesService.enableNode$ = enableFavoriteNode.asObservable();
     mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', ['isExpanded', 'toggle']);
     await TestBed.configureTestingModule({
       providers: [

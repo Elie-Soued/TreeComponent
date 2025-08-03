@@ -11,7 +11,6 @@ import {
   TestRequest,
 } from '@angular/common/http/testing';
 import { MatTree } from '@angular/material/tree';
-import { environment } from '../../environments/environment';
 
 describe('NodeService', () => {
   let service: NodeService;
