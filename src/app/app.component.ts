@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { TreeComponent } from './components/tree/tree.component';
-import { SearchInputComponent } from './components/searchinput/searchinput.component';
+import { SearchinputComponent } from './components/searchinput/searchinput.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TreeComponent, SearchInputComponent],
+  imports: [TreeComponent, SearchinputComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
