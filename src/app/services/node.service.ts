@@ -1,9 +1,9 @@
+/* eslint-disable @tseslint/class-methods-use-this */
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 
 import { Injectable } from '@angular/core';
 import { MatTree } from '@angular/material/tree';
 import { type TreeNode } from '../types';
-import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,7 @@ export class NodeService {
   ): void {
     for (const node of nodes) {
       // Expand match with ancestors
-      if (UtilsService.isNodeMatch(node, searchTerm) && ancestors.length) {
+      if (this.isNodeMatch(node, searchTerm) && ancestors.length) {
         ancestors.forEach((ancestor: TreeNode) => {
           tree.expand(ancestor);
         });
@@ -37,7 +37,7 @@ export class NodeService {
           ? this.filterNonMatchingLeafs(node.children, searchTerm)
           : [];
 
-        if (UtilsService.isNodeMatch(node, searchTerm) || children.length) {
+        if (this.isNodeMatch(node, searchTerm) || children.length) {
           return {
             ...node,
             children: children.length ? children : [],
@@ -47,5 +47,11 @@ export class NodeService {
         return null;
       })
       .filter((node: TreeNode | null): node is TreeNode => node !== null);
+  }
+
+  isNodeMatch(node: TreeNode, searchValue: string | null): boolean {
+    if (!searchValue) return false;
+
+    return node.text.toLowerCase().includes(searchValue.toLowerCase());
   }
 }

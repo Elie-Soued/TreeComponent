@@ -1,20 +1,14 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { type TreeNode, type FavoritePayload, type PopupState } from '../types';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { UtilsService } from './utils.service';
+import { type TreeNode, type PopupState } from '../types';
 import { DataService } from './data.service';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavoritesService {
-  private FAVORITE_URL: string = environment.FAVORITE_URL;
-
-  private payload: FavoritePayload = environment.favorite_payload;
-
   private popUp: BehaviorSubject<PopupState> = new BehaviorSubject<PopupState>({
     visible: false,
     node: null,
@@ -26,7 +20,7 @@ export class FavoritesService {
 
   private dataService: DataService = inject(DataService);
 
-  private http: HttpClient = inject(HttpClient);
+  private httpService: HttpService = inject(HttpService);
 
   addNode(node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
@@ -38,14 +32,14 @@ export class FavoritesService {
     const updatedFavorites: TreeNode[] = [...currentFavorites, favoriteCopy];
 
     this.dataService.updateFavoritesInUI(updatedFavorites);
-    this.updateFavoritesInBackend(updatedFavorites);
+    this.httpService.updateFavoritesInBackend(updatedFavorites);
   }
 
   renameNode(): void {
     const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
 
     this.dataService.updateFavoritesInUI(currentFavorites);
-    this.updateFavoritesInBackend(currentFavorites);
+    this.httpService.updateFavoritesInBackend(currentFavorites);
   }
 
   removeNode(node: TreeNode): void {
@@ -53,7 +47,7 @@ export class FavoritesService {
     const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
     this.dataService.updateFavoritesInUI(filteredFavorites);
-    this.updateFavoritesInBackend(filteredFavorites);
+    this.httpService.updateFavoritesInBackend(filteredFavorites);
   }
 
   createNewFolder(parentNode: TreeNode, isRoot: boolean): void {
@@ -82,7 +76,7 @@ export class FavoritesService {
     }
 
     this.dataService.updateFavoritesInUI(currentFavorites);
-    this.updateFavoritesInBackend(currentFavorites);
+    this.httpService.updateFavoritesInBackend(currentFavorites);
   }
 
   dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): void {
@@ -118,7 +112,7 @@ export class FavoritesService {
 
     if ((targetNode && targetNode.id !== sourceNode.id) || targetNodeText === 'Favoriten') {
       this.dataService.updateFavoritesInUI(updatedFavorites);
-      this.updateFavoritesInBackend(updatedFavorites);
+      this.httpService.updateFavoritesInBackend(updatedFavorites);
     }
   }
 
@@ -138,19 +132,6 @@ export class FavoritesService {
       position: { x: 0, y: 0 },
       isLeftClick: false,
     });
-  }
-
-  private updateFavoritesInBackend(favorites: TreeNode[]): void {
-    this.payload.favorites.children = favorites;
-    this.http
-      .post(this.FAVORITE_URL, UtilsService.buildRequestBody(this.payload), {
-        headers: UtilsService.getHeaders(),
-      })
-      .subscribe({
-        error: () => {
-          this.dataService.loadInitialData().subscribe();
-        },
-      });
   }
 
   private searchNodeRecursively(
