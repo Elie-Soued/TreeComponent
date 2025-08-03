@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NodelabelComponent } from './nodelabel.component';
+import { NodeLabelComponent } from './nodelabel.component';
 import { By } from '@angular/platform-browser';
 import { type TreeNode } from '../../types';
 
-describe('NodelabelComponent', () => {
-  let component: NodelabelComponent;
-  let fixture: ComponentFixture<NodelabelComponent>;
+describe('NodeLabelComponent', () => {
+  let component: NodeLabelComponent;
+  let fixture: ComponentFixture<NodeLabelComponent>;
 
   const mockNode: TreeNode = {
     text: 'Stammdatenverwaltung',
@@ -24,9 +24,9 @@ describe('NodelabelComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting()],
-      imports: [NodelabelComponent],
+      imports: [NodeLabelComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(NodelabelComponent);
+    fixture = TestBed.createComponent(NodeLabelComponent);
     component = fixture.componentInstance;
     component.node = mockNode;
     component.searchValue = 'pilex';

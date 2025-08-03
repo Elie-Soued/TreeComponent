@@ -1,19 +1,19 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { SearchinputComponent } from './searchinput.component';
+import { SearchInputComponent } from './searchinput.component';
 import { By } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
 
 describe('SearchbarComponent', () => {
-  let component: SearchinputComponent;
-  let fixture: ComponentFixture<SearchinputComponent>;
+  let component: SearchInputComponent;
+  let fixture: ComponentFixture<SearchInputComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [provideAnimations()],
-      imports: [SearchinputComponent],
+      imports: [SearchInputComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(SearchinputComponent);
+    fixture = TestBed.createComponent(SearchInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

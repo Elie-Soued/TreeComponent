@@ -5,7 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
-import { SearchinputComponent } from './components/searchinput/searchinput.component';
+import { SearchInputComponent } from './components/searchinput/searchinput.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -30,10 +30,10 @@ describe('AppComponent', () => {
     const searchinputDebugElement: DebugElement = fixture.debugElement.query(
       By.css('app-searchinput'),
     );
-    const searchinputComponent: SearchinputComponent =
-      searchinputDebugElement.componentInstance as SearchinputComponent;
+    const searchInputComponent: SearchInputComponent =
+      searchinputDebugElement.componentInstance as SearchInputComponent;
 
-    searchinputComponent.searchValue.emit('pilex');
+    searchInputComponent.searchValue.emit('pilex');
     tick();
     fixture.detectChanges();
     expect(component.searchValue).toEqual('pilex');

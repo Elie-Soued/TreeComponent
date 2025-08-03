@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './nodelabel.component.html',
   styleUrl: './nodelabel.component.scss',
 })
-export class NodelabelComponent implements OnInit, OnChanges, AfterViewChecked {
+export class NodeLabelComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() searchValue: string | null = null;
 
   @Input() node!: TreeNode;

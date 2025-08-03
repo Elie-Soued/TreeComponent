@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './searchinput.component.html',
   styleUrl: './searchinput.component.scss',
 })
-export class SearchinputComponent implements OnInit, OnDestroy {
+export class SearchInputComponent implements OnInit, OnDestroy {
   @Output() searchValue: EventEmitter<string | null> = new EventEmitter<string | null>();
 
   searchControl: FormControl = new FormControl('');
