@@ -5,7 +5,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';
-import { SearchbarComponent } from './components/searchbar/searchbar.component';
+import { SearchInputComponent } from './components/searchinput/searchinput.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -20,18 +20,20 @@ describe('AppComponent', () => {
     fixture.detectChanges();
   });
   it('The App component is correctly rendered', () => {
-    const searchBar: DebugElement = fixture.debugElement.query(By.css('app-searchbar'));
+    const searchinput: DebugElement = fixture.debugElement.query(By.css('app-searchinput'));
     const tree: DebugElement = fixture.debugElement.query(By.css('app-tree'));
 
-    expect(searchBar).toBeTruthy();
+    expect(searchinput).toBeTruthy();
     expect(tree).toBeTruthy();
   });
   it('searchValue is correctly updated', fakeAsync(() => {
-    const searchBarDebugElement: DebugElement = fixture.debugElement.query(By.css('app-searchbar'));
-    const searchBarComponent: SearchbarComponent =
-      searchBarDebugElement.componentInstance as SearchbarComponent;
+    const searchinputDebugElement: DebugElement = fixture.debugElement.query(
+      By.css('app-searchinput'),
+    );
+    const searchInputComponent: SearchInputComponent =
+      searchinputDebugElement.componentInstance as SearchInputComponent;
 
-    searchBarComponent.searchValue.emit('pilex');
+    searchInputComponent.searchValue.emit('pilex');
     tick();
     fixture.detectChanges();
     expect(component.searchValue).toEqual('pilex');
