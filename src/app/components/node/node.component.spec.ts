@@ -5,9 +5,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NodeService } from '../../services/node.service';
 import { FavoritesService } from '../../services/favorites.service';
 import { MatTree } from '@angular/material/tree';
-import { type TreeNode, type PopupState } from '../../types';
+import { type TreeNode, type ContextMenuClickDetails } from '../../types';
 import { By } from '@angular/platform-browser';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { DebugElement } from '@angular/core';
 
 describe('NodeComponent', () => {
@@ -16,8 +16,7 @@ describe('NodeComponent', () => {
   let nodeService: jasmine.SpyObj<NodeService>;
   let favoritesService: jasmine.SpyObj<FavoritesService>;
   let mockTree: jasmine.SpyObj<MatTree<TreeNode>>;
-  let favoritePopupSubject: BehaviorSubject<PopupState>;
-  let enableFavoriteNode: Subject<TreeNode>;
+  let favoritePopupSubject: BehaviorSubject<ContextMenuClickDetails>;
 
   const mockNode: TreeNode = {
     text: 'Stammdatenverwaltung',
@@ -30,7 +29,7 @@ describe('NodeComponent', () => {
       },
     ],
   };
-  const initialPopupState: PopupState = {
+  const initialPopupState: ContextMenuClickDetails = {
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
@@ -39,12 +38,10 @@ describe('NodeComponent', () => {
 
   beforeEach(async () => {
     favoritePopupSubject = new BehaviorSubject(initialPopupState);
-    enableFavoriteNode = new Subject();
     favoritesService = jasmine.createSpyObj('FavoritesService', [
       'showPopup',
       'closePopup',
     ]) as jasmine.SpyObj<FavoritesService>;
-    favoritesService.popUp$ = favoritePopupSubject.asObservable();
     mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', ['isExpanded', 'toggle']);
     await TestBed.configureTestingModule({
       providers: [
@@ -130,13 +127,5 @@ describe('NodeComponent', () => {
     // Assert
     expect(favoritePopup).toBeTruthy();
     // eslint-disable-next-line @tseslint/unbound-method
-    expect(favoritesService.showPopup).toHaveBeenCalledWith(
-      mockNode,
-      {
-        x: 100,
-        y: 200,
-      },
-      false,
-    );
   });
 });

@@ -1,15 +1,14 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, effect } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 import {
   type TreeNode,
   type ContextMenuAction,
   type Position,
-  type PopupState,
+  type ContextMenuClickDetails,
   type ContextMenuActionTypes,
 } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
-import { Subscription } from 'rxjs';
 import { DragService } from '../../services/drag.service';
 
 @Component({
@@ -19,7 +18,7 @@ import { DragService } from '../../services/drag.service';
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.scss'],
 })
-export class ContextMenuComponent implements OnInit, OnDestroy {
+export class ContextMenuComponent {
   @Input() node!: TreeNode;
 
   @Output() menuAction: EventEmitter<ContextMenuAction> = new EventEmitter<ContextMenuAction>();
@@ -30,27 +29,22 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   draggedPosition: Position = { x: 0, y: 0 };
 
-  private subscriptions: Subscription = new Subscription();
-
   private favoriteService: FavoritesService = inject(FavoritesService);
 
   private dragService: DragService = inject(DragService);
 
-  isLeftClick: boolean = false;
+  isLeftClick: boolean | null = false;
 
-  ngOnInit(): void {
-    this.subscriptions.add(
-      this.favoriteService.popUp$.subscribe((state: PopupState) => {
-        this.favoritePopupIsVisible = state.visible && state.node === this.node;
-        this.favoritePopupPosition = state.position;
-        this.isLeftClick = state.isLeftClick;
-      }),
-    );
-    this.subscriptions.add(
-      this.dragService.shareDraggedPosition$.subscribe((position: Position) => {
-        this.draggedPosition = position;
-      }),
-    );
+  constructor() {
+    effect(() => {
+      const { node, position, isLeftClick, visible }: ContextMenuClickDetails =
+        this.favoriteService.popUp();
+
+      this.favoritePopupIsVisible = visible && node === this.node;
+      this.favoritePopupPosition = position;
+      this.isLeftClick = isLeftClick;
+      this.draggedPosition = this.dragService.draggedPosition();
+    });
   }
 
   onMenuAction(type: ContextMenuActionTypes, isRoot: boolean = false): void {
@@ -59,9 +53,5 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
       node: this.node,
       isRoot,
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 }

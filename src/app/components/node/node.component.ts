@@ -73,25 +73,36 @@ export class NodeComponent {
       }
     }
 
-    this.favoriteService.showPopup(
-      this.node,
-      {
+    this.favoriteService.popUp.set({
+      visible: true,
+      node: this.node,
+      position: {
         x: e.clientX,
         y: e.clientY,
       },
       isLeftClick,
-    );
+    });
   }
 
   @HostListener('document:click')
   hideFavorites(): void {
-    this.favoriteService.closePopup();
+    this.favoriteService.popUp.set({
+      visible: false,
+      node: null,
+      position: { x: 0, y: 0 },
+      isLeftClick: false,
+    });
   }
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.isEnabled = false;
-    this.favoriteService.closePopup();
+    this.favoriteService.popUp.set({
+      visible: false,
+      node: null,
+      position: { x: 0, y: 0 },
+      isLeftClick: false,
+    });
   }
 
   @HostListener('document:keydown.enter')

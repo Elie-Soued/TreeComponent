@@ -34,28 +34,13 @@ export interface ContextMenuAction {
   node: TreeNode;
   isRoot?: boolean;
 }
+export interface ContextMenuClickDetails {
+  visible: boolean;
+  node: TreeNode | null;
+  position: Position;
+  isLeftClick: boolean | null;
+}
 export interface Position {
   x: number;
   y: number;
 }
-export interface EnvironmentType {
-  production: boolean;
-  BASE_URL: string;
-  FAVORITE_URL: string;
-  favorite_payload: FavoritePayload;
-}
-export interface PopupState {
-  visible: boolean;
-  node: TreeNode | null;
-  position: Position;
-  isLeftClick: boolean;
-}
-export type Change<T> = {
-  currentValue: T;
-  previousValue: T;
-  firstChange: boolean;
-  isFirstChange: () => boolean;
-};
-export type Changes = {
-  searchValue: Change<string>;
-};

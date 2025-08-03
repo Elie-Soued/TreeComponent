@@ -1,7 +1,6 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { type TreeNode, type PopupState } from '../types';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
+import { type TreeNode, ContextMenuClickDetails } from '../types';
 import { DataService } from './data.service';
 import { HttpService } from './http.service';
 
@@ -9,14 +8,15 @@ import { HttpService } from './http.service';
   providedIn: 'root',
 })
 export class FavoritesService {
-  private popUp: BehaviorSubject<PopupState> = new BehaviorSubject<PopupState>({
+  popUp: WritableSignal<ContextMenuClickDetails> = signal({
     visible: false,
     node: null,
-    position: { x: 0, y: 0 },
-    isLeftClick: false,
+    position: {
+      x: 0,
+      y: 0,
+    },
+    isLeftClick: null,
   });
-
-  popUp$: Observable<PopupState> = this.popUp.asObservable();
 
   private dataService: DataService = inject(DataService);
 
@@ -114,24 +114,6 @@ export class FavoritesService {
       this.dataService.updateFavoritesInUI(updatedFavorites);
       this.httpService.updateFavoritesInBackend(updatedFavorites);
     }
-  }
-
-  showPopup(node: TreeNode, position: { x: number; y: number }, isLeftClick: boolean): void {
-    this.popUp.next({
-      visible: true,
-      node,
-      position,
-      isLeftClick,
-    });
-  }
-
-  closePopup(): void {
-    this.popUp.next({
-      visible: false,
-      node: null,
-      position: { x: 0, y: 0 },
-      isLeftClick: false,
-    });
   }
 
   private searchNodeRecursively(

@@ -1,7 +1,6 @@
 /* eslint-disable @tseslint/prefer-readonly-parameter-types */
-import { Injectable, inject } from '@angular/core';
+import { Injectable, WritableSignal, inject, signal } from '@angular/core';
 import { type Position, type TreeNode } from '../types';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { FavoritesService } from './favorites.service';
 
 @Injectable({
@@ -18,22 +17,18 @@ export class DragService {
 
   elementOffset: Position = { x: 0, y: 0 };
 
-  private shareDraggedPosition: BehaviorSubject<Position> = new BehaviorSubject<Position>({
-    x: 0,
-    y: 0,
-  });
-
   private treeElement!: HTMLElement;
 
   private boundaries: { left: number; top: number; right: number; bottom: number } | null = null;
 
-  private isOverFavorite: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
   private isFavorite: boolean = false;
 
-  shareDraggedPosition$: Observable<Position> = this.shareDraggedPosition.asObservable();
+  draggedPosition: WritableSignal<Position> = signal({
+    x: 0,
+    y: 0,
+  });
 
-  isOverFavorite$: Observable<boolean> = this.isOverFavorite.asObservable();
+  overFavorite: WritableSignal<boolean> = signal<boolean>(false);
 
   private favoriteService: FavoritesService = inject(FavoritesService);
 
@@ -60,7 +55,7 @@ export class DragService {
       x: e.clientX - this.elementOffset.x,
       y: e.clientY - this.elementOffset.y,
     };
-    this.shareDraggedPosition.next(this.currentMousePosition);
+    this.draggedPosition.set(this.currentMousePosition);
     this.checkFavoriteHover(e);
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
@@ -76,7 +71,7 @@ export class DragService {
     newX = Math.max(this.boundaries.left, Math.min(this.boundaries.right, newX));
     newY = Math.max(this.boundaries.top, Math.min(this.boundaries.bottom, newY));
     this.currentMousePosition = { x: newX, y: newY };
-    this.shareDraggedPosition.next(this.currentMousePosition);
+    this.draggedPosition.set(this.currentMousePosition);
     this.checkFavoriteHover(e);
   };
 
@@ -86,7 +81,7 @@ export class DragService {
     this.handleDrop(e);
     this.isDragging = false;
     this.draggedNode = null;
-    this.isOverFavorite.next(false);
+    this.overFavorite.set(false);
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     document.body.style.userSelect = '';
@@ -97,7 +92,7 @@ export class DragService {
     const favoriteElement: Element | null | undefined = elementBelow?.closest('.favorite');
 
     this.isFavorite = Boolean(favoriteElement);
-    this.isOverFavorite.next(this.isFavorite);
+    this.overFavorite.set(this.isFavorite);
   }
 
   handleDrop(e: MouseEvent): void {
