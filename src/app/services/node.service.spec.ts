@@ -8,7 +8,7 @@ import { provideHttpClient } from '@angular/common/http';
 import {
   provideHttpClientTesting,
   HttpTestingController,
-  TestRequest,
+  TestRequest
 } from '@angular/common/http/testing';
 import { MatTree } from '@angular/material/tree';
 
@@ -24,9 +24,9 @@ describe('NodeService', () => {
       {
         text: 'Stammdatenverwaltung',
         iconCls: 'stamm.ico',
-        children: [],
-      },
-    ],
+        children: []
+      }
+    ]
   };
   const mockData2: Data = {
     Interface: 'menu.load',
@@ -44,11 +44,11 @@ describe('NodeService', () => {
               {
                 text: 'Nonex cornflex',
                 call: 'R10AB01001',
-                iconCls: 'prosoz_16.ico',
-              },
-            ],
-          },
-        ],
+                iconCls: 'prosoz_16.ico'
+              }
+            ]
+          }
+        ]
       },
       {
         text: 'Pilex CornFlex',
@@ -61,13 +61,13 @@ describe('NodeService', () => {
               {
                 text: 'Pilex la flex',
                 call: 'R10AB01001',
-                iconCls: 'prosoz_16.ico',
-              },
-            ],
-          },
-        ],
-      },
-    ],
+                iconCls: 'prosoz_16.ico'
+              }
+            ]
+          }
+        ]
+      }
+    ]
   };
   const treeData: TreeNode[] = [
     {
@@ -77,14 +77,14 @@ describe('NodeService', () => {
         {
           text: 'Child Match',
           children: [],
-          iconCls: '',
+          iconCls: ''
         },
         {
           text: 'Another Child',
           children: [],
-          iconCls: '',
-        },
-      ],
+          iconCls: ''
+        }
+      ]
     },
     {
       text: 'Parent 2',
@@ -97,40 +97,39 @@ describe('NodeService', () => {
             {
               text: 'Deep Match',
               children: [],
-              iconCls: '',
-            },
-          ],
-        },
-      ],
-    },
+              iconCls: ''
+            }
+          ]
+        }
+      ]
+    }
   ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ]
     });
     service = TestBed.inject(NodeService);
     httpClient = TestBed.inject(HttpTestingController);
   });
-
   it('expandMatchingNodes expands correct ancestors for matching nodes', () => {
     const mockTree: MatTree<TreeNode> = {
-      expand: jasmine.createSpy('expand'),
+      expand: jasmine.createSpy('expand')
     } as unknown as MatTree<TreeNode>;
 
     service.expandMatchingNodes(treeData, 'match', mockTree, []);
     // Check that it expanded correct ancestors
     expect(mockTree.expand).toHaveBeenCalledTimes(3);
-    expect(mockTree.expand).toHaveBeenCalledWith(treeData[0]);
-    expect(mockTree.expand).toHaveBeenCalledWith(treeData[1]);
-    expect(mockTree.expand).toHaveBeenCalledWith(treeData[1].children![0]);
+    expect(mockTree.expand).toHaveBeenCalledWith(treeData[ 0 ]);
+    expect(mockTree.expand).toHaveBeenCalledWith(treeData[ 1 ]);
+    expect(mockTree.expand).toHaveBeenCalledWith(treeData[ 1 ].children![ 0 ]);
   });
   it('filterNonMatchingLeafs is filtering the correct nodes', () => {
     const ouf: TreeNode[] = service.filterNonMatchingLeafs(mockData2.children, 'Pilex');
 
     expect(ouf.length).toBe(1);
-    expect(ouf[0].text).toBe('Pilex CornFlex');
-    expect(ouf[0].children?.[0].text).toBe('Pilex');
-    expect(ouf[0].children?.[0].children?.[0].text).toBe('Pilex la flex');
+    expect(ouf[ 0 ].text).toBe('Pilex CornFlex');
+    expect(ouf[ 0 ].children?.[ 0 ].text).toBe('Pilex');
+    expect(ouf[ 0 ].children?.[ 0 ].children?.[ 0 ].text).toBe('Pilex la flex');
   });
 });

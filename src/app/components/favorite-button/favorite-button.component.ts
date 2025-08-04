@@ -1,4 +1,4 @@
-/* eslint-disable @tseslint/prefer-readonly-parameter-types */
+
 import { Component, Input, Output, EventEmitter, inject, effect } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { type Position } from '../../types';
@@ -8,9 +8,9 @@ import { DragService } from '../../services/drag.service';
 @Component({
   selector: 'app-favorite-button',
   standalone: true,
-  imports: [NgStyle, MatIconModule],
+  imports: [ NgStyle, MatIconModule ],
   templateUrl: './favorite-button.component.html',
-  styleUrl: './favorite-button.component.scss',
+  styleUrl: './favorite-button.component.scss'
 })
 export class FavoriteButtonComponent {
   @Input() title!: string;
@@ -27,14 +27,14 @@ export class FavoriteButtonComponent {
 
   private dragService: DragService = inject(DragService);
 
-  constructor() {
+  constructor () {
     effect(() => {
       this.isOverFavorite = this.dragService.overFavorite();
       this.isDragged = true;
     });
   }
 
-  onClick(): void {
+  onClick (): void {
     this.buttonClick.emit();
   }
 }

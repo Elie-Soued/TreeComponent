@@ -8,11 +8,10 @@ describe('HttpService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ]
     });
     service = TestBed.inject(HttpService);
   });
-
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

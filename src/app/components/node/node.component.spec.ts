@@ -25,24 +25,24 @@ describe('NodeComponent', () => {
       {
         text: 'Kundenstamm',
         call: 'R10ST00001',
-        iconCls: 'prosoz_16.ico',
-      },
-    ],
+        iconCls: 'prosoz_16.ico'
+      }
+    ]
   };
   const initialPopupState: ContextMenuClickDetails = {
     visible: false,
     node: null,
     position: { x: 0, y: 0 },
-    isLeftClick: false,
+    isLeftClick: false
   };
 
   beforeEach(async () => {
     favoritePopupSubject = new BehaviorSubject(initialPopupState);
     favoritesService = jasmine.createSpyObj('FavoritesService', [
       'showPopup',
-      'closePopup',
+      'closePopup'
     ]) as jasmine.SpyObj<FavoritesService>;
-    mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', ['isExpanded', 'toggle']);
+    mockTree = jasmine.createSpyObj<MatTree<TreeNode>>('MatTree', [ 'isExpanded', 'toggle' ]);
     await TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -50,14 +50,14 @@ describe('NodeComponent', () => {
 
         {
           provide: NodeService,
-          useValue: nodeService,
+          useValue: nodeService
         },
         {
           provide: FavoritesService,
-          useValue: favoritesService,
-        },
+          useValue: favoritesService
+        }
       ],
-      imports: [NodeComponent],
+      imports: [ NodeComponent ]
     }).compileComponents();
     fixture = TestBed.createComponent(NodeComponent);
     component = fixture.componentInstance;
@@ -91,7 +91,7 @@ describe('NodeComponent', () => {
   it('Render a leaf', () => {
     component.node = {
       text: 'Kundenstamm',
-      iconCls: 'prosoz_16.ico',
+      iconCls: 'prosoz_16.ico'
     };
     component.isLeaf = true;
     fixture.detectChanges();
@@ -107,7 +107,7 @@ describe('NodeComponent', () => {
     const mockEvent: Event = new MouseEvent('contextmenu', {
       bubbles: true,
       clientX: 100,
-      clientY: 200,
+      clientY: 200
     });
     const span: DebugElement = fixture.debugElement.query(By.css('app-nodelabel'));
 
@@ -117,7 +117,7 @@ describe('NodeComponent', () => {
       visible: true,
       node: mockNode,
       position: { x: 100, y: 200 },
-      isLeftClick: false,
+      isLeftClick: false
     });
     fixture.detectChanges();
 
@@ -126,6 +126,5 @@ describe('NodeComponent', () => {
 
     // Assert
     expect(favoritePopup).toBeTruthy();
-    // eslint-disable-next-line @tseslint/unbound-method
   });
 });

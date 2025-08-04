@@ -13,7 +13,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideAnimations()],
+      providers: [ provideHttpClient(), provideHttpClientTesting(), provideAnimations() ]
     }).compileComponents();
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
@@ -28,10 +28,10 @@ describe('AppComponent', () => {
   });
   it('searchValue is correctly updated', fakeAsync(() => {
     const searchinputDebugElement: DebugElement = fixture.debugElement.query(
-      By.css('app-searchinput'),
+      By.css('app-searchinput')
     );
-    const searchInputComponent: SearchInputComponent =
-      searchinputDebugElement.componentInstance as SearchInputComponent;
+    const searchInputComponent: SearchInputComponent
+      = searchinputDebugElement.componentInstance as SearchInputComponent;
 
     searchInputComponent.searchValue.emit('pilex');
     tick();

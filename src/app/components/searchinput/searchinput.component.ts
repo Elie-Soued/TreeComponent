@@ -8,9 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-searchinput',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule],
+  imports: [ ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule ],
   templateUrl: './searchinput.component.html',
-  styleUrl: './searchinput.component.scss',
+  styleUrl: './searchinput.component.scss'
 })
 export class SearchInputComponent implements OnInit, OnDestroy {
   @Output() searchValue: EventEmitter<string | null> = new EventEmitter<string | null>();
@@ -21,21 +21,21 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.subscriptions.add(
       this.searchControl.valueChanges
         .pipe(debounceTime(this.searchDebounceDelay), distinctUntilChanged())
         .subscribe((value: string | null) => {
           this.searchValue.emit(value);
-        }),
+        })
     );
   }
 
-  clearForm(): void {
+  clearForm (): void {
     this.searchControl.setValue('');
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void {
     this.subscriptions.unsubscribe();
   }
 }

@@ -6,7 +6,7 @@ import { type TreeNode, type Data } from '../types';
 import { HttpService } from './http.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DataService {
   private treeData: BehaviorSubject<TreeNode[]> = new BehaviorSubject<TreeNode[]>([]);
@@ -15,11 +15,11 @@ export class DataService {
 
   private httpService: HttpService = inject(HttpService);
 
-  loadInitialData(): Observable<TreeNode[]> {
+  loadInitialData (): Observable<TreeNode[]> {
     return this.httpService.getInitialData().pipe(
       map((response: Data) => {
         const favoriteDirectory: TreeNode | undefined = response.children.find(
-          (n: TreeNode) => n.text === 'Favoriten',
+          (n: TreeNode) => n.text === 'Favoriten'
         );
 
         if (favoriteDirectory) {
@@ -36,32 +36,32 @@ export class DataService {
       tap((data: TreeNode[]) => {
         this.treeData.next(data);
       }),
-      catchError(() => of([])),
+      catchError(() => of([]))
     );
   }
 
-  getCurrentTreeData(): TreeNode[] {
+  getCurrentTreeData (): TreeNode[] {
     return this.treeData.value;
   }
 
   // Used mainly in FavoriteService
-  getCurrentFavorites(): TreeNode[] {
+  getCurrentFavorites (): TreeNode[] {
     const data: TreeNode[] = this.getCurrentTreeData();
     const favoritesNode: TreeNode | undefined = data.find(
-      (node: TreeNode) => node.text === 'Favoriten',
+      (node: TreeNode) => node.text === 'Favoriten'
     );
 
     return favoritesNode?.children ?? [];
   }
 
-  updateTreeData(newData: TreeNode[]): void {
+  updateTreeData (newData: TreeNode[]): void {
     this.treeData.next(newData);
   }
 
-  updateFavoritesInUI(newFavorites: TreeNode[]): void {
-    const currentData: TreeNode[] = [...this.getCurrentTreeData()];
+  updateFavoritesInUI (newFavorites: TreeNode[]): void {
+    const currentData: TreeNode[] = [ ...this.getCurrentTreeData() ];
     const favoriteIndex: number = currentData.findIndex(
-      (node: TreeNode) => node.text === 'Favoriten',
+      (node: TreeNode) => node.text === 'Favoriten'
     );
 
     if (favoriteIndex === -1) {
@@ -70,36 +70,34 @@ export class DataService {
         text: 'Favoriten',
         children: newFavorites,
         iconCls: '',
-        favorite: true,
+        favorite: true
       });
     } else {
       // Update existing favorites directory
-      currentData[favoriteIndex] = {
-        ...currentData[favoriteIndex],
-        children: newFavorites,
+      currentData[ favoriteIndex ] = {
+        ...currentData[ favoriteIndex ],
+        children: newFavorites
       };
     }
 
     this.updateTreeData(currentData);
   }
 
-  private setFavoriteFlags(nodes: TreeNode[]): void {
+  private setFavoriteFlags (nodes: TreeNode[]): void {
     nodes.forEach((node: TreeNode) => {
       node.favorite = true;
 
-      if (node.children) {
+      if (node.children)
         this.setFavoriteFlags(node.children);
-      }
     });
   }
 
-  private setUniqueIDs(nodes: TreeNode[]): void {
+  private setUniqueIDs (nodes: TreeNode[]): void {
     nodes.forEach((node: TreeNode) => {
       node.id = crypto.randomUUID();
 
-      if (node.children) {
+      if (node.children)
         this.setUniqueIDs(node.children);
-      }
     });
   }
 }

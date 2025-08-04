@@ -16,15 +16,15 @@ describe('NodeLabelComponent', () => {
       {
         text: 'Kundenstamm',
         call: 'R10ST00001',
-        iconCls: 'prosoz_16.ico',
-      },
-    ],
+        iconCls: 'prosoz_16.ico'
+      }
+    ]
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-      imports: [NodeLabelComponent],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ],
+      imports: [ NodeLabelComponent ]
     }).compileComponents();
     fixture = TestBed.createComponent(NodeLabelComponent);
     component = fixture.componentInstance;
@@ -46,7 +46,7 @@ describe('NodeLabelComponent', () => {
     component.node = {
       text: 'Stammdatenverwaltung',
       iconCls: 'stamm.ico',
-      children: [],
+      children: []
     };
     component.ngOnInit();
     fixture.detectChanges();

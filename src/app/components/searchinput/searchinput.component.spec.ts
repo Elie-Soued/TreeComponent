@@ -10,8 +10,8 @@ describe('SearchbarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideAnimations()],
-      imports: [SearchInputComponent],
+      providers: [ provideAnimations() ],
+      imports: [ SearchInputComponent ]
     }).compileComponents();
     fixture = TestBed.createComponent(SearchInputComponent);
     component = fixture.componentInstance;

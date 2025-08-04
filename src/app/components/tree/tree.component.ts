@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   OnChanges,
   AfterViewInit,
-  inject,
+  inject
 } from '@angular/core';
 import { MatTree, MatTreeModule } from '@angular/material/tree';
 import { NodeService } from '../../services/node.service';
@@ -24,9 +24,9 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-tree',
   standalone: true,
-  imports: [MatTreeModule, NodeComponent, CommonModule],
+  imports: [ MatTreeModule, NodeComponent, CommonModule ],
   templateUrl: './tree.component.html',
-  styleUrl: './tree.component.scss',
+  styleUrl: './tree.component.scss'
 })
 export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @ViewChild('tree') tree!: MatTree<TreeNode>;
@@ -52,48 +52,47 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   hasChild = (_: number, node: TreeNode) =>
     Boolean(node.children) && node.children && node.children.length > 0;
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.subscriptions.add(this.dataService.loadInitialData().subscribe());
     this.updateTreeData();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit (): void {
     this.isTreeReady = true;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const searchValueChanged: boolean = !changes['searchValue'].firstChange && this.isTreeReady;
+  ngOnChanges (changes: SimpleChanges): void {
+    const searchValueChanged: boolean = !changes[ 'searchValue' ].firstChange && this.isTreeReady;
 
-    if (searchValueChanged) {
+    if (searchValueChanged)
       this.filterTree();
-    }
   }
 
-  private updateTreeData(): void {
+  private updateTreeData (): void {
     this.subscriptions.add(
       this.dataService.treeData$.subscribe((data: TreeNode[]) => {
         const favoritesNode: TreeNode | undefined = data.find(
-          (node: TreeNode) => node.text === 'Favoriten',
+          (node: TreeNode) => node.text === 'Favoriten'
         );
 
-        if (favoritesNode) {
+        if (favoritesNode)
           this.tree.expand(favoritesNode);
-        }
 
-        this.initialData = [...data];
-        this.dataSource = [...data];
-      }),
+
+        this.initialData = [ ...data ];
+        this.dataSource = [ ...data ];
+      })
     );
   }
 
-  private filterTree(): void {
+  private filterTree (): void {
     if (!this.searchValue || this.searchValue.length < this.minimunSearchCharacter) {
-      this.dataSource = [...this.initialData];
+      this.dataSource = [ ...this.initialData ];
       this.tree.collapseAll();
     } else {
       const filteredNodes: TreeNode[] = this.nodeService.filterNonMatchingLeafs(
         this.initialData,
-        this.searchValue,
+        this.searchValue
       );
 
       this.dataSource = filteredNodes;
@@ -101,7 +100,7 @@ export class TreeComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void {
     this.subscriptions.unsubscribe();
   }
 }

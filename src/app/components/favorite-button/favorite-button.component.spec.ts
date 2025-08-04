@@ -9,8 +9,8 @@ describe('FavoriteButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-      imports: [FavoriteButtonComponent],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ],
+      imports: [ FavoriteButtonComponent ]
     }).compileComponents();
     fixture = TestBed.createComponent(FavoriteButtonComponent);
     component = fixture.componentInstance;

@@ -1,4 +1,4 @@
-/* eslint-disable @tseslint/prefer-readonly-parameter-types */
+
 import { Component, Input, Output, EventEmitter, inject, effect } from '@angular/core';
 import { FavoriteButtonComponent } from '../favorite-button/favorite-button.component';
 import {
@@ -6,7 +6,7 @@ import {
   type ContextMenuAction,
   type Position,
   type ContextMenuClickDetails,
-  type ContextMenuActionTypes,
+  type ContextMenuActionTypes
 } from '../../types';
 import { FavoritesService } from '../../services/favorites.service';
 import { DragService } from '../../services/drag.service';
@@ -14,9 +14,9 @@ import { DragService } from '../../services/drag.service';
 @Component({
   selector: 'app-context-menu',
   standalone: true,
-  imports: [FavoriteButtonComponent],
+  imports: [ FavoriteButtonComponent ],
   templateUrl: './context-menu.component.html',
-  styleUrls: ['./context-menu.component.scss'],
+  styleUrls: [ './context-menu.component.scss' ]
 })
 export class ContextMenuComponent {
   @Input() node!: TreeNode;
@@ -35,10 +35,10 @@ export class ContextMenuComponent {
 
   isLeftClick: boolean | null = false;
 
-  constructor() {
+  constructor () {
     effect(() => {
-      const { node, position, isLeftClick, visible }: ContextMenuClickDetails =
-        this.favoriteService.popUp();
+      const { node, position, isLeftClick, visible }: ContextMenuClickDetails
+        = this.favoriteService.popUp();
 
       this.favoritePopupIsVisible = visible && node === this.node;
       this.favoritePopupPosition = position;
@@ -47,11 +47,11 @@ export class ContextMenuComponent {
     });
   }
 
-  onMenuAction(type: ContextMenuActionTypes, isRoot: boolean = false): void {
+  onMenuAction (type: ContextMenuActionTypes, isRoot: boolean = false): void {
     this.menuAction.emit({
       type,
       node: this.node,
-      isRoot,
+      isRoot
     });
   }
 }

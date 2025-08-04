@@ -4,7 +4,7 @@ import { type Position, type TreeNode } from '../types';
 import { FavoritesService } from './favorites.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class DragService {
   isDragging: boolean = false;
@@ -19,20 +19,20 @@ export class DragService {
 
   private treeElement!: HTMLElement;
 
-  private boundaries: { left: number; top: number; right: number; bottom: number } | null = null;
+  private boundaries: { left: number; top: number; right: number; bottom: number; } | null = null;
 
   private isFavorite: boolean = false;
 
   draggedPosition: WritableSignal<Position> = signal({
     x: 0,
-    y: 0,
+    y: 0
   });
 
   overFavorite: WritableSignal<boolean> = signal<boolean>(false);
 
   private favoriteService: FavoritesService = inject(FavoritesService);
 
-  startDrag(e: MouseEvent, node: TreeNode, draggedElement: HTMLElement, tree: HTMLElement): void {
+  startDrag (e: MouseEvent, node: TreeNode, draggedElement: HTMLElement, tree: HTMLElement): void {
     this.isDragging = true;
     this.draggedNode = node;
     this.treeElement = tree;
@@ -42,18 +42,18 @@ export class DragService {
 
     this.elementOffset = {
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
+      y: e.clientY - rect.top
     };
     this.boundaries = {
       left: rectTree.left,
       top: rectTree.top,
       right: rectTree.right - rect.width,
-      bottom: rectTree.bottom - rect.height,
+      bottom: rectTree.bottom - rect.height
     };
     this.dragStartPosition = { x: rect.left, y: rect.top };
     this.currentMousePosition = {
       x: e.clientX - this.elementOffset.x,
-      y: e.clientY - this.elementOffset.y,
+      y: e.clientY - this.elementOffset.y
     };
     this.draggedPosition.set(this.currentMousePosition);
     this.checkFavoriteHover(e);
@@ -87,7 +87,7 @@ export class DragService {
     document.body.style.userSelect = '';
   };
 
-  private checkFavoriteHover(e: MouseEvent): void {
+  private checkFavoriteHover (e: MouseEvent): void {
     const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);
     const favoriteElement: Element | null | undefined = elementBelow?.closest('.favorite');
 
@@ -95,7 +95,7 @@ export class DragService {
     this.overFavorite.set(this.isFavorite);
   }
 
-  handleDrop(e: MouseEvent): void {
+  handleDrop (e: MouseEvent): void {
     const elementBelow: Element | null = document.elementFromPoint(e.clientX, e.clientY);
     const dropTarget: Element | null | undefined = elementBelow?.closest('app-node');
 
@@ -105,9 +105,8 @@ export class DragService {
       if (inputElement) {
         const nodeValue: string | null = inputElement.getAttribute('ng-reflect-model');
 
-        if (this.isFavorite && this.draggedNode) {
+        if (this.isFavorite && this.draggedNode)
           this.favoriteService.dropNode(this.draggedNode, nodeValue);
-        }
       }
     }
   }

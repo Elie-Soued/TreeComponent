@@ -7,7 +7,7 @@ import {
   ElementRef,
   OnChanges,
   AfterViewChecked,
-  inject,
+  inject
 } from '@angular/core';
 import { NodeService } from '../../services/node.service';
 import { type TreeNode } from '../../types';
@@ -16,9 +16,9 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-nodelabel',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ FormsModule ],
   templateUrl: './nodelabel.component.html',
-  styleUrl: './nodelabel.component.scss',
+  styleUrl: './nodelabel.component.scss'
 })
 export class NodeLabelComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() searchValue: string | null = null;
@@ -39,7 +39,7 @@ export class NodeLabelComponent implements OnInit, OnChanges, AfterViewChecked {
 
   public nodeService: NodeService = inject(NodeService);
 
-  private highlightMatchingLetters(node: TreeNode, searchValue: string): void {
+  private highlightMatchingLetters (node: TreeNode, searchValue: string): void {
     const lowerText: string = node.text.toLowerCase();
     const lowerSearch: string = searchValue.toLowerCase();
     const start: number = lowerText.indexOf(lowerSearch);
@@ -49,19 +49,17 @@ export class NodeLabelComponent implements OnInit, OnChanges, AfterViewChecked {
     this.after = node.text.slice(start + searchValue.length);
   }
 
-  ngOnInit(): void {
-    if (this.searchValue) {
+  ngOnInit (): void {
+    if (this.searchValue)
       this.highlightMatchingLetters(this.node, this.searchValue);
-    }
   }
 
-  ngOnChanges(): void {
-    if (this.isEnabled) {
+  ngOnChanges (): void {
+    if (this.isEnabled)
       this.shouldFocus = true;
-    }
   }
 
-  ngAfterViewChecked(): void {
+  ngAfterViewChecked (): void {
     if (this.shouldFocus) {
       setTimeout(() => {
         const inputEl: HTMLInputElement = this.input.nativeElement;
@@ -77,10 +75,10 @@ export class NodeLabelComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   // eslint-disable-next-line @tseslint/class-methods-use-this
-  displayHighlightedText(searchValue: string | null): boolean | undefined {
-    if (searchValue) {
+  displayHighlightedText (searchValue: string | null): boolean | undefined {
+    if (searchValue)
       return searchValue.trim().length > 2;
-    }
+
 
     return undefined;
   }

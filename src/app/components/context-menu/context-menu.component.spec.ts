@@ -9,8 +9,8 @@ describe('ContextMenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-      imports: [ContextMenuComponent],
+      providers: [ provideHttpClient(), provideHttpClientTesting() ],
+      imports: [ ContextMenuComponent ]
     }).compileComponents();
     fixture = TestBed.createComponent(ContextMenuComponent);
     component = fixture.componentInstance;

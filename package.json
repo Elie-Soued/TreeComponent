@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "prepare": "husky",
-    "format": "prettier --write \"src/**/*.{js,ts,json,css,scss,html}\""
+    "format": "eslint --fix ."
   },
   "private": true,
   "dependencies": {

@@ -5,7 +5,7 @@ import { DataService } from './data.service';
 import { HttpService } from './http.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FavoritesService {
   popUp: WritableSignal<ContextMenuClickDetails> = signal({
@@ -13,36 +13,36 @@ export class FavoritesService {
     node: null,
     position: {
       x: 0,
-      y: 0,
+      y: 0
     },
-    isLeftClick: null,
+    isLeftClick: null
   });
 
   private dataService: DataService = inject(DataService);
 
   private httpService: HttpService = inject(HttpService);
 
-  addNode(node: TreeNode): void {
+  addNode (node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
     const favoriteCopy: TreeNode = this.createFavoriteCopy(node);
 
     favoriteCopy.favorite = true;
     favoriteCopy.id = crypto.randomUUID();
 
-    const updatedFavorites: TreeNode[] = [...currentFavorites, favoriteCopy];
+    const updatedFavorites: TreeNode[] = [ ...currentFavorites, favoriteCopy ];
 
     this.dataService.updateFavoritesInUI(updatedFavorites);
     this.httpService.updateFavoritesInBackend(updatedFavorites);
   }
 
-  renameNode(): void {
-    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
+  renameNode (): void {
+    const currentFavorites: TreeNode[] = [ ...this.dataService.getCurrentFavorites() ];
 
     this.dataService.updateFavoritesInUI(currentFavorites);
     this.httpService.updateFavoritesInBackend(currentFavorites);
   }
 
-  removeNode(node: TreeNode): void {
+  removeNode (node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
     const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
@@ -50,23 +50,23 @@ export class FavoritesService {
     this.httpService.updateFavoritesInBackend(filteredFavorites);
   }
 
-  createNewFolder(parentNode: TreeNode, isRoot: boolean): void {
+  createNewFolder (parentNode: TreeNode, isRoot: boolean): void {
     const childNode: TreeNode = {
       text: 'neuer Ordner',
       iconCls: 'no-icon',
       children: [],
       favorite: true,
-      id: crypto.randomUUID(),
+      id: crypto.randomUUID()
     };
-    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
+    const currentFavorites: TreeNode[] = [ ...this.dataService.getCurrentFavorites() ];
 
-    if (isRoot) {
+    if (isRoot)
       currentFavorites.push(childNode);
-    } else {
+    else {
       const nodeInFavorite: TreeNode | undefined = this.searchNodeRecursively(
         parentNode,
         currentFavorites,
-        'id',
+        'id'
       );
 
       if (nodeInFavorite) {
@@ -79,29 +79,29 @@ export class FavoritesService {
     this.httpService.updateFavoritesInBackend(currentFavorites);
   }
 
-  dropNode(sourceNode: TreeNode | null, targetNodeText: string | null): void {
-    if (!sourceNode || !targetNodeText) {
+  dropNode (sourceNode: TreeNode | null, targetNodeText: string | null): void {
+    if (!sourceNode || !targetNodeText)
       return;
-    }
+
 
     let targetNode: TreeNode | undefined = undefined;
 
-    const currentFavorites: TreeNode[] = [...this.dataService.getCurrentFavorites()];
+    const currentFavorites: TreeNode[] = [ ...this.dataService.getCurrentFavorites() ];
     // Remove the sourceNode from its current location
     const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
       sourceNode,
       currentFavorites,
-      'id',
+      'id'
     );
 
     // Add it to the target location
-    if (targetNodeText === 'Favoriten') {
+    if (targetNodeText === 'Favoriten')
       updatedFavorites.push(sourceNode);
-    } else {
+    else {
       targetNode = this.searchNodeRecursively(
         { text: targetNodeText } as TreeNode,
         updatedFavorites,
-        'text',
+        'text'
       );
 
       if (targetNode) {
@@ -110,56 +110,55 @@ export class FavoritesService {
       }
     }
 
-    if ((targetNode && targetNode.id !== sourceNode.id) || targetNodeText === 'Favoriten') {
+    if (targetNode && targetNode.id !== sourceNode.id || targetNodeText === 'Favoriten') {
       this.dataService.updateFavoritesInUI(updatedFavorites);
       this.httpService.updateFavoritesInBackend(updatedFavorites);
     }
   }
 
-  private searchNodeRecursively(
+  private searchNodeRecursively (
     targetNode: TreeNode,
     favorites: TreeNode[],
-    searchBy: keyof TreeNode,
+    searchBy: keyof TreeNode
   ): TreeNode | undefined {
     const foundNode: TreeNode | undefined = favorites.find(
-      (fav: TreeNode) => fav[searchBy] === targetNode[searchBy],
+      (fav: TreeNode) => fav[ searchBy ] === targetNode[ searchBy ]
     );
 
-    if (foundNode) {
+    if (foundNode)
       return foundNode;
-    }
+
 
     for (const fav of favorites) {
       if (fav.children && fav.children.length > 0) {
         const nestedResult: TreeNode | undefined = this.searchNodeRecursively(
           targetNode,
           fav.children,
-          searchBy,
+          searchBy
         );
 
-        if (nestedResult) {
+        if (nestedResult)
           return nestedResult;
-        }
       }
     }
 
     return undefined;
   }
 
-  private removeNodeRecursively(
+  private removeNodeRecursively (
     targetNode: TreeNode,
     favorites: TreeNode[],
-    searchBy: keyof TreeNode,
+    searchBy: keyof TreeNode
   ): TreeNode[] {
     const filteredFavorites: TreeNode[] = favorites.filter(
-      (fav: TreeNode) => fav[searchBy] !== targetNode[searchBy],
+      (fav: TreeNode) => fav[ searchBy ] !== targetNode[ searchBy ]
     );
 
     return filteredFavorites.map((fav: TreeNode) => {
       if (fav.children && fav.children.length > 0) {
         return {
           ...fav,
-          children: this.removeNodeRecursively(targetNode, fav.children, searchBy),
+          children: this.removeNodeRecursively(targetNode, fav.children, searchBy)
         };
       }
 
@@ -167,13 +166,13 @@ export class FavoritesService {
     });
   }
 
-  private createFavoriteCopy(node: TreeNode): TreeNode {
+  private createFavoriteCopy (node: TreeNode): TreeNode {
     const copy: TreeNode = {
       ...node,
       favorite: true,
       children: node.children
         ? node.children.map((child: TreeNode) => this.createFavoriteCopy(child))
-        : undefined,
+        : undefined
     };
 
     return copy;
