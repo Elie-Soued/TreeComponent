@@ -2,7 +2,7 @@
 /* eslint-disable @tseslint/class-methods-use-this */
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { type FavoritePayload, type Data, TreeNode } from '../types';
+import { type FavoritePayload, type Data, type SavedFavoritesResponse, type TreeNode } from '../types';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -34,17 +34,12 @@ export class HttpService {
     return this.http.get<Data>(this.BASE_URL);
   }
 
-  updateFavoritesInBackend (favorites: TreeNode[]): void {
+  updateFavoritesInBackend (favorites: TreeNode[]): Observable<SavedFavoritesResponse> {
     this.payload.favorites.children = favorites;
-    this.http
-      .post(this.FAVORITE_URL, this.buildRequestBody(this.payload), {
-        headers: this.getHeaders()
-      })
-      .subscribe({
-        error: () => {
-          this.getInitialData().subscribe();
-        }
-      });
+
+    return this.http.post<SavedFavoritesResponse>(this.FAVORITE_URL, this.buildRequestBody(this.payload), {
+      headers: this.getHeaders()
+    });
   }
 
   private buildRequestBody (payload: FavoritePayload): HttpParams {

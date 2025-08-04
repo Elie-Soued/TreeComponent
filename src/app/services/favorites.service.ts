@@ -32,14 +32,14 @@ export class FavoritesService {
     const updatedFavorites: TreeNode[] = [ ...currentFavorites, favoriteCopy ];
 
     this.dataService.updateFavoritesInUI(updatedFavorites);
-    this.httpService.updateFavoritesInBackend(updatedFavorites);
+    this.updateFavoritesInBackend(updatedFavorites);
   }
 
   renameNode (): void {
     const currentFavorites: TreeNode[] = [ ...this.dataService.getCurrentFavorites() ];
 
     this.dataService.updateFavoritesInUI(currentFavorites);
-    this.httpService.updateFavoritesInBackend(currentFavorites);
+    this.updateFavoritesInBackend(currentFavorites);
   }
 
   removeNode (node: TreeNode): void {
@@ -47,7 +47,7 @@ export class FavoritesService {
     const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
 
     this.dataService.updateFavoritesInUI(filteredFavorites);
-    this.httpService.updateFavoritesInBackend(filteredFavorites);
+    this.updateFavoritesInBackend(filteredFavorites);
   }
 
   createNewFolder (parentNode: TreeNode, isRoot: boolean): void {
@@ -76,7 +76,7 @@ export class FavoritesService {
     }
 
     this.dataService.updateFavoritesInUI(currentFavorites);
-    this.httpService.updateFavoritesInBackend(currentFavorites);
+    this.updateFavoritesInBackend(currentFavorites);
   }
 
   dropNode (sourceNode: TreeNode | null, targetNodeText: string | null): void {
@@ -112,8 +112,17 @@ export class FavoritesService {
 
     if (targetNode && targetNode.id !== sourceNode.id || targetNodeText === 'Favoriten') {
       this.dataService.updateFavoritesInUI(updatedFavorites);
-      this.httpService.updateFavoritesInBackend(updatedFavorites);
+      this.updateFavoritesInBackend(updatedFavorites);
     }
+  }
+
+
+  private updateFavoritesInBackend (favorites: TreeNode[]): void {
+    this.httpService.updateFavoritesInBackend(favorites).subscribe({
+      error: () => {
+        this.dataService.loadInitialData().subscribe();
+      }
+    });
   }
 
   private searchNodeRecursively (
