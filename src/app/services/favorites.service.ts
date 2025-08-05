@@ -44,7 +44,7 @@ export class FavoritesService {
 
   removeNode (node: TreeNode): void {
     const currentFavorites: TreeNode[] = this.dataService.getCurrentFavorites();
-    const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites, 'id');
+    const filteredFavorites: TreeNode[] = this.removeNodeRecursively(node, currentFavorites);
 
     this.dataService.updateFavoritesInUI(filteredFavorites);
     this.updateFavoritesInBackend(filteredFavorites);
@@ -54,7 +54,10 @@ export class FavoritesService {
     const childNode: TreeNode = {
       text: 'neuer Ordner',
       iconCls: 'no-icon',
-      children: [],
+      children: [ {
+        text: "",
+        iconCls: "no-icon"
+      } ],
       favorite: true,
       id: crypto.randomUUID()
     };
@@ -71,6 +74,7 @@ export class FavoritesService {
 
       if (nodeInFavorite) {
         nodeInFavorite.children ??= [];
+        nodeInFavorite.children = nodeInFavorite.children.filter((node: TreeNode) => node.text !== "");
         nodeInFavorite.children.push(childNode);
       }
     }
@@ -90,8 +94,7 @@ export class FavoritesService {
     // Remove the sourceNode from its current location
     const updatedFavorites: TreeNode[] = this.removeNodeRecursively(
       sourceNode,
-      currentFavorites,
-      'id'
+      currentFavorites
     );
 
     // Add it to the target location
@@ -106,6 +109,7 @@ export class FavoritesService {
 
       if (targetNode) {
         targetNode.children ??= [];
+        targetNode.children = targetNode.children.filter((node: TreeNode) => node.text !== "");
         targetNode.children.push(sourceNode);
       }
     }
@@ -156,18 +160,30 @@ export class FavoritesService {
 
   private removeNodeRecursively (
     targetNode: TreeNode,
-    favorites: TreeNode[],
-    searchBy: keyof TreeNode
+    favorites: TreeNode[]
   ): TreeNode[] {
     const filteredFavorites: TreeNode[] = favorites.filter(
-      (fav: TreeNode) => fav[ searchBy ] !== targetNode[ searchBy ]
+      (fav: TreeNode) => fav.id !== targetNode.id
     );
 
     return filteredFavorites.map((fav: TreeNode) => {
       if (fav.children && fav.children.length > 0) {
+        const updatedChildren: TreeNode[] = this.removeNodeRecursively(targetNode, fav.children);
+
+        // If children array becomes empty after removal, add placeholder
+        if (updatedChildren.length === 0) {
+          return {
+            ...fav,
+            children: [ {
+              text: "",
+              iconCls: "no-icon"
+            } ]
+          };
+        }
+
         return {
           ...fav,
-          children: this.removeNodeRecursively(targetNode, fav.children, searchBy)
+          children: updatedChildren
         };
       }
 

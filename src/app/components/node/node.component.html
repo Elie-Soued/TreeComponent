@@ -1,6 +1,11 @@
 <div class="tree-node">
-  @if (isLeaf && node.text !== 'neuer Ordner') {
-    <button mat-icon-button disabled id="leafBtn" class="tree-node__button__leaf"></button>
+  @if (isLeaf) {
+    <button
+      mat-icon-button
+      disabled
+      id="leafBtn"
+      class="tree-node__button__leaf"
+    ></button>
   } @else {
     <button
       id="nodeBtn"
@@ -9,7 +14,7 @@
       class="tree-node__button"
     >
       <mat-icon class="tree-node__button__icon" id="nodeIcon">
-        {{ tree.isExpanded(node) ? 'remove' : 'add' }}
+        {{ tree.isExpanded(node) ? "remove" : "add" }}
       </mat-icon>
     </button>
   }
