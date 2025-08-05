@@ -6,5 +6,13 @@ main {
   width: auto;
   margin: 0.5rem;
   padding: 0.25rem;
-  border: 1px solid gray;
+}
+
+mat-tree-node {
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  // Keep left/right padding for indentation - don't override these
+  height: auto;
+  min-height: unset !important; // Override Material's default min-height
 }

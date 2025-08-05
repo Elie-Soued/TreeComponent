@@ -11,7 +11,7 @@
     @if (isOverFavorite) {
       <button [attr.aria-label]="'Toggle '" class="favorite-button__button">
         <mat-icon class="favorite-button__icon">
-          {{ 'add' }}
+          {{ "add" }}
         </mat-icon>
       </button>
     } @else {
@@ -20,7 +20,7 @@
         class="favorite-button__button favorite-button__button--red"
       >
         <mat-icon class="favorite-button__icon">
-          {{ 'close' }}
+          {{ "close" }}
         </mat-icon>
       </button>
     }
@@ -36,6 +36,8 @@
     }"
     (click)="onClick()"
   >
-    {{ title }}
+    <span>
+      {{ title }}
+    </span>
   </button>
 }

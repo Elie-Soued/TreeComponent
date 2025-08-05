@@ -1,7 +1,11 @@
 <div class="searchbar">
-  <label>Suche :</label>
+  <label>Suche:</label>
   <mat-form-field appearance="outline">
-    <input matInput [formControl]="searchControl" placeholder="min. 3 Zeichen" />
+    <input
+      matInput
+      [formControl]="searchControl"
+      placeholder="min. 3 Zeichen"
+    />
     <button
       id="clearBtn"
       matSuffix
@@ -10,7 +14,7 @@
       type="button"
       (click)="clearForm()"
     >
-      <mat-icon>close</mat-icon>
+      <mat-icon style="font-weight: bold">close</mat-icon>
     </button>
   </mat-form-field>
 </div>

@@ -10,11 +10,35 @@
 label {
   width: 100px;
   margin: 0.5rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 mat-form-field {
+  margin: 0 !important;
   width: 100%;
-  height: auto;
+
+  // Target the main form field wrapper
+  ::ng-deep .mat-mdc-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  // Target the text field wrapper to reduce height
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    height: 32px !important;
+    min-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  // Target the input element itself
+  ::ng-deep .mat-mdc-input-element {
+    height: auto !important;
+    padding: 6px 12px !important;
+    line-height: 20px !important;
+    font-size: 14px !important;
+  }
 }
 
 button {

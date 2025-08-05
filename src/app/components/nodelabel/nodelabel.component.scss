@@ -8,6 +8,9 @@
   padding: 0.25rem;
   margin: 0rem;
   cursor: default;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 .node-text__segment {
@@ -28,6 +31,9 @@
   background-color: transparent;
   min-width: 300px;
   border: none;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 .node-text__input[disabled] {
