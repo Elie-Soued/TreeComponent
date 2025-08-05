@@ -49,3 +49,10 @@ export interface SavedFavoritesResponse {
   NodeToSave: string;
   Result: boolean;
 }
+export interface configType {
+  language: string;
+  menu: string;
+  DataBase: string;
+  DataLib: string;
+  node: string;
+}

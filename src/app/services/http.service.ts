@@ -2,9 +2,10 @@
 /* eslint-disable @tseslint/class-methods-use-this */
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { type FavoritePayload, type Data, type SavedFavoritesResponse, type TreeNode } from '../types';
+import { type FavoritePayload, type Data, type SavedFavoritesResponse, type TreeNode, configType } from '../types';
 import { Observable } from 'rxjs';
 import { HTTP_ENVIRONMENT_URL } from "../core/configs/http";
+import { config } from '../core/configs/config';
 
 
 @Injectable({
@@ -16,31 +17,18 @@ export class HttpService {
   private BASE_URL: string = `${ HTTP_ENVIRONMENT_URL }/ogs_php/ogs_menu_webclient/index.php`;
 
 
-  private payload: FavoritePayload = {
-    language: '0',
-    MenuUsername: 'SOUEID',
-    menu: 'R10ALL00',
-    DataBase: 'OGSTCPDB',
-    DataLib: 'OGS01R10',
-    favorites: {
-      text: 'Favoriten',
-      iconCls: 'no-icon',
-      children: []
-    }
-  };
-
-
   getInitialData (): Observable<Data> {
+    const { language, menu, DataBase, DataLib, node }: configType = config;
     const queryParams: URLSearchParams = new URLSearchParams({
       nav: 'menu.load',
       ajax_req: JSON.stringify({
-        language: "0",
+        language,
         MenuUsername: "SOUEID",
-        menu: "R10ALL00",
-        DataBase: "OGSTCPDB",
-        DataLib: "OGS01R10"
+        menu,
+        DataBase,
+        DataLib
       }),
-      node: 'root'
+      node
     });
 
 
@@ -48,14 +36,27 @@ export class HttpService {
   }
 
   updateFavoritesInBackend (favorites: TreeNode[]): Observable<SavedFavoritesResponse> {
+    const { language, menu, DataBase, DataLib }: configType = config;
     const queryParams: URLSearchParams = new URLSearchParams({
       nav: 'menu.save'
     });
+    const payload: FavoritePayload = {
+      language,
+      MenuUsername: 'SOUEID',
+      menu,
+      DataBase,
+      DataLib,
+      favorites: {
+        text: 'Favoriten',
+        iconCls: 'no-icon',
+        children: []
+      }
+    };
 
-    this.payload.favorites.children = favorites;
+    payload.favorites.children = favorites;
 
 
-    return this.http.post<SavedFavoritesResponse>(`${ this.BASE_URL }?${ queryParams.toString() }`, this.buildRequestBody(this.payload), {
+    return this.http.post<SavedFavoritesResponse>(`${ this.BASE_URL }?${ queryParams.toString() }`, this.buildRequestBody(payload), {
       headers: this.getHeaders()
     });
   }
