@@ -101,10 +101,10 @@ export class DragService {
     const dropTarget: Element | null | undefined = elementBelow?.closest('app-node');
 
     if (dropTarget) {
-      const inputElement: Element | null = dropTarget.querySelector('input[ng-reflect-model]');
+      const inputElement: HTMLInputElement | null = dropTarget.querySelector('input.node-text__input');
 
       if (inputElement) {
-        const nodeValue: string | null = inputElement.getAttribute('ng-reflect-model');
+        const nodeValue: string = inputElement.value;
 
         if (this.isFavorite && this.draggedNode)
           this.favoriteService.dropNode(this.draggedNode, nodeValue);
