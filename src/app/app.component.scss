@@ -2,6 +2,15 @@ main {
   display: inline-block;
 }
 
+button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background-color: rgb(112, 111, 105);
+  color: white;
+  border: none;
+}
+
 .tree-node__button--background--OGS-light {
   background-color: #0082bf;
 }

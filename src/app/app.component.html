@@ -1,4 +1,17 @@
 <main>
-  <app-searchinput (searchValue)="onSearchValueChange($event)"></app-searchinput>
-  <app-tree [searchValue]="searchValue"></app-tree>
+  <button
+    aria-label="menu"
+    type="button"
+    (click)="toggleTree()"
+    [disabled]="this.isDisabled"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  @if (showTree) {
+    <app-searchinput
+      (searchValue)="onSearchValueChange($event)"
+    ></app-searchinput>
+    <app-tree [searchValue]="searchValue"></app-tree>
+  }
 </main>
