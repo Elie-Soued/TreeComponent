@@ -40,6 +40,7 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "/var/www/TreeComponent",
               "budgets": [
                 {
                   "type": "initial",
